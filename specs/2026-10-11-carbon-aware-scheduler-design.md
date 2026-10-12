@@ -1,0 +1,108 @@
+# Carbon-Aware Energy Scheduler — Design Spec
+
+Date: 2026-10-11 · Status: draft for review · Owner: Gihan
+
+## 1. Problem and purpose
+
+Electricity from the grid is not equally "clean" at every hour: carbon intensity (gCO2e emitted per kWh) swings with the generation mix (solar at noon, gas at night). Flexible loads (EV charging, ML training, batch jobs) can shift in time to cut emissions, but only if someone can **forecast** the next 48 hours **with honest uncertainty** and turn that forecast into a **decision**.
+
+This project builds that end to end from free public data: ingest → forecast demand and carbon intensity with calibrated intervals → recommend when to run a flexible job → serve via API → monitor drift.
+
+Purpose for the owner: a data science internship portfolio piece that shows probabilistic forecasting, decision-making under uncertainty, honest evaluation, deployment and monitoring.
+
+## 2. Scope
+
+### MVP (plans 01–07)
+- One balancing authority: **CISO** (California ISO). Data: 2021-01-01 → present, hourly.
+- Targets: `demand_mwh` and `carbon_intensity_g_per_kwh`, horizons 1..48 h.
+- Point forecast (median) plus 80% prediction interval (conformalized quantile regression).
+- Scheduler: given a job (duration, power, earliest start, deadline), recommend a start time and report expected emissions vs "run now".
+- Replay backtest of the scheduler on historical data (realized savings, regret vs oracle).
+- FastAPI service in Docker; runs offline from a baked demo snapshot (no API key needed to demo).
+
+### v1 (plans 08–11)
+- Weather features (Open-Meteo), drift and coverage monitoring, scheduled automation (GitHub Actions), second region (ERCO) as a generalization check, portfolio documentation.
+
+### Non-goals
+- No real-time streaming, no database server, no auth, no UI beyond OpenAPI docs, no deep learning, no multi-region optimisation, no marginal-emissions modelling, no commercial use.
+
+## 3. Data sources (all free)
+
+| Source | Use | Access | Notes |
+|---|---|---|---|
+| EIA Open Data API v2, route `electricity/rto/region-data` | demand (D), day-ahead demand forecast (DF), net generation (NG), interchange (TI) | free key via `EIA_API_KEY` | JSON capped at 5,000 rows/page → paginate |
+| EIA API v2, route `electricity/rto/fuel-type-data` | net generation by fuel | same key | fuel codes to be confirmed by probe (plan 02, Task 1) |
+| EIA-930 bulk CSV/XLSX | fallback for history | no key | not used in MVP |
+| IPCC AR5 lifecycle emission medians | emission factors | static YAML in repo | verify values against source before publishing (plan 03, Task 1) |
+| Open-Meteo archive + forecast | weather features (v1 only) | no key, non-commercial, CC BY 4.0 attribution | plan 08 |
+
+**Unverified assumptions** (must be checked by the probe task, then this table updated): hourly `period` format (`YYYY-MM-DDTHH`, UTC), facet names (`respondent`, `type`, `fueltype`), numeric values returned as strings, exact fuel codes, how EIA flags revisions.
+
+## 4. Key decisions
+
+| # | Decision | Why |
+|---|---|---|
+| D1 | Carbon intensity is **generation-based**: `Σ(gen_f × EF_f) / Σ gen_f` over fossil + renewable + nuclear fuels; storage and unknown excluded; imports ignored | Simple, transparent, reproducible from free data. Limitation documented; EIA's consumption-based estimate is out of scope |
+| D2 | One **global** LightGBM model per target with `horizon` as a feature, not 48 models | Fewer artifacts, shared strength across horizons |
+| D3 | Features use only information available at issue time. Seasonal anchors: `y[t+h-24·ceil(h/24)]`, `y[t+h-168·ceil(h/168)]` | Prevents leakage; fixes lag meaning for every horizon |
+| D4 | Intervals via **conformalized quantile regression** (CQR), calibrated on a chronologically later window, per horizon bucket (1–6, 7–24, 25–48) | Distribution-free, finite-sample coverage under exchangeability; honest about drift |
+| D5 | Splits are chronological only; evaluation by rolling-origin backtest | Time-series integrity |
+| D6 | Storage: Parquet files under `data/{interim,processed}/{region}/`; no database | YAGNI |
+| D7 | Scheduler strategies: `median` (minimise expected emissions) and `upper` (risk-averse, minimise the upper bound). Non-interruptible first; interruptible is a stretch task | Shows decision-under-uncertainty trade-off |
+| D8 | Demo image bakes a small data snapshot and trained model; live refresh is optional | Anyone can run it with no key |
+| D9 | Own implementations for conformal, PSI/KS drift and metrics (≈30–60 lines each) with tests; Evidently only for an optional HTML report | Fewer fragile dependencies, shows understanding |
+| D10 | Config via env/`pydantic-settings`; region metadata in `config/regions.yaml` | 12-factor |
+
+## 5. Architecture
+
+```
+EIA API ──► ingest ──► interim/{region}/hourly.parquet ──► carbon ──► processed/{region}/hourly.parquet
+                                                                        │
+                            features ◄──────────────────────────────────┘
+                               │
+                    LightGBM quantiles ─► CQR calibration ─► models/{region}/{target}/current/
+                                                                        │
+                    FastAPI (/v1/forecast, /v1/schedule) ◄─ ForecastService ─┘
+                         │                                              │
+                    scheduler (optimizer)                      monitoring (drift, coverage)
+```
+
+Package: `src/carbon_scheduler/{config,logging,cli}.py` and subpackages `ingest/ carbon/ features/ models/ scheduler/ api/ monitoring/`.
+
+## 6. Data contracts
+
+- **Hourly frame** (interim/processed): index `DatetimeIndex` tz=UTC, hourly, no gaps (NaN allowed). Columns: `demand_mwh`, `demand_forecast_mwh`, `net_generation_mwh`, `net_interchange_mwh`, `gen_<fuel>_mwh` per fuel. Processed adds `carbon_intensity_g_per_kwh`.
+- **Forecast frame**: columns `issue_time`, `target_time` (UTC), `horizon` (int 1..48), `lower`, `median`, `upper`, `target` (`demand_mwh`|`carbon_intensity_g_per_kwh`).
+- **Model artifact**: directory with `model.joblib` and `metadata.json` (keys: `region`, `target`, `trained_at`, `data_start`, `data_end`, `train_end`, `calibration_end`, `alpha`, `feature_columns`, `metrics`, `versions`, `git_sha`).
+
+## 7. Evaluation protocol and success targets
+
+Rolling-origin backtest on CISO: last 6 months test, 3 months calibration immediately before, training before that. Issue times every 24 h at 00:00 local.
+
+Targets (reported honestly even if missed):
+- Median MAE beats seasonal-naive (168 h) for both targets at every horizon bucket.
+- 80% interval empirical coverage in [77%, 83%] overall and ≥ 70% in every horizon bucket.
+- Scheduler replay: mean realized emissions savings vs run-now > 0; report regret vs oracle and the `median` vs `upper` strategy trade-off.
+
+## 8. Engineering standards
+
+- Python ≥3.11,<3.13, `src/` layout, `uv` with committed lockfile, `pyproject.toml` single config.
+- `ruff` (lint+format), `mypy` strict on `src`, `pytest` + coverage ≥ 80%.
+- Test pyramid: unit (no network) → fixture-based integration → opt-in `live` tests.
+- TDD per task, one logical commit per task, Conventional Commits.
+- Architecture Decision Records in `docs/adr/` for D1–D10 as they are implemented.
+- Secrets only via env; `.env.example` committed, `.env` ignored. Logs never contain keys.
+- Docker: multi-stage, non-root user, healthcheck, pinned base image, `.dockerignore`.
+- Reproducibility: fixed seeds, pinned deps, data version recorded in model metadata.
+- Data licence and attribution recorded in README (EIA reuse policy; Open-Meteo CC BY 4.0).
+
+## 9. Risks
+
+| Risk | Mitigation |
+|---|---|
+| EIA data anomalies (spikes, negatives, gaps, revisions) | validation + quality report; 48 h overlap on incremental ingest |
+| EIA rate limits unpublished | pagination, retry with backoff, request throttle, bulk-file fallback |
+| Leakage via weather (archive vs forecast) | document; ablation; prefer historical-forecast data if available |
+| Generation-based intensity ignores imports | document in model card; sensitivity note |
+| Free hosting terms change | local Docker + recorded demo is the baseline deliverable |
+| Scope creep | MVP line after plan 07; anything else is v1 |

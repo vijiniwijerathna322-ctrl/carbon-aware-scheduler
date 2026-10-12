@@ -1,0 +1,32 @@
+[project]
+name = "carbon-scheduler"
+version = "0.1.0"
+description = "Carbon-aware energy scheduling with calibrated forecasts"
+readme = "README.md"
+requires-python = ">=3.11,<3.13"
+dependencies = ["pydantic>=2", "pydantic-settings>=2", "typer", "pandas", "pyarrow", "httpx", "tenacity", "pyyaml"]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/carbon_scheduler"]
+
+[dependency-groups]
+dev = ["pytest", "pytest-cov", "respx", "ruff", "mypy", "pandas-stubs", "types-PyYAML", "pre-commit"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM", "PL"]
+
+[tool.mypy]
+strict = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+markers = ["live: opt-in tests requiring live external services"]
+addopts = "-m 'not live' --cov=carbon_scheduler --cov-fail-under=0"
