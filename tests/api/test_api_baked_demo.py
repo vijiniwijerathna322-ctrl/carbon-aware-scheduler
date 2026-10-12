@@ -14,6 +14,12 @@ def test_baked_demo_offline_forecast_and_schedule(monkeypatch):
     monkeypatch.delenv("EIA_API_KEY", raising=False)
     root = PROJECT_ROOT / "demo"
     manifest = json.loads((root / "manifest.json").read_text(encoding="utf-8"))
+    metadata_path = next((root / "models/CISO/carbon_intensity_g_per_kwh").rglob("metadata.json"))
+    metadata = json.loads(metadata_path.read_text(encoding="utf-8"))
+    assert (
+        hashlib.sha256((PROJECT_ROOT / "config/emission_factors.yaml").read_bytes()).hexdigest()
+        == metadata["factors_sha256"]
+    )
     for name, digest in manifest["sha256"].items():
         assert hashlib.sha256((root / name).read_bytes()).hexdigest() == digest
     settings = Settings(
