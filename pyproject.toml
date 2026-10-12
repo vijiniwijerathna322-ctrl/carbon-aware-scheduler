@@ -6,6 +6,9 @@ readme = "README.md"
 requires-python = ">=3.11,<3.13"
 dependencies = ["pydantic>=2", "pydantic-settings>=2", "typer", "pandas", "pyarrow", "httpx", "tenacity", "pyyaml"]
 
+[project.scripts]
+carbon-scheduler = "carbon_scheduler.cli:app"
+
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
