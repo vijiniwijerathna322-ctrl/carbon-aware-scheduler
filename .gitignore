@@ -2,6 +2,7 @@
 .env.*
 !.env.example
 data/
+reports/
 models/*
 !models/demo/
 .venv/

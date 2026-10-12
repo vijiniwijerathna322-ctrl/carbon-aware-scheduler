@@ -8,6 +8,8 @@ from pandas.tseries.holiday import USFederalHolidayCalendar
 
 from carbon_scheduler.models.base import HORIZONS, validate_horizons, validate_series
 
+__all__ = ["FEATURE_COLUMNS", "HORIZONS", "build_supervised"]
+
 FEATURE_COLUMNS = [
     "horizon",
     "y_issue",

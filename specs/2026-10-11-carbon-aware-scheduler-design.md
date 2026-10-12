@@ -46,7 +46,7 @@ Purpose for the owner: a data science internship portfolio piece that shows prob
 | D2 | One **global** LightGBM model per target with `horizon` as a feature, not 48 models | Fewer artifacts, shared strength across horizons |
 | D3 | Features use only information available at issue time. Seasonal anchors: `y[t+h-24·ceil(h/24)]`, `y[t+h-168·ceil(h/168)]` | Prevents leakage; fixes lag meaning for every horizon |
 | D4 | Intervals via **conformalized quantile regression** (CQR), calibrated on a chronologically later window, per horizon bucket (1–6, 7–24, 25–48) | Distribution-free, finite-sample coverage under exchangeability; honest about drift |
-| D5 | Splits are chronological only; evaluation by rolling-origin backtest | Time-series integrity |
+| D5 | Splits are chronological only; evaluation by rolling-origin backtest on pointwise raw targets with physical fit/predict truncation | Time-series integrity; retrospective interpolation and centered cleaning are excluded from real model evaluation |
 | D6 | Storage: Parquet files under `data/{raw,interim,processed}/{region}/`; no database | YAGNI |
 | D7 | Scheduler strategies: `median` (minimise expected emissions) and `upper` (risk-averse, minimise the upper bound). Non-interruptible first; interruptible is a stretch task | Shows decision-under-uncertainty trade-off |
 | D8 | Demo image bakes a small data snapshot and trained model; live refresh is optional | Anyone can run it with no key |
@@ -75,6 +75,7 @@ Package: `src/carbon_scheduler/{config,logging,cli}.py` and subpackages `ingest/
 - **Hourly frame** (raw/interim/processed): index `DatetimeIndex` tz=UTC, hourly, no gaps (NaN allowed). Columns: `demand_mwh`, `demand_forecast_mwh`, `net_generation_mwh`, `net_interchange_mwh`, `gen_<fuel>_mwh` per fuel. Processed adds `carbon_intensity_g_per_kwh`.
 - **Carbon diagnostics** (processed): `carbon_covered_generation_mwh`, `carbon_excluded_generation_mwh`, `carbon_observed_coverage_fraction`, `carbon_missing_fuel_count` (present included columns), and `carbon_negative_generation_count` (all observed fuel columns). Coverage divides covered positive generation by all observed positive fuel generation; it cannot quantify missing amounts. All-missing or zero included totals produce NaN; partial mixes remain explicitly incomplete. GEO before its first reporting date stays missing, and OTH is never assumed to be biomass. Carbon provenance records configuration/source and input/factor digests; no lifecycle factor is presented as a measured hourly emissions rate.
 - **Forecast frame**: columns `issue_time`, `target_time` (UTC), `horizon` (int 1..48), `lower`, `median`, `upper`, `target` (`demand_mwh`|`carbon_intensity_g_per_kwh`).
+- **Forecast evaluation inputs**: default to raw observations; mask nonpositive demand and recompute carbon pointwise without interpolation or centered filters. Retrospective processed-data evaluation is explicit exploratory mode only. Latest revisions and zero observation latency remain assumptions; historical publication vintages are not reconstructed (ADR 0005).
 - **Ingestion quality report**: `gap_fraction` counts hours incomplete in any of the four required regional series; absent required columns count as missing for every hour. `n_remaining_gaps` counts these hours. Interpolation counts filled cells across numeric columns, and remaining missing-cell totals include virtual absent required columns. Fuel missingness, first/last observed UTC ISO timestamps and interior missing counts are diagnostics; G2 does not certify carbon-mix completeness. Cleaning rejects infinite values, flags demand <= 0 and centered 168-hour median/MAD spikes, then fills only complete bounded interior gaps of at most three hours. This retrospective cleaning uses future observations; historical forecast evaluation must avoid leakage. See ADR 0011.
 - **Model artifact**: directory with `model.joblib` and `metadata.json` (keys: `region`, `target`, `trained_at`, `data_start`, `data_end`, `train_end`, `calibration_end`, `alpha`, `feature_columns`, `metrics`, `versions`, `git_sha`).
 
@@ -83,7 +84,7 @@ Package: `src/carbon_scheduler/{config,logging,cli}.py` and subpackages `ingest/
 Rolling-origin backtest on CISO: last 6 months test, 3 months calibration immediately before, training before that. Issue times every 24 h at 00:00 local.
 
 Targets (reported honestly even if missed):
-- Median MAE beats seasonal-naive (168 h) for both targets at every horizon bucket.
+- Median MAE beats seasonal-naive (168 h) for both targets at every horizon bucket on paired finite predictions and identical realized labels; report full per-model availability separately.
 - 80% interval empirical coverage in [77%, 83%] overall and ≥ 70% in every horizon bucket.
 - Scheduler replay: mean realized emissions savings vs run-now > 0; report regret vs oracle and the `median` vs `upper` strategy trade-off.
 

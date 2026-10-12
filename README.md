@@ -78,3 +78,33 @@ The 50,646-hour snapshot has mean intensity 237.16 gCO2e/kWh and 47 missing
 intensity hours. Its 29.37–449.03 range reflects changing observed fuel mixes.
 43,472 hours have partial included-fuel observations, largely because GEO appears
 late; these values must not be described as complete whole-grid carbon intensity.
+
+## Forecast backtests
+
+Run offline rolling-origin comparisons on the latest six calendar months:
+
+```powershell
+uv run carbon-scheduler backtest --region CISO --target demand_mwh --model naive
+uv run carbon-scheduler backtest --region CISO --target demand_mwh --model lgbm
+uv run carbon-scheduler backtest --region CISO --target carbon_intensity_g_per_kwh --model naive
+uv run carbon-scheduler backtest --region CISO --target carbon_intensity_g_per_kwh --model lgbm
+uv run python scripts/summarize_point_backtests.py
+```
+
+Reports and prediction Parquet files go to `reports/`; `--reports-dir` overrides
+that directory. The final comparison is written to `docs/results/backtest-point.md`.
+Forecasts cover horizons 1–48, with daily region-local midnight issues and refits
+every 30 local calendar days. LightGBM uses fixed seed 42 and one CPU thread.
+
+Backtests default to raw observations, preserving gaps and avoiding the future
+information used by retrospective cleaning. They still use latest revisions and
+assume zero observation latency. `--data-source processed` enables exploratory
+retrospective results and does not establish leakage-safe performance. Point
+scores compare identical forecast rows for G3; reports also show per-model
+availability and uncalibrated interval metrics. See [ADR 0005](docs/adr/0005-chronological-raw-backtest.md).
+
+The [first six-month results](docs/results/backtest-point.md) pass G3 in every
+horizon bucket for both targets. Paired overall median MAE improved by 53.35%
+for demand (2,690.36 → 1,255.11 MWh) and 38.49% for carbon intensity
+(43.98 → 27.05 gCO2e/kWh). Raw interval coverage is 73.17% and 58.83%,
+respectively; these intervals still need Plan 05 calibration.

@@ -13,10 +13,38 @@ from carbon_scheduler.config import MissingApiKeyError, get_settings
 from carbon_scheduler.ingest.eia_client import EiaAuthError, EiaRequestError
 from carbon_scheduler.ingest.pipeline import G2_MAX_GAP_FRACTION, run_ingest
 from carbon_scheduler.logging import configure_logging
+from carbon_scheduler.models.reporting import run_backtest
 
 app = typer.Typer(
     help="Carbon-aware energy scheduler.", no_args_is_help=True, pretty_exceptions_enable=False
 )
+
+
+@app.command()
+def backtest(
+    region: str = typer.Option("CISO"),
+    target: str = typer.Option("carbon_intensity_g_per_kwh"),
+    model: str = typer.Option("naive"),
+    data_source: str = typer.Option("raw"),
+    reports_dir: Annotated[Path, typer.Option()] = Path("reports"),
+) -> None:
+    """Compare chronological forecasts using raw observations by default."""
+    try:
+        if data_source not in ("raw", "processed"):
+            raise ValueError("data-source must be raw or processed")
+        path = run_backtest(
+            region,
+            target,
+            model,
+            get_settings(),
+            reports_dir=reports_dir,
+            data_source="raw" if data_source == "raw" else "processed",
+        )
+    except (OSError, ValueError) as error:
+        typer.echo(f"Backtest failed: {error}", err=True)
+        raise typer.Exit(code=1) from None
+    typer.echo(f"Backtest report: {path}")
+    typer.echo(f"Predictions: {path.with_suffix('.parquet')}")
 
 
 @app.callback()
