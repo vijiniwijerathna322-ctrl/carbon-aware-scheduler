@@ -23,4 +23,6 @@ is not installed and WSL reports no installation. GitHub CI has not been trigger
 from this local branch. Plan 07 and the MVP gate remain pending those checks; no
 release tag has been created.
 
-Local quality gate: 255 tests passed (1 live test excluded), 93.33% coverage; Ruff, formatting, mypy and offline lock consistency passed. The TestClient dependency emits a deprecation warning for its supported httpx compatibility path; tests remain passing.
+Local quality gate: 255 tests passed (1 live test excluded), 93.37% coverage; Ruff, formatting, mypy and offline lock consistency passed. The TestClient dependency emits a deprecation warning for its supported httpx compatibility path; tests remain passing.
+
+- Windows demo staging now inherits workspace permissions, and Git preserves exact demo bytes across platforms for manifest verification.

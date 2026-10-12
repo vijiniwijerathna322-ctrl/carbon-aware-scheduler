@@ -157,4 +157,6 @@
 - Dockerfile, smoke script and CI job are prepared. Shell syntax passes. Local smoke fails because Docker is not installed; WSL is also not installed. Linux image compatibility, image size, CI smoke and clean-clone Docker quickstart remain unverified.
 - No remote push, main merge or v0.1.0 tag until the outstanding MVP checks are satisfied.
 
-- Final local gate: 255 tests passed, 93.33% coverage; Ruff, formatting, mypy and lock consistency passed.
+- Final local gate: 255 tests passed, 93.37% coverage; Ruff, formatting, mypy and lock consistency passed.
+
+- Windows demo staging now inherits workspace permissions, and Git preserves exact demo bytes across platforms for manifest verification.

@@ -3,13 +3,28 @@
 import hashlib
 import json
 import shutil
+from collections.abc import Iterator
+from contextlib import contextmanager
 from pathlib import Path
-from tempfile import TemporaryDirectory
+from uuid import uuid4
 
 from carbon_scheduler.config import Settings
 from carbon_scheduler.ingest.store import read_hourly, write_hourly
 from carbon_scheduler.models.registry import load_model, read_metadata
 from carbon_scheduler.models.reporting import TARGETS
+
+
+@contextmanager
+def _staging_directory(parent: Path) -> Iterator[Path]:
+    # A normal mkdir inherits the workspace ACL on Windows. TemporaryDirectory's
+    # private ACL survives rename and would prevent Git's other account reading it.
+    directory = parent.resolve() / f".demo-stage-{uuid4().hex}"
+    directory.mkdir()
+    try:
+        yield directory
+    finally:
+        if directory.parent == parent.resolve() and directory.name.startswith(".demo-stage-"):
+            shutil.rmtree(directory)
 
 
 def make_demo_assets(
@@ -38,7 +53,7 @@ def make_demo_assets(
             raise ValueError("Demo requires raw-trained models")
     output.parent.mkdir(parents=True, exist_ok=True)
     # Stage only newly created files. The user's existing output is never deleted.
-    with TemporaryDirectory(dir=output.parent, prefix=".demo-stage-") as temporary:
+    with _staging_directory(output.parent) as temporary:
         stage = Path(temporary) / "assets"
         stage.mkdir()
         write_hourly(frame, region, "raw", stage / "data")
