@@ -1,0 +1,21 @@
+# Allow only the source, lockfile, public configuration and explicit demo assets.
+*
+data/
+models/
+.git/
+.venv/
+.tools/
+reports/
+!Dockerfile
+!pyproject.toml
+!uv.lock
+!src/
+!src/**
+!config/
+!config/**
+!demo/
+!demo/**
+**/__pycache__
+**/*.pyc
+**/.env
+**/.env.*
