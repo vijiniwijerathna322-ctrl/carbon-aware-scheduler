@@ -19,7 +19,7 @@ import numpy as np
 import pandas as pd
 
 from carbon_scheduler.config import PROJECT_ROOT
-from carbon_scheduler.features.build import FEATURE_COLUMNS
+from carbon_scheduler.features.build import feature_columns
 from carbon_scheduler.models.forecast_model import ForecastModel
 from carbon_scheduler.regions import load_regions
 
@@ -176,7 +176,14 @@ def load_model(
 ) -> ForecastModel:
     path = _artifact(region, target, models_dir, version)
     metadata = read_metadata(region, target, models_dir, path.name)
-    if metadata.get("feature_columns") != FEATURE_COLUMNS:
+    columns = metadata.get("exog_columns", [])
+    try:
+        expected = (
+            feature_columns(pd.DataFrame(columns=columns)) if columns else feature_columns(None)
+        )
+    except (ValueError, TypeError) as error:
+        raise ModelIncompatibleError("Invalid exogenous feature contract") from error
+    if metadata.get("feature_columns") != expected:
         raise ModelIncompatibleError(
             "feature_columns mismatch; retrain with the current feature builder"
         )
@@ -199,7 +206,7 @@ def load_model(
     if (
         not isinstance(model, ForecastModel)
         or model.target != target
-        or model.metadata()["feature_columns"] != FEATURE_COLUMNS
+        or model.metadata()["feature_columns"] != expected
     ):
         raise ModelIncompatibleError("Serialized model does not match its metadata")
     return model

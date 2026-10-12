@@ -1,5 +1,6 @@
 """Vectorized direct multi-horizon supervised features."""
 
+import re
 from collections.abc import Sequence
 
 import numpy as np
@@ -8,7 +9,7 @@ from pandas.tseries.holiday import USFederalHolidayCalendar
 
 from carbon_scheduler.models.base import HORIZONS, validate_horizons, validate_series
 
-__all__ = ["FEATURE_COLUMNS", "HORIZONS", "build_supervised"]
+__all__ = ["FEATURE_COLUMNS", "HORIZONS", "build_supervised", "feature_columns"]
 
 FEATURE_COLUMNS = [
     "horizon",
@@ -26,13 +27,50 @@ FEATURE_COLUMNS = [
 ]
 
 
-def build_supervised(
+def feature_columns(exog: pd.DataFrame | None) -> list[str]:
+    if exog is None:
+        return list(FEATURE_COLUMNS)
+    columns = list(exog.columns)
+    if (
+        not columns
+        or len(set(columns)) != len(columns)
+        or any(
+            not isinstance(column, str) or re.fullmatch(r"[a-z][a-z0-9_]*", column) is None
+            for column in columns
+        )
+    ):
+        raise ValueError("Exogenous columns must be distinct safe lowercase identifiers")
+    return [*FEATURE_COLUMNS, *(f"wx_{column}" for column in columns)]
+
+
+def validate_exog(exog: pd.DataFrame) -> None:
+    feature_columns(exog)
+    index = exog.index
+    if not isinstance(index, pd.DatetimeIndex) or str(index.tz) != "UTC" or index.hasnans:
+        raise ValueError("Weather features require a UTC DatetimeIndex")
+    if (
+        not index.is_unique
+        or not index.is_monotonic_increasing
+        or not index.equals(index.floor("h"))
+    ):
+        raise ValueError("Weather timestamps must be unique increasing whole hours")
+    if any(
+        not pd.api.types.is_numeric_dtype(exog[c]) or pd.api.types.is_bool_dtype(exog[c])
+        for c in exog
+    ):
+        raise ValueError("Weather columns must be numeric")
+    if np.isinf(exog.to_numpy(dtype=float, na_value=np.nan)).any():
+        raise ValueError("Weather values must be finite or NaN")
+
+
+def build_supervised(  # noqa: PLR0913
     series: pd.Series,
     issue_times: pd.DatetimeIndex,
     *,
     tz: str,
     horizons: Sequence[int] = HORIZONS,
     with_target: bool = True,
+    exog: pd.DataFrame | None = None,
 ) -> pd.DataFrame:
     """Calendar features describe targets; observation features describe issues.
 
@@ -72,4 +110,9 @@ def build_supervised(
     frame["month_local"] = local.month
     frame["is_us_holiday"] = days.isin(holidays).astype(int)
     frame["y"] = series.reindex(targets).to_numpy() if with_target else np.nan
+    if exog is not None:
+        validate_exog(exog)
+        weather = exog.reindex(targets)
+        for column in exog:
+            frame[f"wx_{column}"] = weather[column].to_numpy()
     return frame

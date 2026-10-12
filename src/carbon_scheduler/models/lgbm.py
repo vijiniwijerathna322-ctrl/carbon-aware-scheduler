@@ -30,6 +30,7 @@ class QuantileLgbm:
         alphas: Sequence[float] = QUANTILES,
         params: Mapping[str, Any] | None = None,
         seed: int = 42,
+        columns: Sequence[str] = FEATURE_COLUMNS,
     ) -> None:
         if tuple(alphas) != QUANTILES:
             raise ValueError("Supported quantiles are exactly (0.1, 0.5, 0.9)")
@@ -37,12 +38,14 @@ class QuantileLgbm:
         self.params = {**DEFAULT_PARAMS, **(params or {})}
         self.seed = seed
         self.models_: list[Any] = []
+        self.feature_columns_ = list(columns)
 
     def _features(self, X: pd.DataFrame) -> pd.DataFrame:
-        missing = set(FEATURE_COLUMNS) - set(X.columns)
+        columns = getattr(self, "feature_columns_", FEATURE_COLUMNS)
+        missing = set(columns) - set(X.columns)
         if missing:
             raise ValueError(f"Missing feature columns: {', '.join(sorted(missing))}")
-        values = X[FEATURE_COLUMNS].astype("float64")
+        values = X[columns].astype("float64")
         if np.isinf(values.to_numpy()).any():
             raise ValueError("Features must be finite or NaN")
         return values

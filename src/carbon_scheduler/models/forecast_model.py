@@ -7,7 +7,7 @@ from zoneinfo import ZoneInfo
 import numpy as np
 import pandas as pd
 
-from carbon_scheduler.features.build import FEATURE_COLUMNS, build_supervised
+from carbon_scheduler.features.build import build_supervised, feature_columns, validate_exog
 from carbon_scheduler.models.base import utc_hour, validate_series
 from carbon_scheduler.models.conformal import SplitConformalCQR
 from carbon_scheduler.models.evaluate import summarize
@@ -24,6 +24,8 @@ class ForecastModel:
         lgbm_params: Mapping[str, Any] | None = None,
         seed: int = 42,
         issue_step_h: int = 3,
+        exog: pd.DataFrame | None = None,
+        exog_source: str | None = None,
     ) -> None:
         if target not in ("demand_mwh", "carbon_intensity_g_per_kwh"):
             raise ValueError("Unsupported forecast target")
@@ -38,7 +40,13 @@ class ForecastModel:
         self.calibration_days = calibration_days
         self.issue_step_h = issue_step_h
         self.seed = seed
-        self.model = QuantileLgbm(params=lgbm_params, seed=seed)
+        if exog is not None:
+            validate_exog(exog)
+        self.exog = exog.copy(deep=True) if exog is not None else None
+        self.exog_source = exog_source or (
+            str(exog.attrs.get("source", "unspecified_exploratory")) if exog is not None else None
+        )
+        self.model = QuantileLgbm(params=lgbm_params, seed=seed, columns=feature_columns(exog))
         self.calibrator = SplitConformalCQR(alpha)
         self.fit_end_: pd.Timestamp | None = None
         self.calibration_predictions_ = pd.DataFrame()
@@ -66,9 +74,11 @@ class ForecastModel:
             )
         issues = pd.DatetimeIndex(history.index[:: self.issue_step_h])
         training_history = history.loc[:start]
-        training = build_supervised(training_history, issues[issues <= start], tz=self.tz)
+        training = build_supervised(
+            training_history, issues[issues <= start], tz=self.tz, exog=self.exog
+        )
         training = training.loc[(training.target_time <= start) & np.isfinite(training.y)].copy()
-        calibration = build_supervised(history, issues[issues > start], tz=self.tz)
+        calibration = build_supervised(history, issues[issues > start], tz=self.tz, exog=self.exog)
         calibration = calibration.loc[
             (calibration.target_time <= end) & np.isfinite(calibration.y)
         ].copy()
@@ -91,7 +101,9 @@ class ForecastModel:
             "data_end": history.index[-1].isoformat(),
             "n_train": len(training),
             "n_calibration": len(calibration),
-            "feature_columns": list(FEATURE_COLUMNS),
+            "feature_columns": feature_columns(self.exog),
+            "exog_columns": list(self.exog.columns) if self.exog is not None else [],
+            "exog_source": self.exog_source,
             "seed": self.seed,
             "issue_step_h": self.issue_step_h,
             "calibration_days": self.calibration_days,
@@ -101,14 +113,20 @@ class ForecastModel:
             },
         }
 
-    def predict(self, series: pd.Series, issue_time: pd.Timestamp) -> pd.DataFrame:
+    def predict(
+        self, series: pd.Series, issue_time: pd.Timestamp, exog: pd.DataFrame | None = None
+    ) -> pd.DataFrame:
         if self.fit_end_ is None:
             raise RuntimeError("Call fit before predict")
         issue = utc_hour(issue_time)
         if issue < self.fit_end_:
             raise ValueError("issue_time cannot precede fit_end")
         frame = build_supervised(
-            series.loc[:issue], pd.DatetimeIndex([issue]), tz=self.tz, with_target=False
+            series.loc[:issue],
+            pd.DatetimeIndex([issue]),
+            tz=self.tz,
+            with_target=False,
+            exog=exog if exog is not None else getattr(self, "exog", None),
         )
         return self._adjusted(frame)[["target_time", "horizon", "lower", "median", "upper"]]
 
