@@ -88,16 +88,30 @@ Recorded RED before implementation, then 20 factor tests passed; full local gate
   - `def build_dataset(region: str, settings: Settings, factors_path: Path = Path("config/emission_factors.yaml")) -> Path` — reads interim, appends `carbon_intensity_g_per_kwh`, writes processed; returns the path. Also appends `carbon_covered_generation_mwh`, `carbon_excluded_generation_mwh`, `carbon_observed_coverage_fraction` (covered / total observed positive fuel generation), `carbon_missing_fuel_count` (missing cells in present included fuel columns), and `carbon_negative_generation_count` (negative observed fuel cells clipped for positive-generation weighting). Observed coverage is not coverage of true unobserved generation. Writes a carbon quality/provenance report with factors, source, included/excluded codes, aggregate diagnostics and input/factors digests; identical reruns preserve bytes. Relative factors paths resolve from project root. No API key required.
   - CLI: `carbon-scheduler build-dataset --region CISO`
 
-- [ ] **Step 1: Failing tests:** `test_build_dataset_adds_intensity_column_and_keeps_index`, `test_build_dataset_missing_interim_gives_actionable_error`, `test_build_dataset_is_idempotent`
-- [ ] **Step 2: Run** → FAIL
-- [ ] **Step 3: Implement.**
-- [ ] **Step 4: Run** → PASS
-- [ ] **Step 5: EDA notebook (manual):** plot daily/weekly profiles of demand and intensity, missingness heatmap, distribution of intensity by hour of day and season. Use local region time for calendar profiles, UTC storage unchanged. Write 5–8 measured bullet findings at the top; execute every cell on real processed data and inspect rendered figures. Add a locked optional `eda` dependency group for matplotlib and notebook execution.
-- [ ] **Step 6: Write ADR 0001** (context D1, the formula, limitations: imports, storage, lifecycle vs combustion factors).
-- [ ] **Step 7: Commit** `feat(carbon): build-dataset command, EDA notebook and ADR`
+- [x] **Step 1: Failing tests:** `test_build_dataset_adds_intensity_column_and_keeps_index`, `test_build_dataset_missing_interim_gives_actionable_error`, `test_build_dataset_is_idempotent`
+- [x] **Step 2: Run** → FAIL (missing dataset module, recorded before implementation)
+- [x] **Step 3: Implement.**
+- [x] **Step 4: Run** → PASS
+- [x] **Step 5: EDA notebook (manual):** plot daily/weekly profiles of demand and intensity, missingness heatmap, distribution of intensity by hour of day and season. Use local region time for calendar profiles, UTC storage unchanged. Write 5–8 measured bullet findings at the top; execute every cell on real processed data and inspect rendered figures. Add a locked optional `eda` dependency group for matplotlib and notebook execution.
+- [x] **Step 6: Write ADR 0001** (context D1, the formula, limitations: imports, storage, lifecycle vs combustion factors).
+- [x] **Step 7: Commit** `feat(carbon): build-dataset command, EDA notebook and ADR`
 
 ## Definition of Done
 
-- [ ] `data/processed/CISO/hourly.parquet` has `carbon_intensity_g_per_kwh`, values plausible (CISO typically about 100–350 g/kWh; investigate anything outside)
-- [ ] EDA findings written; ADR 0001 committed
-- [ ] Quality gate green; master plan status updated
+- [x] `data/processed/CISO/hourly.parquet` has `carbon_intensity_g_per_kwh`, values plausible (CISO typically about 100–350 g/kWh; investigate anything outside)
+- [x] EDA findings written; ADR 0001 committed
+- [x] Quality gate green; master plan status updated
+
+Verification on 2026-10-12: 147 tests passed, one live test deselected,
+97.57% coverage; ruff, format and mypy passed. Carbon modules have 100% statement
+coverage. Real CISO reruns preserve Parquet/report bytes and modification times.
+Executed all five notebook code cells and inspected all three rendered figures;
+seven measured findings appear at the top. Optional EDA dependencies are locked.
+
+The 50,646-hour snapshot has 50,599 observed-mix intensities, mean 237.16,
+range 29.37–449.03 gCO2e/kWh. The 2,615 hours below 100 have mean gas share
+8.3% and solar share 47.7%; the 4,123 hours above 350 have gas share 74.7%
+and solar share 0.3%. All computed values respect configured factor bounds.
+43,472 rows have partial included-fuel observations, primarily historical GEO
+missingness. The processed series is suitable as a documented observed-mix
+proxy, not a claim of complete whole-grid consumption intensity.

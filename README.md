@@ -49,3 +49,32 @@ The full-history live check is explicitly opt-in and downloads into a temporary 
 ```powershell
 uv run pytest tests/ingest/test_live.py -m live --no-cov
 ```
+
+## Build the carbon dataset
+
+After ingestion, run `uv run carbon-scheduler build-dataset --region CISO`.
+This offline command writes `data/processed/CISO/hourly.parquet` and
+`carbon-quality-report.json` without requiring an API key. Use `--factors-path`
+to select another validated factors file; relative paths resolve from the project root.
+Equal reruns preserve both files' bytes and modification times.
+
+Intensity is a lifecycle proxy for observed positive generation with configured
+factors. Storage, unknown fuels and heterogeneous OTH are excluded; imports are
+not attributed. Missing fuel observations remain missing. The output includes
+covered/excluded generation, observed coverage, missing included fuel-cell counts
+and negative generation counts. Observed coverage does not measure unobserved
+generation. The report records factors, citations, absent fuel codes and input digests.
+See [ADR 0001](docs/adr/0001-generation-based-intensity.md).
+
+The [executed EDA notebook](notebooks/01_eda.ipynb) includes local-calendar profiles,
+missingness and distributions. Regenerate it from the project root with:
+
+```powershell
+uv sync --group eda
+uv run --group eda python scripts/build_eda_notebook.py
+```
+
+The 50,646-hour snapshot has mean intensity 237.16 gCO2e/kWh and 47 missing
+intensity hours. Its 29.37–449.03 range reflects changing observed fuel mixes.
+43,472 hours have partial included-fuel observations, largely because GEO appears
+late; these values must not be described as complete whole-grid carbon intensity.

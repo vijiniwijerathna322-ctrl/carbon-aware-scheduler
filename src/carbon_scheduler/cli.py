@@ -2,10 +2,13 @@
 
 import json
 from dataclasses import asdict
+from pathlib import Path
+from typing import Annotated
 
 import typer
 
 from carbon_scheduler import __version__
+from carbon_scheduler.carbon.dataset import build_dataset as build_processed_dataset
 from carbon_scheduler.config import MissingApiKeyError, get_settings
 from carbon_scheduler.ingest.eia_client import EiaAuthError, EiaRequestError
 from carbon_scheduler.ingest.pipeline import G2_MAX_GAP_FRACTION, run_ingest
@@ -26,6 +29,21 @@ def main() -> None:
 def version() -> None:
     """Print the installed package version."""
     typer.echo(__version__)
+
+
+@app.command()
+def build_dataset(
+    region: str = typer.Option("CISO"),
+    factors_path: Annotated[Path, typer.Option()] = Path("config/emission_factors.yaml"),
+) -> None:
+    """Build processed intensity and coverage diagnostics from interim data."""
+    try:
+        path = build_processed_dataset(region, get_settings(), factors_path)
+    except (OSError, ValueError) as error:
+        typer.echo(f"Build dataset failed: {error}", err=True)
+        raise typer.Exit(code=1) from None
+    typer.echo(f"Processed dataset: {path}")
+    typer.echo(f"Carbon quality report: {path.with_name('carbon-quality-report.json')}")
 
 
 @app.command()
