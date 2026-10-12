@@ -1,0 +1,25 @@
+# Units: g CO2e/kWh; lifecycle technology proxies, not operational emissions.
+source: >-
+  IPCC AR5 WGIII (2014), Annex III, Table A.III.2, p. 1335, lifecycle medians
+  https://www.ipcc.ch/site/assets/uploads/2018/02/ipcc_wg3_ar5_annex-iii.pdf
+  for col, ng, nuc, sun, wnd, wat and geo; oil separately uses UK Parliament
+  POSTnote 268 (2006), p. 2, historical UK oil average proxy (not an IPCC median)
+  https://www.parliament.uk/documents/post/postpn268.pdf
+factors:
+  col: 820 # IPCC coal pulverised combustion median.
+  ng: 490 # IPCC gas combined cycle median.
+  nuc: 12 # IPCC nuclear median.
+  sun: 48 # IPCC utility-scale solar PV median.
+  wnd: 11 # IPCC onshore wind median.
+  wat: 24 # IPCC hydropower median.
+  geo: 38 # IPCC geothermal median.
+  oil: 650 # POSTnote 268 historical UK oil average proxy.
+excluded:
+  - bat # Battery storage: charging mix and losses require separate accounting.
+  - ps # Pumped storage: charging mix and losses require separate accounting.
+  - snb # Solar integrated with battery storage: unresolved combined accounting.
+  - wnb # Wind integrated with battery storage: unresolved combined accounting.
+  - oes # Other energy storage: technology/charging mix unresolved.
+  - ues # Unknown energy storage alias: unresolved storage classification.
+  - unk # Unknown fuel: no defensible technology factor.
+  - oth # EIA other: heterogeneous/confidential fuels; cannot assume biomass.
