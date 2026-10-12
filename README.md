@@ -131,3 +131,29 @@ bucket is 69.68%, below its 70% target. Both CQR medians still beat the weekly
 baseline in every bucket. The original results are retained without test-period
 tuning; [ADR 0013](docs/adr/0013-carbon-coverage-gate-miss.md) documents the miss.
 Carbon intervals must not be advertised as validated nominal 80% bounds.
+
+## Scheduling replay
+
+After producing the raw CQR carbon backtest, run:
+
+```powershell
+uv run carbon-scheduler schedule-backtest --region CISO
+```
+
+The command writes both strategies' summaries and per-job results to
+`reports/schedule_backtest_CISO.md` and `.parquet`. `--reports-dir` selects the
+directory containing the CQR prediction file and provenance sidecar. See the
+[recorded replay results](docs/results/schedule-backtest.md) for measured savings,
+oracle comparisons and excluded scenarios.
+
+The six-month replay scored 2,726 scenarios per strategy: mean realized savings
+were 29.37% for median and 27.35% for upper, versus the 33.17% hindsight oracle.
+G5 passed; 19 scenarios with incomplete actual windows were excluded. These are
+equally weighted scenario percentages, not an estimate for a real fleet.
+
+The optimizer supports contiguous and interruptible jobs, UTC whole-hour starts,
+deadline constraints, and median/upper objectives. Replay uses illustrative 7 kW
+EV scenarios arriving at daily local midnight, with the issue-hour observation
+available under zero observation latency. Upper endpoints are an uncertainty
+heuristic, not a validated job-level confidence bound. See
+[ADR 0014](docs/adr/0014-scheduling-and-replay.md).

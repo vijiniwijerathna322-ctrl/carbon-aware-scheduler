@@ -15,10 +15,25 @@ from carbon_scheduler.ingest.pipeline import G2_MAX_GAP_FRACTION, run_ingest
 from carbon_scheduler.logging import configure_logging
 from carbon_scheduler.models.reporting import run_backtest
 from carbon_scheduler.models.training import train_region
+from carbon_scheduler.scheduler.reporting import run_schedule_backtest
 
 app = typer.Typer(
     help="Carbon-aware energy scheduler.", no_args_is_help=True, pretty_exceptions_enable=False
 )
+
+
+@app.command()
+def schedule_backtest(
+    region: str = typer.Option("CISO"),
+    reports_dir: Annotated[Path, typer.Option()] = Path("reports"),
+) -> None:
+    """Replay both scheduling strategies using saved CQR carbon forecasts."""
+    try:
+        path = run_schedule_backtest(region, get_settings(), reports_dir)
+    except (OSError, ValueError, KeyError) as error:
+        typer.echo(f"Schedule backtest failed: {error}", err=True)
+        raise typer.Exit(code=1) from None
+    typer.echo(f"Scheduling report: {path}")
 
 
 @app.command()
