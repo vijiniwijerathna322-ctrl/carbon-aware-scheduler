@@ -80,6 +80,24 @@ def test_missing_point_is_not_renormalized(tmp_path):
     assert frame.attrs["missing_cells"] == 1
 
 
+def test_explicit_forecast_range_covers_next_48_target_hours(tmp_path):
+    calls = []
+
+    def handler(request):
+        calls.append(request)
+        return httpx.Response(200, json=payload())
+
+    issue = pd.Timestamp("2020-12-31T23:00Z")
+    with httpx.Client(transport=httpx.MockTransport(handler)) as http:
+        frame = WeatherClient(tmp_path, http).fetch_forecast(
+            [WeatherPoint(1, 1, 1)], issue_time=issue
+        )
+    assert frame.index.equals(pd.date_range(issue + pd.Timedelta(hours=1), periods=48, freq="h"))
+    assert calls[0].url.params["start_hour"] == "2021-01-01T00:00"
+    assert calls[0].url.params["end_hour"] == "2021-01-02T23:00"
+    assert "forecast_days" not in calls[0].url.params
+
+
 @pytest.mark.parametrize("fault", ["units", "timezone", "duplicate", "infinity"])
 def test_invalid_provider_contract_is_rejected(tmp_path, fault):
     data = payload()

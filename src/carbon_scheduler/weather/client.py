@@ -13,7 +13,7 @@ from typing import Any, Literal, cast
 import httpx
 import pandas as pd
 
-from carbon_scheduler.models.base import validate_series
+from carbon_scheduler.models.base import utc_hour, validate_series
 from carbon_scheduler.regions import WeatherPoint
 
 VARIABLES = ("temperature_2m", "cloud_cover", "shortwave_radiation", "wind_speed_100m")
@@ -164,7 +164,29 @@ class WeatherClient:
         )
         return result
 
-    def fetch_forecast(self, points: Sequence[WeatherPoint], hours: int = 48) -> pd.DataFrame:
+    def fetch_forecast(
+        self,
+        points: Sequence[WeatherPoint],
+        hours: int = 48,
+        *,
+        issue_time: pd.Timestamp | None = None,
+    ) -> pd.DataFrame:
         if isinstance(hours, bool) or not 1 <= hours <= 72:  # noqa: PLR2004
             raise ValueError("Forecast hours must be in 1..72")
-        return self._weighted(points, "forecast", {"forecast_hours": hours})
+        if issue_time is None:
+            return self._weighted(points, "forecast", {"forecast_hours": hours})
+        issue = utc_hour(issue_time)
+        index = pd.date_range(issue + pd.Timedelta(hours=1), periods=hours, freq="h")
+        frame = self._weighted(
+            points,
+            "forecast",
+            {
+                "start_hour": index[0].strftime("%Y-%m-%dT%H:%M"),
+                "end_hour": index[-1].strftime("%Y-%m-%dT%H:%M"),
+            },
+        )
+        result = frame.reindex(index)
+        result.attrs.update(
+            cast(dict[str, Any], frame.attrs), missing_cells=int(result.isna().sum().sum())
+        )
+        return result

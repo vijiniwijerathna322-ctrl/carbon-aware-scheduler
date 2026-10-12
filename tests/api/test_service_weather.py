@@ -70,7 +70,7 @@ def test_demo_mode_uses_baked_weather_snapshot(weather_settings, monkeypatch):
 def test_forecast_uses_weather_when_model_requires_it(weather_settings, monkeypatch):
     settings, version, weather = weather_settings
     settings = settings.model_copy(update={"demo_mode": False, "max_data_age_hours": 999999})
-    monkeypatch.setattr(WeatherClient, "fetch_forecast", lambda *args: weather)
+    monkeypatch.setattr(WeatherClient, "fetch_forecast", lambda *args, **kwargs: weather)
     _, meta = ForecastService(settings).forecast("demand_mwh")
     assert meta.model_version == version
 
@@ -94,7 +94,7 @@ def test_weather_unavailable_falls_back_and_adds_note(weather_settings, monkeypa
     settings, version, weather = weather_settings
     settings = settings.model_copy(update={"demo_mode": False, "max_data_age_hours": 999999})
 
-    def fetch(*args):
+    def fetch(*args, **kwargs):
         if failure == "network":
             raise WeatherUnavailable("Synthetic provider failure")
         if failure == "future":

@@ -37,16 +37,21 @@ No such production variant is approved by this plan.
 
 Serving requires all 48 weather target hours and a timezone-aware `received_at`
 no later than the reported issue time. A newly fetched response after that time
-therefore falls back rather than silently adding future information. Live API
-`forecast_hours=48` starts at the provider's current hour; if that range does not
-cover the energy target hours, it also falls back. A future operational design
-must reconcile weather issuance with the energy issue convention.
+therefore falls back rather than silently adding future information. Live serving
+requests explicit `start_hour`/`end_hour` covering energy issue+1 through issue+48;
+plain `forecast_hours=48` would start at the provider's current hour. A matching
+forecast cache must have been prepared by the issue time (for example through
+pre-issue prefetch). A future operational design must supply that acquisition
+workflow and reconcile weather issuance with the energy issue convention.
 
 Demo variants, when explicitly supplied, read
 `data/weather/<region>_forecast.parquet` and never request the network. The shipped
 demo has no weather variant or weather snapshot because the production decision
 is to retain the existing baseline. Forecast and schedule responses expose
 fallback notes; `/v1/models/current` identifies the model actually serving.
+
+A live explicit-range probe on 2026-10-12 returned 48 hours with all four
+variables finite; the corresponding request-window contract has a fixture test.
 
 ## Consequences
 

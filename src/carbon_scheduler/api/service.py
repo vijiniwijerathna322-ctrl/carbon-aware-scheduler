@@ -126,7 +126,9 @@ class ForecastService:
             else:
                 client = WeatherClient(self.settings.data_dir / "weather" / "cache")
                 try:
-                    weather = client.fetch_forecast(load_regions()[self.region].weather_points)
+                    weather = client.fetch_forecast(
+                        load_regions()[self.region].weather_points, issue_time=meta.issue_time
+                    )
                 finally:
                     client.close()
             available = pd.Timestamp(weather.attrs["received_at"])
