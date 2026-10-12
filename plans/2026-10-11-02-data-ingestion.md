@@ -41,10 +41,10 @@
 **Interfaces:** Produces verified constants used below: `REGION_DATA_ROUTE = "electricity/rto/region-data"`, `FUEL_TYPE_ROUTE = "electricity/rto/fuel-type-data"`, set of `fueltype` codes, set of `type` codes (`D`, `DF`, `NG`, `TI` expected), exact `period` format.
 
 - [x] **Step 1: Get a free key** at the EIA registration page; put it in `.env` (not committed).
-- [ ] **Step 2: Write `scripts/probe_eia.py`:** GET `https://api.eia.gov/v2/electricity/rto/region-data/` (route metadata: facets, frequencies, data columns) and `…/fuel-type-data/`; then GET each `/data/` with `frequency=hourly&data[0]=value&facets[respondent][]=CISO&start=2024-01-01T00&end=2024-01-02T00&length=5000&sort[0][column]=period&sort[0][direction]=asc`. Save raw JSON (with the `api_key` stripped from any echoed URL) into the four fixture files.
+- [x] **Step 2: Write `scripts/probe_eia.py`:** GET `https://api.eia.gov/v2/electricity/rto/region-data/` (route metadata: facets, frequencies, data columns) and `…/fuel-type-data/`; then GET each `/data/` with `frequency=hourly&data[0]=value&facets[respondent][]=CISO&start=2024-01-01T00&end=2024-01-02T00&length=5000&sort[0][column]=period&sort[0][direction]=asc`. Save raw JSON (with the `api_key` stripped from any echoed URL) into the four fixture files.
 - [x] **Step 3: Run it:** `uv run python scripts/probe_eia.py` → Verified: four route/page files plus two facet-code files written, all HTTP 200. Full 5000 limit records every category at both inclusive boundaries.
 - [x] **Step 4: Inspect and record** in the spec §3: actual `period` format, facet names, `type` and `fueltype` codes, whether `value` is a string, whether `start`/`end` are inclusive, and `response.total`. If anything contradicts the plan's interfaces below, fix this plan first (gate G1).
-- [ ] **Step 5: Commit** `docs: verify EIA API shape and record fixtures`
+- [x] **Step 5: Commit** `docs: verify EIA API shape and record fixtures` (commit `15384ce`).
 
 ### Task 2: `EiaClient` with pagination, retry and throttle
 
@@ -55,18 +55,18 @@
 **Interfaces:**
 - Produces:
   - `class EiaAuthError(RuntimeError)`, `class EiaRequestError(RuntimeError)`
-  - `class EiaClient: def __init__(self, api_key: str, *, base_url: str = "https://api.eia.gov/v2", http: httpx.Client | None = None, page_length: int = 5000, min_interval_s: float = 0.25, max_retries: int = 5) -> None`
+  - `class EiaClient: def __init__(self, api_key: str, *, base_url: str = "https://api.eia.gov/v2", http: httpx.Client | None = None, page_length: int = 5000, min_interval_s: float = 0.25, max_retries: int = 5, sleep: Callable[[float], None] = time.sleep) -> None`
   - `def fetch_route(self, route: str, *, facets: Mapping[str, Sequence[str]], start: str, end: str, data: Sequence[str] = ("value",), frequency: str = "hourly") -> list[dict[str, Any]]` — all rows across pages
 
-- [ ] **Step 1: Failing tests (respx)** — names and assertions:
+- [x] **Step 1: Failing tests (respx)** — names and assertions:
   - `test_paginates_until_total`: `total=12000`, pages of 5000/5000/2000 → `len(rows) == 12000`, three requests with `offset` 0/5000/10000
   - `test_retries_on_429_then_succeeds`: first response 429, second 200 → rows returned, 2 requests
   - `test_gives_up_after_max_retries`: persistent 503 with `max_retries=2` → `EiaRequestError`, 3 requests
   - `test_invalid_key_raises_auth_error_without_retry`: 403 → `EiaAuthError`, exactly 1 request
   - `test_api_key_never_logged`: caplog contains no key text
-- [ ] **Step 2: Run:** `uv run pytest tests/ingest/test_eia_client.py -v` → FAIL
-- [ ] **Step 3: Implement** with `tenacity` (`retry_if_exception_type(_Retryable)`, exponential backoff with jitter, `sleep` injectable so tests don't wait) and a simple monotonic-clock throttle ensuring `min_interval_s` between requests (set to 0 in tests).
-- [ ] **Step 4: Run** → PASS
+- [x] **Step 2: Run:** `uv run pytest tests/ingest/test_eia_client.py -v` → FAIL
+- [x] **Step 3: Implement** with `tenacity` (`retry_if_exception_type(_Retryable)`, exponential backoff with jitter, `sleep` injectable so tests don't wait) and a simple monotonic-clock throttle ensuring `min_interval_s` between requests (set to 0 in tests).
+- [x] **Step 4: Run** → PASS
 - [ ] **Step 5: Commit** `feat(ingest): EIA client with pagination, retry and throttle`
 
 ### Task 3: Route fetchers
