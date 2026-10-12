@@ -4,7 +4,7 @@ version = "0.1.0"
 description = "Carbon-aware energy scheduling with calibrated forecasts"
 readme = "README.md"
 requires-python = ">=3.11,<3.13"
-dependencies = ["pydantic>=2", "pydantic-settings>=2", "typer", "pandas", "numpy", "pyarrow", "httpx", "tenacity", "pyyaml"]
+dependencies = ["pydantic>=2", "pydantic-settings>=2", "typer", "pandas", "numpy", "pyarrow", "httpx", "tenacity", "pyyaml", "lightgbm", "scikit-learn"]
 
 [project.scripts]
 carbon-scheduler = "carbon_scheduler.cli:app"
