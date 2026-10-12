@@ -32,3 +32,7 @@ Next verification step: publish branch `plan/07-api-and-docker` to `vijiniwijera
 ## Verified GitHub CI
 
 The user authorized the upload and branch `plan/07-api-and-docker` was pushed. [CI run 38251457125](https://github.com/vijiniwijerathna322-ctrl/carbon-aware-scheduler/actions/runs/38251457125) passed both Linux quality checks and the offline/non-root/read-only Docker smoke at commit `f23659b`. Image size: 587,311,058 bytes (587.31 MB), below the 600 MB target. Initial failures exposed platform-specific NumPy resolution and factor-file newline conversion; NumPy is now pinned to 2.4.6 and factor bytes are preserved. Local Docker is still unavailable, but the actual image was verified on the clean CI runner. Earlier permission/pending notes above describe the previous state. Main merge and release tag remain pending.
+
+## MVP release
+
+Final branch commit 30359fb passed [CI run 38251774540](https://github.com/vijiniwijerathna322-ctrl/carbon-aware-scheduler/actions/runs/38251774540), including the clean Linux Docker build and read-only/non-root forecast/schedule smoke. This remote Docker host supplies container verification while the Windows development machine lacks a runtime. The completed MVP is merged to local main and tagged locally as v0.1.0; remote main/tag publication requires explicit user approval after automatic review rejected the default-branch push; historical pending notes above are superseded. Carbon G4 remains an explicitly documented miss.
