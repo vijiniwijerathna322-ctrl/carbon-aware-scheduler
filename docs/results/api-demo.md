@@ -26,3 +26,5 @@ release tag has been created.
 Local quality gate: 255 tests passed (1 live test excluded), 93.37% coverage; Ruff, formatting, mypy and offline lock consistency passed. The TestClient dependency emits a deprecation warning for its supported httpx compatibility path; tests remain passing.
 
 - Windows demo staging now inherits workspace permissions, and Git preserves exact demo bytes across platforms for manifest verification.
+
+Next verification step: publish branch `plan/07-api-and-docker` to `vijiniwijerathna322-ctrl/carbon-aware-scheduler` and inspect both CI jobs. Automatic approval review rejected the attempted push for missing explicit destination/payload authorization; the repository was not uploaded. The branch includes earlier unpushed project commits plus approximately 4.9 MB of demo observations and model artifacts. Current `.env` and full ignored data/models directories are not tracked. Docker verification remains pending.

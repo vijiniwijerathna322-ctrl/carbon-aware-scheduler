@@ -123,12 +123,12 @@
 - Create: `Dockerfile`, `.dockerignore`, `scripts/smoke_docker.sh`
 - Modify: `.github/workflows/ci.yml` (add docker build + smoke job), `Makefile` (`docker-build`, `docker-run`)
 
-- [ ] **Step 1: Write `scripts/smoke_docker.sh`:** build image, run detached with `--read-only --tmpfs /tmp -p 8000:8000`, poll `/healthz` up to 30 s, `curl` `/v1/forecast?horizon=6` and a `POST /v1/schedule`, assert HTTP 200 and JSON keys `points` / `recommendation`, stop container; exit non-zero on any failure.
-- [ ] **Step 2: Run it before writing the Dockerfile** — `bash scripts/smoke_docker.sh` → Expected: FAIL (no image)
-- [ ] **Step 3: Write the Dockerfile:** stage 1 `python:3.11-slim` + uv, `uv sync --frozen --no-dev` into `/app/.venv`; stage 2 copies venv, `src/`, `config/`, `demo/`; `useradd` non-root; env vars per Global Constraints; `HEALTHCHECK` using Python `urllib` (no curl dependency); `CMD ["uvicorn","carbon_scheduler.api.main:app","--host","0.0.0.0","--port","8000"]` (module-level `app = create_app()`).
+- [x] **Step 1: Write `scripts/smoke_docker.sh`:** build image, run detached with `--read-only --tmpfs /tmp -p 8000:8000`, poll `/healthz` up to 30 s, `curl` `/v1/forecast?horizon=6` and a `POST /v1/schedule`, assert HTTP 200 and JSON keys `points` / `recommendation`, stop container; exit non-zero on any failure.
+- [x] **Step 2: Run it before writing the Dockerfile** — `bash scripts/smoke_docker.sh` → Expected: FAIL (no image)
+- [x] **Step 3: Write the Dockerfile:** stage 1 `python:3.11-slim` + uv, `uv sync --frozen --no-dev` into `/app/.venv`; stage 2 copies venv, `src/`, `config/`, `demo/`; `useradd` non-root; env vars per Global Constraints; `HEALTHCHECK` using Python `urllib` (no curl dependency); `CMD ["uvicorn","carbon_scheduler.api.main:app","--host","0.0.0.0","--port","8000"]` (module-level `app = create_app()`).
 - [ ] **Step 4: Run** `bash scripts/smoke_docker.sh` → Expected: PASS; also `docker image ls` to note the image size (target < 600 MB)
 - [ ] **Step 5: Add the CI job** and push; confirm green.
-- [ ] **Step 6: Commit** `build: dockerfile, smoke test and CI job`
+- [x] **Step 6: Commit** `build: dockerfile, smoke test and CI job`
 
 ### Task 6: API documentation in the OpenAPI schema and README quickstart
 
@@ -160,3 +160,5 @@
 - Final local gate: 255 tests passed, 93.37% coverage; Ruff, formatting, mypy and lock consistency passed.
 
 - Windows demo staging now inherits workspace permissions, and Git preserves exact demo bytes across platforms for manifest verification.
+
+- Continuation: Docker is still unavailable locally. A push of plan/07-api-and-docker to the configured GitHub repository was rejected by automatic approval review because explicit authorization for uploading the repository source/history and demo data/model artifacts to that destination is missing. No remote push occurred. Branch publication requires user approval before CI can run.
