@@ -53,6 +53,14 @@ fallback notes; `/v1/models/current` identifies the model actually serving.
 A live explicit-range probe on 2026-10-12 returned 48 hours with all four
 variables finite; the corresponding request-window contract has a fixture test.
 
+On 8,756 paired demand points, weather MAE fell from 1253.69 to 1085.81 MWh,
+but coverage fell from 77.35% to 76.34%, below the overall G4 lower bound.
+This also rejects demand promotion on the measured interval-quality criterion.
+On 8,710 paired intensity points, weather MAE rose from 33.41 to 37.63
+gCO2e/kWh (+12.64%) and coverage fell from 71.57% to 70.45%. Thus this
+weather configuration also worsened carbon accuracy and interval coverage.
+The [full ablation](../results/ablation-weather.md) publishes every horizon bucket.
+
 ## Consequences
 
 Optional weather outages do not make the baseline unhealthy. Synthetic tests

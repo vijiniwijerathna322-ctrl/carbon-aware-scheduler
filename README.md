@@ -231,3 +231,31 @@ EV scenarios arriving at daily local midnight, with the issue-hour observation
 available under zero observation latency. Upper endpoints are an uncertainty
 heuristic, not a validated job-level confidence bound. See
 [ADR 0014](docs/adr/0014-scheduling-and-replay.md).
+
+## Weather extension
+
+Weather data: [Open-Meteo](https://open-meteo.com/), CC BY 4.0; its public API is
+for non-commercial use. Plan 08 uses cached UTC temperature, cloud cover,
+shortwave radiation and 100 m wind at three illustrative CISO locations.
+The [weather ablation](docs/results/ablation-weather.md) uses realized archive
+weather and is explicitly exploratory: it cannot prove improvement with live
+forecasts. Production and the shipped demo retain weather-free models.
+Optional approved variants fall back to the baseline with response `notes` when
+weather is unavailable, incomplete or newer than the reported issue time.
+See [ADR 0016](docs/adr/0016-weather-provenance-and-fallback.md) for the deployment
+contract and remaining vintage-data requirement.
+
+After producing the raw-target CQR backtest reports, reproduce the experiment:
+
+```bash
+uv run python scripts/probe_open_meteo.py
+uv run python scripts/ablation_weather.py --reuse-baseline
+```
+
+The second command verifies the saved baseline cohort and fits weather variants
+with the same 400-tree, seed-42 configuration. It downloads annual cached weather
+ranges, then performs seven chronological refits per target; this is a substantial
+local computation. Reports remain under `reports/`, and the published comparison
+is written to `docs/results/ablation-weather.md`.
+Once both prediction files exist, add `--reuse-weather` to regenerate the report
+without repeating the weather fits; weather and baseline provenance are checked.
