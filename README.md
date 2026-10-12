@@ -1,5 +1,7 @@
 # Carbon-Aware Energy Scheduler
 
+CI badge: pending GitHub remote and first verified workflow run.
+
 Forecast grid demand and carbon intensity, then schedule flexible jobs with honest uncertainty.
 Implementation follows the [master plan](plans/2026-10-11-00-master-plan.md).
 
