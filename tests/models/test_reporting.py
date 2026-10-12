@@ -122,3 +122,27 @@ def test_cli_invalid_model_fails_before_writing(tmp_path, monkeypatch):
         assert not (tmp_path / "reports").exists()
     finally:
         get_settings.cache_clear()
+
+
+def test_cqr_report_flags_missed_coverage_and_has_all_diagnostics():
+    frame = pd.DataFrame(
+        {
+            "target_time": pd.to_datetime(
+                ["2024-01-01T00Z", "2024-01-01T01Z", "2024-01-01T02Z"], utc=True
+            ),
+            "horizon": [1, 7, 25],
+            "y": [10.0, 10.0, 10.0],
+            "median": [1.0, 1.0, 1.0],
+            "lower": [0.0, 0.0, 0.0],
+            "upper": [2.0, 2.0, 2.0],
+        }
+    )
+    summary = summarize(frame)
+    summary.attrs["timezone"] = "UTC"
+    report = render_backtest_report(
+        {"cqr": summary}, "CISO", "demand_mwh", predictions_by_model={"cqr": frame}
+    )
+    assert "G4: FAIL" in report
+    assert "Coverage by hour_local" in report
+    assert "Coverage by month_local" in report
+    assert "separate earlier calibration" in report
