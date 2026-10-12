@@ -2,3 +2,7 @@ CISO:
   timezone: America/Los_Angeles
   lat: 36.7
   lon: -119.4
+  weather_points:
+    - {lat: 34.05, lon: -118.24, weight: 0.5}
+    - {lat: 37.77, lon: -122.42, weight: 0.3}
+    - {lat: 36.74, lon: -119.78, weight: 0.2}

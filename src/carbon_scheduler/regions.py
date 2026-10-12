@@ -1,5 +1,6 @@
 """Validated region metadata, resolved independently of the working directory."""
 
+import math
 import re
 from dataclasses import dataclass
 from pathlib import Path
@@ -15,11 +16,27 @@ class UnknownRegionError(ValueError):
 
 
 @dataclass(frozen=True)
+class WeatherPoint:
+    lat: float
+    lon: float
+    weight: float
+
+    def __post_init__(self) -> None:
+        if not all(math.isfinite(value) for value in (self.lat, self.lon, self.weight)):
+            raise ValueError("Weather coordinates and weights must be finite")
+        if not -90 <= self.lat <= 90 or not -180 <= self.lon <= 180:  # noqa: PLR2004
+            raise ValueError("Weather coordinates are out of range")
+        if self.weight <= 0:
+            raise ValueError("Weather weights must be positive")
+
+
+@dataclass(frozen=True)
 class Region:
     code: str
     timezone: str
     lat: float
     lon: float
+    weather_points: tuple[WeatherPoint, ...] = ()
 
     def __post_init__(self) -> None:
         if re.fullmatch(r"[A-Z][A-Z0-9_-]*", self.code) is None:
@@ -41,4 +58,11 @@ def load_regions(path: Path = Path("config/regions.yaml")) -> dict[str, Region]:
         values = yaml.safe_load(stream)
     if not isinstance(values, dict) or not values:
         raise ValueError("Region configuration must be a nonempty mapping")
-    return Regions({code: Region(code=code, **metadata) for code, metadata in values.items()})
+    regions = Regions()
+    for code, raw_metadata in values.items():
+        metadata = dict(raw_metadata)
+        points = metadata.pop("weather_points", [])
+        regions[code] = Region(
+            code=code, weather_points=tuple(WeatherPoint(**p) for p in points), **metadata
+        )
+    return regions
