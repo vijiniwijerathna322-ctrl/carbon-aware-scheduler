@@ -63,7 +63,7 @@ Recorded RED before implementation, then 20 factor tests passed; full local gate
 - Consumes: `EmissionFactors`, the hourly frame (columns `gen_<fuel>_mwh`)
 - Produces: `def compute_intensity(df: pd.DataFrame, factors: EmissionFactors) -> pd.Series` — name `carbon_intensity_g_per_kwh`, same index as `df`
 
-- [ ] **Step 1: Failing tests:**
+- [x] **Step 1: Tests recovered and reviewed:**
   - `test_pure_coal_equals_coal_factor` (only `gen_col_mwh` > 0 → 820)
   - `test_half_coal_half_solar_is_mean` → (820+48)/2 = 434
   - `test_storage_and_unknown_excluded`
@@ -71,10 +71,10 @@ Recorded RED before implementation, then 20 factor tests passed; full local gate
   - `test_negative_generation_clipped_to_zero_for_weighting`
   - `test_bounded_by_min_and_max_factor` (random mixes, assert bounds)
   - `test_changing_factor_changes_output`
-- [ ] **Step 2: Run** → FAIL
-- [ ] **Step 3: Implement** vectorised: clip observed included fuels at 0, weights = gen / row sum (`min_count=1`), intensity = Σ weights × EF; call `check_coverage` on all frame fuel columns first. Reject infinite/non-numeric generation; preserve input and index. Partial missing mixes use observed values, not inferred zero; all-missing/zero/no-included mixes return float NaN.
-- [ ] **Step 4: Run** → PASS
-- [ ] **Step 5: Commit** `feat(carbon): generation-weighted carbon intensity`
+- [x] **Step 2: Recovery run** → 24 focused tests PASS. Implementation and tests were inherited as untracked files; the original RED run cannot be independently confirmed.
+- [x] **Step 3: Implement** vectorised: clip observed included fuels at 0, weights = gen / row sum (`min_count=1`), intensity = Σ weights × EF; call `check_coverage` on all frame fuel columns first. Reject infinite/non-numeric generation; preserve input and index. Partial missing mixes use observed values, not inferred zero; all-missing/zero/no-included mixes return float NaN.
+- [x] **Step 4: Run** → PASS
+- [x] **Step 5: Commit** `feat(carbon): generation-weighted carbon intensity`
 
 ### Task 3: `build-dataset` command and EDA
 
