@@ -20,7 +20,16 @@ def create_app(service_factory: Callable[[], ForecastService] | None = None) -> 
             app.state.service = None
         yield
 
-    app = FastAPI(title="Carbon-aware scheduler", version="0.1.0", lifespan=lifespan)
+    app = FastAPI(
+        title="Carbon-aware scheduler",
+        version="0.1.0",
+        lifespan=lifespan,
+        description=(
+            "Optional weather data: [Open-Meteo](https://open-meteo.com/), CC BY 4.0. "
+            "The public weather API is for non-commercial use. Current production "
+            "models remain weather-free; archive-weather ablation is exploratory."
+        ),
+    )
 
     @app.exception_handler(ServiceUnavailableError)
     async def unavailable(request: Request, error: ServiceUnavailableError) -> JSONResponse:

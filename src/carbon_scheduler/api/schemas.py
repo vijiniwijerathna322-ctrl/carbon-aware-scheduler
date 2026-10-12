@@ -21,6 +21,7 @@ class ForecastResponse(BaseModel):
     model_version: str
     alpha: float
     points: list[ForecastPoint]
+    notes: list[str] = Field(default_factory=list)
 
 
 class ScheduleRequest(BaseModel):

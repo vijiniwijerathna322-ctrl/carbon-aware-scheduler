@@ -14,6 +14,37 @@ from carbon_scheduler.models.registry import load_model, read_metadata
 from carbon_scheduler.models.reporting import TARGETS
 
 
+def _copy_weather_assets(region: str, settings: Settings, stage: Path) -> dict[str, str]:
+    versions = {}
+    for target in TARGETS:
+        source = settings.models_dir / region / target
+        pointer = source / "weather.json"
+        if not pointer.is_file():
+            continue
+        choice = json.loads(pointer.read_text(encoding="utf-8"))
+        if not isinstance(choice, dict) or choice.get("approved") is not True:
+            raise ValueError("Demo weather variant must be explicitly approved")
+        metadata = read_metadata(region, target, settings.models_dir, choice["version"])
+        load_model(region, target, settings.models_dir, choice["version"])
+        if metadata.get("exog_source") != "issue_vintage_forecast":
+            raise ValueError("Demo weather variant requires issue-vintage provenance")
+        version = metadata["version"]
+        destination = stage / "models" / region / target / version
+        destination.mkdir()
+        for filename in ("model.joblib", "metadata.json"):
+            shutil.copyfile(source / version / filename, destination / filename)
+        shutil.copyfile(pointer, destination.parent / "weather.json")
+        versions[target] = version
+    if versions:
+        destination = stage / "data" / "weather"
+        destination.mkdir()
+        shutil.copyfile(
+            settings.data_dir / "weather" / f"{region}_forecast.parquet",
+            destination / f"{region}_forecast.parquet",
+        )
+    return versions
+
+
 @contextmanager
 def _staging_directory(parent: Path) -> Iterator[Path]:
     # A normal mkdir inherits the workspace ACL on Windows. TemporaryDirectory's
@@ -27,7 +58,7 @@ def _staging_directory(parent: Path) -> Iterator[Path]:
             shutil.rmtree(directory)
 
 
-def make_demo_assets(
+def make_demo_assets(  # noqa: PLR0912
     region: str, settings: Settings, out_dir: Path, history_days: int = 400
 ) -> None:
     if history_days < 8:  # noqa: PLR2004
@@ -67,6 +98,7 @@ def make_demo_assets(
             (destination.parent / "current.json").write_text(
                 json.dumps({"version": version}) + "\n", encoding="utf-8"
             )
+        weather_versions = _copy_weather_assets(region, settings, stage)
         manifest = {
             "region": region,
             "data_source": "raw",
@@ -76,6 +108,7 @@ def make_demo_assets(
             "models": {
                 target: metadata["version"] for target, metadata in metadata_by_target.items()
             },
+            "weather_models": weather_versions,
             "sha256": {
                 str(path.relative_to(stage)).replace("\\", "/"): hashlib.sha256(
                     path.read_bytes()
@@ -107,4 +140,8 @@ def make_demo_assets(
         healthy, reason = service.is_healthy()
         if not healthy:
             raise ValueError(f"Copied demo cannot serve forecasts: {reason}")
+        for target, version in weather_versions.items():
+            _, meta = service.forecast(target)
+            if meta.model_version != version:
+                raise ValueError("Copied demo weather variant fell back; snapshot is not valid")
         stage.rename(output)

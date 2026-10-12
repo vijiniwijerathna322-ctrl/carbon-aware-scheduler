@@ -54,6 +54,7 @@ def forecast(
         data_as_of=meta.data_as_of.to_pydatetime(),
         model_version=meta.model_version,
         alpha=meta.alpha,
+        notes=list(meta.notes),
         points=[ForecastPoint.model_validate(row) for row in frame.to_dict("records")],
     )
 
@@ -75,6 +76,7 @@ def schedule(body: ScheduleRequest, service: Service) -> ScheduleResponse:
     notes = [
         "Carbon G4 missed nominal coverage; summed endpoints are not job-level confidence bounds."
     ]
+    notes.extend(meta.notes)
     earliest = first if body.earliest_start is None else pd.Timestamp(body.earliest_start)
     if earliest < first:
         earliest = first
