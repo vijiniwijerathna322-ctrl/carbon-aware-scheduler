@@ -9,7 +9,7 @@ dependencies = [
     "pydantic-settings>=2",
     "typer",
     "pandas",
-    "numpy",
+    "numpy==2.4.6",
     "pyarrow",
     "httpx",
     "tenacity",
