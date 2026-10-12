@@ -1,0 +1,95 @@
+"""Build an offline raw-target demo without copying keys or unrelated files."""
+
+import hashlib
+import json
+import shutil
+from pathlib import Path
+from tempfile import TemporaryDirectory
+
+from carbon_scheduler.config import Settings
+from carbon_scheduler.ingest.store import read_hourly, write_hourly
+from carbon_scheduler.models.registry import load_model, read_metadata
+from carbon_scheduler.models.reporting import TARGETS
+
+
+def make_demo_assets(
+    region: str, settings: Settings, out_dir: Path, history_days: int = 400
+) -> None:
+    if history_days < 8:  # noqa: PLR2004
+        raise ValueError("history_days must be at least 8 for weekly lag features")
+    output = out_dir.resolve()
+    if output.exists():
+        raise FileExistsError("Demo output already exists; choose a new output directory")
+    for source_root in (settings.data_dir.resolve(), settings.models_dir.resolve()):
+        if output.is_relative_to(source_root) or source_root.is_relative_to(output):
+            raise ValueError("Demo output must be separate from source data and model directories")
+    frame = read_hourly(region, "raw", settings.data_dir)
+    if frame.empty:
+        raise ValueError("No source observations for demo")
+    frame = frame.iloc[-history_days * 24 :].copy()
+    if len(frame) < 8 * 24:  # noqa: PLR2004
+        raise ValueError("Demo snapshot needs at least 8 days of hourly history")
+    metadata_by_target = {
+        target: read_metadata(region, target, settings.models_dir) for target in TARGETS
+    }
+    for target, metadata in metadata_by_target.items():
+        load_model(region, target, settings.models_dir, metadata["version"])
+        if metadata.get("data_source") != "raw":
+            raise ValueError("Demo requires raw-trained models")
+    output.parent.mkdir(parents=True, exist_ok=True)
+    # Stage only newly created files. The user's existing output is never deleted.
+    with TemporaryDirectory(dir=output.parent, prefix=".demo-stage-") as temporary:
+        stage = Path(temporary) / "assets"
+        stage.mkdir()
+        write_hourly(frame, region, "raw", stage / "data")
+        for target, metadata in metadata_by_target.items():
+            version = metadata["version"]
+            source = settings.models_dir / region / target / version
+            destination = stage / "models" / region / target / version
+            destination.mkdir(parents=True)
+            for filename in ("model.joblib", "metadata.json"):
+                shutil.copyfile(source / filename, destination / filename)
+            (destination.parent / "current.json").write_text(
+                json.dumps({"version": version}) + "\n", encoding="utf-8"
+            )
+        manifest = {
+            "region": region,
+            "data_source": "raw",
+            "history_days": history_days,
+            "data_start": frame.index[0].isoformat(),
+            "data_end": frame.index[-1].isoformat(),
+            "models": {
+                target: metadata["version"] for target, metadata in metadata_by_target.items()
+            },
+            "sha256": {
+                str(path.relative_to(stage)).replace("\\", "/"): hashlib.sha256(
+                    path.read_bytes()
+                ).hexdigest()
+                for path in stage.rglob("*")
+                if path.is_file()
+            },
+            "limitations": (
+                "Frozen latest-revision snapshot; zero observation latency; "
+                "carbon G4 missed nominal coverage."
+            ),
+        }
+        (stage / "manifest.json").write_text(
+            json.dumps(manifest, indent=2) + "\n", encoding="utf-8"
+        )
+        # Verify the copied artifacts and snapshot together before publishing.
+        from carbon_scheduler.api.service import ForecastService  # noqa: PLC0415
+
+        service = ForecastService(
+            settings.model_copy(
+                update={
+                    "data_dir": stage / "data",
+                    "models_dir": stage / "models",
+                    "demo_mode": True,
+                }
+            ),
+            region,
+        )
+        healthy, reason = service.is_healthy()
+        if not healthy:
+            raise ValueError(f"Copied demo cannot serve forecasts: {reason}")
+        stage.rename(output)

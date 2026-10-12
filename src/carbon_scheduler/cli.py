@@ -10,6 +10,7 @@ import typer
 from carbon_scheduler import __version__
 from carbon_scheduler.carbon.dataset import build_dataset as build_processed_dataset
 from carbon_scheduler.config import MissingApiKeyError, get_settings
+from carbon_scheduler.demo import make_demo_assets
 from carbon_scheduler.ingest.eia_client import EiaAuthError, EiaRequestError
 from carbon_scheduler.ingest.pipeline import G2_MAX_GAP_FRACTION, run_ingest
 from carbon_scheduler.logging import configure_logging
@@ -20,6 +21,21 @@ from carbon_scheduler.scheduler.reporting import run_schedule_backtest
 app = typer.Typer(
     help="Carbon-aware energy scheduler.", no_args_is_help=True, pretty_exceptions_enable=False
 )
+
+
+@app.command()
+def make_demo(
+    region: str = typer.Option("CISO"),
+    out_dir: Annotated[Path, typer.Option()] = Path("demo"),
+    history_days: int = typer.Option(400, min=8),
+) -> None:
+    """Copy current raw-model artifacts into a new offline demo directory."""
+    try:
+        make_demo_assets(region, get_settings(), out_dir, history_days)
+    except (OSError, ValueError, RuntimeError) as error:
+        typer.echo(f"Make demo failed: {error}", err=True)
+        raise typer.Exit(code=1) from None
+    typer.echo(f"Offline demo: {out_dir}")
 
 
 @app.command()
