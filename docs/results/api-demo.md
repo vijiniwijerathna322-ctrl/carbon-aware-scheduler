@@ -28,3 +28,7 @@ Local quality gate: 255 tests passed (1 live test excluded), 93.37% coverage; Ru
 - Windows demo staging now inherits workspace permissions, and Git preserves exact demo bytes across platforms for manifest verification.
 
 Next verification step: publish branch `plan/07-api-and-docker` to `vijiniwijerathna322-ctrl/carbon-aware-scheduler` and inspect both CI jobs. Automatic approval review rejected the attempted push for missing explicit destination/payload authorization; the repository was not uploaded. The branch includes earlier unpushed project commits plus approximately 4.9 MB of demo observations and model artifacts. Current `.env` and full ignored data/models directories are not tracked. Docker verification remains pending.
+
+## Verified GitHub CI
+
+The user authorized the upload and branch `plan/07-api-and-docker` was pushed. [CI run 38251457125](https://github.com/vijiniwijerathna322-ctrl/carbon-aware-scheduler/actions/runs/38251457125) passed both Linux quality checks and the offline/non-root/read-only Docker smoke at commit `f23659b`. Image size: 587,311,058 bytes (587.31 MB), below the 600 MB target. Initial failures exposed platform-specific NumPy resolution and factor-file newline conversion; NumPy is now pinned to 2.4.6 and factor bytes are preserved. Local Docker is still unavailable, but the actual image was verified on the clean CI runner. Earlier permission/pending notes above describe the previous state. Main merge and release tag remain pending.

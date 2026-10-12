@@ -162,3 +162,5 @@
 - Windows demo staging now inherits workspace permissions, and Git preserves exact demo bytes across platforms for manifest verification.
 
 - Continuation: Docker is still unavailable locally. A push of plan/07-api-and-docker to the configured GitHub repository was rejected by automatic approval review because explicit authorization for uploading the repository source/history and demo data/model artifacts to that destination is missing. No remote push occurred. Branch publication requires user approval before CI can run.
+
+- Updated: user authorized branch upload. Implementation CI at f23659b passed (run 38251457125): both Linux checks and non-root/read-only Docker smoke. Image 587,311,058 bytes. Remote clean-runner verification supersedes the earlier CI blocker; local Docker remains unavailable. Main merge and release tag are still pending.

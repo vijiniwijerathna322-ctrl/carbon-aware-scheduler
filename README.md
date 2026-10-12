@@ -58,8 +58,8 @@ The schedule response includes:
 
 These are frozen historical timestamps and expected emissions, not current forecasts
 or realized savings. Carbon's nominal interval-coverage gate remains a miss.
-Native demo checks passed; container build/smoke and GitHub CI verification are
-pending because the development machine has no Docker runtime. See
+Native demo checks and GitHub Linux/Docker CI passed. The development machine
+still has no local Docker runtime; the clean Linux CI runner verified the image. See
 [verification status](docs/results/api-demo.md). Run `bash scripts/smoke_docker.sh`
 on a Docker host to verify the non-root, read-only image.
 
