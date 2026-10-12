@@ -38,6 +38,20 @@ Purpose for the owner: a data science internship portfolio piece that shows prob
 
 **Verified EIA facts** (live probe 2026-10-12; sanitized API v2.1.14 fixtures in `tests/fixtures/eia/`): `frequency=hourly` is explicitly UTC and periods use `YYYY-MM-DDTHH` (`%Y-%m-%dT%H`). Region facets are `respondent`, `type`; fuel facets are `respondent`, `fueltype`. Metric codes are `D`, `DF`, `NG`, `TI`. The fuel facet endpoint lists 16 distinct codes: `BAT`, `COL`, `GEO`, `NG`, `NUC`, `OES`, `OIL`, `OTH`, `PS`, `SNB`, `SUN`, `UES`, `UNK`, `WAT`, `WNB`, `WND`; repeated IDs have different display labels, so deduplicate IDs. The CISO 2024 sample has eight fuel codes (`COL`, `NG`, `NUC`, `OIL`, `OTH`, `SUN`, `WAT`, `WND`). Values and `response.total` are strings. Both start and end are inclusive: 2024-01-01T00 through 2024-01-02T00 has 25 hours, 100 regional rows and 200 fuel rows. Units are megawatthours. No revision identifier occurs in the sampled rows; incremental refresh treats new observations as replacements. Null handling remains defensive and will be covered by synthetic tests. A further live probe verified ascending secondary sorts on `respondent` and `type`/`fueltype`; pagination uses these after `period` to make same-hour category ordering deterministic.
 
+**Verified Open-Meteo facts (2026-10-12):** archive
+`https://archive-api.open-meteo.com/v1/archive`, live
+`https://api.open-meteo.com/v1/forecast` and historical forecast
+`https://historical-forecast-api.open-meteo.com/v1/forecast` returned HTTP 200
+in the checked-in probes. Request `timezone=UTC` and `wind_speed_unit=kmh`;
+`temperature_2m`, `cloud_cover`, `shortwave_radiation`, `wind_speed_100m`
+return units Celsius, percent, W/m² and km/h. January 2021 historical forecast
+had no finite 100 m wind values, although other variables were populated;
+January 2025 had all four. Seamless historical forecast is not an issue-vintage
+48-hour panel. Plan 08 therefore publishes archive weather as an explicitly
+exploratory hindsight ablation and retains weather-free production models.
+See [ADR 0016](../docs/adr/0016-weather-provenance-and-fallback.md).
+
+
 ## 4. Key decisions
 
 | # | Decision | Why |

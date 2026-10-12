@@ -1,0 +1,13 @@
+{
+  "url": "https://historical-forecast-api.open-meteo.com/v1/forecast",
+  "params": {
+    "latitude": 36.74,
+    "longitude": -119.78,
+    "hourly": "temperature_2m,cloud_cover,shortwave_radiation,wind_speed_100m",
+    "timezone": "UTC",
+    "wind_speed_unit": "kmh",
+    "start_date": "2025-01-01",
+    "end_date": "2025-01-02"
+  },
+  "status": 200
+}
