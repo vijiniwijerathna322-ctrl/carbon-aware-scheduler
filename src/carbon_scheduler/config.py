@@ -35,6 +35,10 @@ class Settings(BaseSettings):
     )
     data_dir: Path = Field(default=PROJECT_ROOT / "data", validation_alias="CARBON_DATA_DIR")
     models_dir: Path = Field(default=PROJECT_ROOT / "models", validation_alias="CARBON_MODELS_DIR")
+    demo_mode: bool = Field(default=False, validation_alias="DEMO_MODE")
+    max_data_age_hours: float = Field(
+        default=6, gt=0, allow_inf_nan=False, validation_alias="MAX_DATA_AGE_HOURS"
+    )
 
     @field_validator("eia_api_key", mode="before")
     @classmethod
