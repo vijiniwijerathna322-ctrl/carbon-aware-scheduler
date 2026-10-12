@@ -107,7 +107,7 @@
 - [x] **Step 2: Run** → FAIL
 - [x] **Step 3: Implement** with `pivot` after explicit de-dup so the count is known and last null revisions remain NaN.
 - [x] **Step 4: Run** → PASS
-- [ ] **Step 5: Commit** `feat(ingest): wide hourly frame transform`
+- [x] **Step 5: Commit** `feat(ingest): wide hourly frame transform` (commit `a8b45f6`).
 
 ### Task 5: Validation and cleaning with a quality report
 
@@ -118,17 +118,19 @@
 **Interfaces:**
 - Produces:
   - `@dataclass(frozen=True) class QualityReport: n_rows: int; n_negative_demand: int; n_spikes: int; n_interpolated: int; n_remaining_gaps: int; gap_fraction: float`
+  - Additional defaulted report fields: `n_remaining_missing_cells: int = 0`, `missing_by_column: dict[str, int]`, `first_observed_by_column` and `last_observed_by_column: dict[str, str | None]` (UTC ISO timestamps), `interior_missing_by_column: dict[str, int]` (mapping defaults are empty), and `n_duplicates: int = 0`.
+  - Count semantics (ADR 0011): `n_remaining_gaps` counts hours incomplete in any of the fixed four core series; `gap_fraction` divides by all hourly rows. Absent required columns contribute virtual missing cells to per-column and total missing counts. `n_interpolated` counts actual filled cells across numeric columns. Fill only complete bounded interior runs within the limit, never partial long runs or boundary extrapolation. Fuel NaNs remain without inferred zero filling; G2 does not certify fuel-mix completeness.
   - `def validate_and_clean(df: pd.DataFrame, *, spike_z: float = 8.0, max_gap_hours: int = 3) -> tuple[pd.DataFrame, QualityReport]` — returns a copy; never mutates input. Rules: demand ≤ 0 → NaN; robust z-score (median/MAD over a 7-day centred rolling window, per column among `demand_mwh` and `net_generation_mwh`) above `spike_z` → NaN; NaN runs ≤ `max_gap_hours` linearly interpolated; longer runs stay NaN.
 
-- [ ] **Step 1: Failing tests:**
+- [x] **Step 1: Failing tests:**
   - `test_negative_demand_becomes_nan_and_counted`
   - `test_spike_flagged` (inject ×10 at one hour in a sinusoid → NaN then interpolated; `n_spikes == 1`)
   - `test_short_gap_interpolated_long_gap_kept` (2 h interpolated, 5 h stays NaN; counts match)
   - `test_input_not_mutated`
   - `test_clean_data_unchanged` (smooth series → report all zero except `n_rows`)
-- [ ] **Step 2: Run** → FAIL
-- [ ] **Step 3: Implement** as above.
-- [ ] **Step 4: Run** → PASS
+- [x] **Step 2: Run** → FAIL
+- [x] **Step 3: Implement** as above.
+- [x] **Step 4: Run** → PASS
 - [ ] **Step 5: Commit** `feat(ingest): validation and cleaning with quality report`
 
 ### Task 6: Parquet store and incremental `ingest` command

@@ -73,6 +73,7 @@ Package: `src/carbon_scheduler/{config,logging,cli}.py` and subpackages `ingest/
 
 - **Hourly frame** (interim/processed): index `DatetimeIndex` tz=UTC, hourly, no gaps (NaN allowed). Columns: `demand_mwh`, `demand_forecast_mwh`, `net_generation_mwh`, `net_interchange_mwh`, `gen_<fuel>_mwh` per fuel. Processed adds `carbon_intensity_g_per_kwh`.
 - **Forecast frame**: columns `issue_time`, `target_time` (UTC), `horizon` (int 1..48), `lower`, `median`, `upper`, `target` (`demand_mwh`|`carbon_intensity_g_per_kwh`).
+- **Ingestion quality report**: `gap_fraction` counts hours incomplete in any of the four required regional series; absent required columns count as missing for every hour. `n_remaining_gaps` counts these hours. Interpolation counts filled cells across numeric columns, and remaining missing-cell totals include virtual absent required columns. Fuel missingness, first/last observed UTC ISO timestamps and interior missing counts are diagnostics; G2 does not certify carbon-mix completeness. Cleaning rejects infinite values, flags demand <= 0 and centered 168-hour median/MAD spikes, then fills only complete bounded interior gaps of at most three hours. This retrospective cleaning uses future observations; historical forecast evaluation must avoid leakage. See ADR 0011.
 - **Model artifact**: directory with `model.joblib` and `metadata.json` (keys: `region`, `target`, `trained_at`, `data_start`, `data_end`, `train_end`, `calibration_end`, `alpha`, `feature_columns`, `metrics`, `versions`, `git_sha`).
 
 ## 7. Evaluation protocol and success targets
