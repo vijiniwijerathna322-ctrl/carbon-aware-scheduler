@@ -67,7 +67,7 @@
 - [x] **Step 2: Run:** `uv run pytest tests/ingest/test_eia_client.py -v` → FAIL
 - [x] **Step 3: Implement** with `tenacity` (`retry_if_exception_type(_Retryable)`, exponential backoff with jitter, `sleep` injectable so tests don't wait) and a simple monotonic-clock throttle ensuring `min_interval_s` between requests (set to 0 in tests).
 - [x] **Step 4: Run** → PASS
-- [ ] **Step 5: Commit** `feat(ingest): EIA client with pagination, retry and throttle`
+- [x] **Step 5: Commit** `feat(ingest): EIA client with pagination, retry and throttle` (commit `0a5b4dc`).
 
 ### Task 3: Route fetchers
 
@@ -81,13 +81,13 @@
   - `def fetch_region_data(client: EiaClient, respondent: str, start: str, end: str) -> pd.DataFrame` — columns `period` (datetime64[ns, UTC]), `type` (str), `value` (float, NaN for null)
   - `def fetch_fuel_type_data(client: EiaClient, respondent: str, start: str, end: str) -> pd.DataFrame` — columns `period`, `fueltype`, `value`
 
-- [ ] **Step 1: Failing tests** using the recorded fixtures through a stub client:
+- [x] **Step 1: Failing tests** using the recorded fixtures through a stub client:
   - `test_region_data_parses_utc_and_numeric`: dtype of `period` is `datetime64[ns, UTC]`; `value` dtype float64
   - `test_null_value_becomes_nan`
   - `test_empty_response_returns_typed_empty_frame`: columns present, zero rows
-- [ ] **Step 2: Run** → FAIL
-- [ ] **Step 3: Implement** both functions; period parsing uses the format verified in Task 1; `pd.to_numeric(errors="coerce")` for `value`.
-- [ ] **Step 4: Run** → PASS
+- [x] **Step 2: Run** → FAIL
+- [x] **Step 3: Implement** both functions; period parsing uses the format verified in Task 1; `pd.to_numeric(errors="coerce")` for `value`.
+- [x] **Step 4: Run** → PASS
 - [ ] **Step 5: Commit** `feat(ingest): region and fuel-type fetchers`
 
 ### Task 4: Transform to a wide hourly frame
