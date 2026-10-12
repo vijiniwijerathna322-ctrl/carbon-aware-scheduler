@@ -88,7 +88,7 @@
 - [x] **Step 2: Run** → FAIL
 - [x] **Step 3: Implement** both functions; period parsing uses the format verified in Task 1; `pd.to_numeric(errors="coerce")` for `value`.
 - [x] **Step 4: Run** → PASS
-- [ ] **Step 5: Commit** `feat(ingest): region and fuel-type fetchers`
+- [x] **Step 5: Commit** `feat(ingest): region and fuel-type fetchers` (commit `9190fa1`).
 
 ### Task 4: Transform to a wide hourly frame
 
@@ -99,14 +99,14 @@
 **Interfaces:**
 - Produces: `def to_hourly_frame(region: pd.DataFrame, fuel: pd.DataFrame) -> tuple[pd.DataFrame, int]` — returns the frame and the number of duplicate rows dropped. Frame: tz-UTC hourly `DatetimeIndex` named `period`, columns `demand_mwh` (type D), `demand_forecast_mwh` (DF), `net_generation_mwh` (NG), `net_interchange_mwh` (TI), and `gen_<fueltype.lower()>_mwh` per fuel; index reindexed to a complete hourly range (gaps → NaN).
 
-- [ ] **Step 1: Failing tests:**
+- [x] **Step 1: Failing tests:**
   - `test_pivots_types_to_columns`
   - `test_duplicates_keep_last_and_are_counted` (two rows same period/type → later one wins, count == 1)
   - `test_index_is_complete_hourly_utc` (a missing hour appears as NaN row)
   - `test_unknown_type_ignored_not_crash`
-- [ ] **Step 2: Run** → FAIL
-- [ ] **Step 3: Implement** with `pivot_table(aggfunc="last")` after explicit de-dup so the count is known.
-- [ ] **Step 4: Run** → PASS
+- [x] **Step 2: Run** → FAIL
+- [x] **Step 3: Implement** with `pivot` after explicit de-dup so the count is known and last null revisions remain NaN.
+- [x] **Step 4: Run** → PASS
 - [ ] **Step 5: Commit** `feat(ingest): wide hourly frame transform`
 
 ### Task 5: Validation and cleaning with a quality report
