@@ -4,11 +4,11 @@
 
 **Goal:** A FastAPI service that returns calibrated forecasts and schedule recommendations, packaged in a small, non-root Docker image that runs offline from a baked demo snapshot.
 
-**Architecture:** `ForecastService` owns model loading and data access (injected via FastAPI dependencies, so tests swap it). Routes are thin: validate → call service/optimizer → serialise. Demo assets (`demo/data`, `demo/models`) are produced by a `make-demo` CLI command and committed (small).
+**Architecture:** `ForecastService` owns model loading and data access (injected via FastAPI dependencies, so tests swap it). Routes are thin: validate → call service/optimizer → serialise. Demo assets (`demo/data/raw`, `demo/models`) are produced by a `make-demo` CLI command and committed (small).
 
 **Tech Stack:** FastAPI, uvicorn, pydantic v2, httpx (TestClient), Docker.
 
-**Spec:** `docs/superpowers/specs/2026-10-11-carbon-aware-scheduler-design.md` (decision D8, §6)
+**Spec:** `specs/2026-10-11-carbon-aware-scheduler-design.md` (decision D8, §6)
 
 ## Global Constraints
 
@@ -44,11 +44,11 @@
   - `get_service()` dependency returning the app-scoped `ForecastService`
   - schemas: `ForecastPoint(target_time: datetime, horizon: int, lower: float, median: float, upper: float)`, `ForecastResponse(region, target, issue_time, data_as_of, model_version, alpha, points: list[ForecastPoint])`, `ScheduleRequest(region: str = "CISO", duration_hours: int, power_kw: float, earliest_start: datetime | None, deadline: datetime, strategy: Literal["median","upper"] = "median", interruptible: bool = False)`, `ScheduleResponse(recommendation: Recommendation, forecast_issue_time: datetime, data_as_of: datetime, model_version: str, notes: list[str])`
 
-- [ ] **Step 1: Failing tests:** `test_healthz_ok_with_stub_service`, `test_healthz_503_when_models_missing_includes_reason`, `test_openapi_lists_all_endpoints`
-- [ ] **Step 2: Run:** `uv run pytest tests/api/test_health.py -v` → FAIL
-- [ ] **Step 3: Implement.**
-- [ ] **Step 4: Run** → PASS
-- [ ] **Step 5: Commit** `feat(api): app factory, schemas and health endpoint`
+- [x] **Step 1: Failing tests:** `test_healthz_ok_with_stub_service`, `test_healthz_503_when_models_missing_includes_reason`, `test_openapi_lists_all_endpoints`
+- [x] **Step 2: Run:** `uv run pytest tests/api/test_health.py -v` → FAIL
+- [x] **Step 3: Implement.**
+- [x] **Step 4: Run** → PASS
+- [x] **Step 5: Commit** `feat(api): app factory, schemas and health endpoint`
 
 ### Task 2: `ForecastService`
 
@@ -57,22 +57,22 @@
 - Test: `tests/api/test_service.py`
 
 **Interfaces:**
-- Consumes: `load_model`, `read_metadata`, `read_hourly`
+- Consumes: `load_model`, `read_metadata`, `load_backtest_series` (raw target policy)
 - Produces: `class ForecastService`:
-  - `def __init__(self, settings: Settings, region: str = "CISO")` (loads both targets' models and the processed snapshot once)
+  - `def __init__(self, settings: Settings, region: str = "CISO")` (loads both targets' models and the raw snapshot once)
   - `def forecast(self, target: str, horizon: int = 48) -> tuple[pd.DataFrame, ForecastMeta]` — `issue_time` = last timestamp with a finite value of `target`
   - `@dataclass(frozen=True) class ForecastMeta: issue_time: pd.Timestamp; data_as_of: pd.Timestamp; model_version: str; alpha: float`
   - `def is_healthy(self) -> tuple[bool, str]`
 
-- [ ] **Step 1: Failing tests (tiny synthetic data + trained tiny model in a session fixture):**
+- [x] **Step 1: Failing tests (tiny synthetic data + trained tiny model in a session fixture):**
   - `test_forecast_returns_horizon_rows_and_meta`
   - `test_issue_time_is_last_finite_observation`
   - `test_unknown_target_raises_value_error`
   - `test_is_healthy_false_when_no_model`
-- [ ] **Step 2: Run** → FAIL
-- [ ] **Step 3: Implement.**
-- [ ] **Step 4: Run** → PASS
-- [ ] **Step 5: Commit** `feat(api): forecast service`
+- [x] **Step 2: Run** → FAIL
+- [x] **Step 3: Implement.**
+- [x] **Step 4: Run** → PASS
+- [x] **Step 5: Commit** `feat(api): forecast service`
 
 ### Task 3: Forecast and schedule endpoints
 
@@ -85,7 +85,7 @@
 - Consumes: `ForecastService.forecast`, `recommend`
 - Produces: the endpoints in Global Constraints; `/v1/schedule` always plans on the `carbon_intensity_g_per_kwh` forecast
 
-- [ ] **Step 1: Failing tests (FastAPI `TestClient`, stub service):**
+- [x] **Step 1: Failing tests (FastAPI `TestClient`, stub service):**
   - `test_forecast_ok_schema_and_horizon`
   - `test_forecast_horizon_out_of_range_422`
   - `test_unknown_region_404`
@@ -95,10 +95,10 @@
   - `test_schedule_past_earliest_start_is_clamped_with_note`
   - `test_stale_data_503_unless_demo_mode`
   - `test_error_body_has_no_traceback_or_paths`
-- [ ] **Step 2: Run** → FAIL
-- [ ] **Step 3: Implement** (domain errors mapped via exception handlers: `InsufficientForecastError` → 422, `ModelNotFoundError` → 503, stale → 503).
-- [ ] **Step 4: Run** → PASS
-- [ ] **Step 5: Commit** `feat(api): forecast and schedule endpoints`
+- [x] **Step 2: Run** → FAIL
+- [x] **Step 3: Implement** (domain errors mapped via exception handlers: `InsufficientForecastError` → 422, `ModelNotFoundError` → 503, stale → 503).
+- [x] **Step 4: Run** → PASS
+- [x] **Step 5: Commit** `feat(api): forecast and schedule endpoints`
 
 ### Task 4: Demo assets and `make-demo`
 
@@ -108,14 +108,14 @@
 - Test: `tests/test_demo.py`
 
 **Interfaces:**
-- Produces: `def make_demo_assets(region: str, settings: Settings, out_dir: Path, history_days: int = 400) -> None` — copies the last `history_days` of processed data and the `current` model versions for both targets into `out_dir/data` and `out_dir/models`, preserving the directory layout the loaders expect; CLI `carbon-scheduler make-demo --region CISO`
+- Produces: `def make_demo_assets(region: str, settings: Settings, out_dir: Path, history_days: int = 400) -> None` — copies the last `history_days` of raw data and the `current` model versions for both targets into `out_dir/data` and `out_dir/models`, preserving the directory layout the loaders expect; CLI `carbon-scheduler make-demo --region CISO`
 
-- [ ] **Step 1: Failing tests:** `test_demo_assets_load_with_service` (assets produced from the synthetic fixture can be loaded by `ForecastService`), `test_demo_data_truncated_to_history_days`
-- [ ] **Step 2: Run** → FAIL
-- [ ] **Step 3: Implement.**
-- [ ] **Step 4: Run** → PASS
-- [ ] **Step 5: Generate** `demo/` from real CISO artifacts; check total size (`du -sh demo`, expect only a few MB) and commit it with a note on EIA attribution in `demo/README.md`.
-- [ ] **Step 6: Commit** `feat: demo assets for offline serving`
+- [x] **Step 1: Failing tests:** `test_demo_assets_load_with_service` (assets produced from the synthetic fixture can be loaded by `ForecastService`), `test_demo_data_truncated_to_history_days`
+- [x] **Step 2: Run** → FAIL
+- [x] **Step 3: Implement.**
+- [x] **Step 4: Run** → PASS
+- [x] **Step 5: Generate** `demo/` from real CISO artifacts; check total size (`du -sh demo`, expect only a few MB) and commit it with a note on EIA attribution in `demo/README.md`.
+- [x] **Step 6: Commit** `feat: demo assets for offline serving`
 
 ### Task 5: Dockerfile and container smoke test
 
@@ -135,11 +135,11 @@
 **Files:**
 - Modify: `src/carbon_scheduler/api/schemas.py` (field descriptions + `json_schema_extra` examples), `README.md`
 
-- [ ] **Step 1: Failing test:** `test_openapi_examples_present_for_schedule_request` (inspect `app.openapi()`)
-- [ ] **Step 2: Run** → FAIL
-- [ ] **Step 3: Implement**; README quickstart: `docker run -p 8000:8000 …`, two `curl` examples with real output pasted, link to `/docs`.
+- [x] **Step 1: Failing test:** `test_openapi_examples_present_for_schedule_request` (inspect `app.openapi()`)
+- [x] **Step 2: Run** → FAIL
+- [x] **Step 3: Implement**; README quickstart: `docker run -p 8000:8000 …`, two `curl` examples with real output pasted, link to `/docs`.
 - [ ] **Step 4: Run tests** → PASS; follow the README commands verbatim in a clean shell to confirm they work.
-- [ ] **Step 5: Commit** `docs(api): openapi examples and quickstart`
+- [x] **Step 5: Commit** `docs(api): openapi examples and quickstart`
 
 ## Definition of Done (= MVP line)
 
@@ -147,3 +147,14 @@
 - [ ] README quickstart works verbatim from a clean clone, no API key
 - [ ] All MVP DoD items in the master plan §2 met
 - [ ] Tag `v0.1.0`; master plan status updated
+
+## Implementation and verification status
+
+- App, service and routes were integrated in one API commit because their startup dependencies are coupled. Models and data load once; finite predictions are cached and copied for requests.
+- Serving/demo use raw targets rather than processed targets to match the training policy (ADR 0015). Carbon factors are checked against the model metadata.
+- Health and demo tests first failed on missing modules. Endpoint/service regression tests were added during implementation; separate red-phase commits were not made for every checklist item. OpenAPI examples were present before their assertion passed.
+- Real tracked demo: 4,905,524 bytes before README; 9,600 hourly rows, both current model versions. Native HTTP/curl examples work with the frozen issue time.
+- Dockerfile, smoke script and CI job are prepared. Shell syntax passes. Local smoke fails because Docker is not installed; WSL is also not installed. Linux image compatibility, image size, CI smoke and clean-clone Docker quickstart remain unverified.
+- No remote push, main merge or v0.1.0 tag until the outstanding MVP checks are satisfied.
+
+- Final local gate: 255 tests passed, 93.33% coverage; Ruff, formatting, mypy and lock consistency passed.

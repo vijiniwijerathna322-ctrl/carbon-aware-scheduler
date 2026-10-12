@@ -5,6 +5,80 @@
 Forecast grid demand and carbon intensity, then schedule flexible jobs with honest uncertainty.
 Implementation follows the [master plan](plans/2026-10-11-00-master-plan.md).
 
+## Offline API demo
+
+The tracked demo serves real CISO models without an EIA key. With Docker installed:
+
+```bash
+docker build -t carbon-scheduler:demo .
+docker run --rm --read-only --tmpfs /tmp --cap-drop ALL -p 127.0.0.1:8000:8000 carbon-scheduler:demo
+```
+
+Open [interactive API docs](http://localhost:8000/docs). From a second Bash shell:
+
+```bash
+curl --fail 'http://localhost:8000/v1/forecast?region=CISO&horizon=1'
+curl --fail -H 'Content-Type: application/json' \
+  -d '{"duration_hours":2,"power_kw":7,"deadline":"2026-10-12T06:00:00Z"}' \
+  'http://localhost:8000/v1/schedule'
+```
+
+The verified native demo forecast returns:
+
+```json
+{"region":"CISO","target":"carbon_intensity_g_per_kwh","issue_time":"2026-10-11T06:00:00Z","data_as_of":"2026-10-11T06:00:00Z","model_version":"20261012T115113Z-438177c1","alpha":0.2,"points":[{"target_time":"2026-10-11T07:00:00Z","horizon":1,"lower":248.42437793177538,"median":260.8126065770477,"upper":301.2394968001054}]}
+```
+
+The schedule response includes:
+
+```json
+{
+  "recommendation": {
+    "start": "2026-10-11T18:00:00Z",
+    "end": "2026-10-11T20:00:00Z",
+    "strategy": "median",
+    "emissions_gco2_median": 2271.0566576815477,
+    "emissions_gco2_lower": 1815.2590382689416,
+    "emissions_gco2_upper": 2601.134505879341,
+    "baseline_start": "2026-10-11T07:00:00Z",
+    "baseline_emissions_gco2_median": 3656.136396335312,
+    "expected_savings_pct": 37.88369985436221,
+    "delay_hours": 11,
+    "hours": null
+  },
+  "forecast_issue_time": "2026-10-11T06:00:00Z",
+  "data_as_of": "2026-10-11T06:00:00Z",
+  "model_version": "20261012T115113Z-438177c1",
+  "notes": [
+    "Carbon G4 missed nominal coverage; summed endpoints are not job-level confidence bounds.",
+    "Demo uses a frozen historical snapshot; times are relative to its forecast issue."
+  ]
+}
+```
+
+These are frozen historical timestamps and expected emissions, not current forecasts
+or realized savings. Carbon's nominal interval-coverage gate remains a miss.
+Native demo checks passed; container build/smoke and GitHub CI verification are
+pending because the development machine has no Docker runtime. See
+[verification status](docs/results/api-demo.md). Run `bash scripts/smoke_docker.sh`
+on a Docker host to verify the non-root, read-only image.
+
+To run the same API natively on Windows after `uv sync`:
+
+```powershell
+$env:CARBON_DATA_DIR="demo/data"
+$env:CARBON_MODELS_DIR="demo/models"
+$env:DEMO_MODE="1"
+uv run uvicorn carbon_scheduler.api.main:app --host 127.0.0.1 --port 8000
+```
+
+Endpoints include `/healthz`, `/v1/forecast`, `/v1/schedule` and `/v1/models/current`.
+Outside demo mode, target data older than `MAX_DATA_AGE_HOURS` (default 6) returns
+503 `data_stale`. Models and raw history are loaded once; restart after refreshing
+them. Forecast horizons are 1–48 hours. Schedule arrivals default to the first
+forecast hour; past arrivals are clamped with a note, while deadlines outside the
+forecast window return 422. Only CISO is served in this MVP.
+
 ## Development
 
 Use Python 3.11 or 3.12 and uv. Run `uv sync`, then `make check`.
