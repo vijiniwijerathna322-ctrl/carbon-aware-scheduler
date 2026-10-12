@@ -14,10 +14,36 @@ from carbon_scheduler.ingest.eia_client import EiaAuthError, EiaRequestError
 from carbon_scheduler.ingest.pipeline import G2_MAX_GAP_FRACTION, run_ingest
 from carbon_scheduler.logging import configure_logging
 from carbon_scheduler.models.reporting import run_backtest
+from carbon_scheduler.models.training import train_region
 
 app = typer.Typer(
     help="Carbon-aware energy scheduler.", no_args_is_help=True, pretty_exceptions_enable=False
 )
+
+
+@app.command()
+def train(
+    region: str = typer.Option("CISO"),
+    fit_end: str | None = typer.Option(None),
+) -> None:
+    """Train both raw-target calibrated models and save local artifacts."""
+    try:
+        timestamp = None
+        if fit_end is not None:
+            import pandas as pd  # noqa: PLC0415
+
+            timestamp = pd.Timestamp(fit_end)
+            timestamp = (
+                timestamp.tz_localize("UTC")
+                if timestamp.tz is None
+                else timestamp.tz_convert("UTC")
+            )
+        paths = train_region(region, get_settings(), fit_end=timestamp)
+    except (OSError, ValueError, RuntimeError) as error:
+        typer.echo(f"Train failed: {error}", err=True)
+        raise typer.Exit(code=1) from None
+    for target, path in paths.items():
+        typer.echo(f"Saved {target}: {path}")
 
 
 @app.command()

@@ -108,3 +108,26 @@ horizon bucket for both targets. Paired overall median MAE improved by 53.35%
 for demand (2,690.36 → 1,255.11 MWh) and 38.49% for carbon intensity
 (43.98 → 27.05 gCO2e/kWh). Raw interval coverage is 73.17% and 58.83%,
 respectively; these intervals still need Plan 05 calibration.
+
+## Calibrated models and registry
+
+```powershell
+uv run carbon-scheduler backtest --region CISO --target demand_mwh --model cqr
+uv run carbon-scheduler backtest --region CISO --target carbon_intensity_g_per_kwh --model cqr
+uv run python scripts/summarize_cqr_backtests.py
+uv run carbon-scheduler train --region CISO
+```
+
+Training uses raw pointwise targets, reserves the final 90 days for calibration,
+and saves unique local versions under `models/CISO/<target>/`. `current.json`
+selects each target's current version. `--fit-end` optionally selects an aware
+timestamp (naive timestamps mean UTC). Defaults use each target's last finite
+observation. Reloaded predictions are verified against the fitted model.
+Artifact metrics describe reused calibration data and are labelled accordingly.
+
+The [held-out CQR results](docs/results/backtest-cqr.md) show demand coverage
+**77.35% (G4 pass)** and carbon coverage **71.57% (G4 fail)**. Carbon's 7–24h
+bucket is 69.68%, below its 70% target. Both CQR medians still beat the weekly
+baseline in every bucket. The original results are retained without test-period
+tuning; [ADR 0013](docs/adr/0013-carbon-coverage-gate-miss.md) documents the miss.
+Carbon intervals must not be advertised as validated nominal 80% bounds.
