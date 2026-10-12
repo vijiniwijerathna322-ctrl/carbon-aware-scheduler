@@ -1,6 +1,6 @@
 # Carbon-Aware Energy Scheduler
 
-CI badge: pending GitHub remote and first verified workflow run.
+[![CI](https://github.com/vijiniwijerathna322-ctrl/carbon-aware-scheduler/actions/workflows/ci.yml/badge.svg)](https://github.com/vijiniwijerathna322-ctrl/carbon-aware-scheduler/actions/workflows/ci.yml)
 
 Forecast grid demand and carbon intensity, then schedule flexible jobs with honest uncertainty.
 Implementation follows the [master plan](plans/2026-10-11-00-master-plan.md).
