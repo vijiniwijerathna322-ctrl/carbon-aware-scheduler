@@ -1,0 +1,935 @@
+{
+  "response": {
+    "total": "100",
+    "dateFormat": "YYYY-MM-DD\"T\"HH24",
+    "frequency": "hourly",
+    "data": [
+      {
+        "period": "2024-01-01T00",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "type": "D",
+        "type-name": "Demand",
+        "value": "23126",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T00",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "type": "DF",
+        "type-name": "Day-ahead demand forecast",
+        "value": "22350",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T00",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "type": "NG",
+        "type-name": "Net generation",
+        "value": "18740",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T00",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "type": "TI",
+        "type-name": "Total interchange",
+        "value": "-3673",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T01",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "type": "D",
+        "type-name": "Demand",
+        "value": "23165",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T01",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "type": "DF",
+        "type-name": "Day-ahead demand forecast",
+        "value": "23747",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T01",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "type": "NG",
+        "type-name": "Net generation",
+        "value": "18479",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T01",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "type": "TI",
+        "type-name": "Total interchange",
+        "value": "-3889",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T02",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "type": "D",
+        "type-name": "Demand",
+        "value": "24138",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T02",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "type": "DF",
+        "type-name": "Day-ahead demand forecast",
+        "value": "25790",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T02",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "type": "NG",
+        "type-name": "Net generation",
+        "value": "19186",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T02",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "type": "TI",
+        "type-name": "Total interchange",
+        "value": "-3965",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T03",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "type": "D",
+        "type-name": "Demand",
+        "value": "25999",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T03",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "type": "DF",
+        "type-name": "Day-ahead demand forecast",
+        "value": "25714",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T03",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "type": "NG",
+        "type-name": "Net generation",
+        "value": "21142",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T03",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "type": "TI",
+        "type-name": "Total interchange",
+        "value": "-4768",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T04",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "type": "D",
+        "type-name": "Demand",
+        "value": "25812",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T04",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "type": "DF",
+        "type-name": "Day-ahead demand forecast",
+        "value": "25039",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T04",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "type": "NG",
+        "type-name": "Net generation",
+        "value": "20260",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T04",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "type": "TI",
+        "type-name": "Total interchange",
+        "value": "-4526",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T05",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "type": "D",
+        "type-name": "Demand",
+        "value": "25007",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T05",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "type": "DF",
+        "type-name": "Day-ahead demand forecast",
+        "value": "24566",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T05",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "type": "NG",
+        "type-name": "Net generation",
+        "value": "19603",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T05",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "type": "TI",
+        "type-name": "Total interchange",
+        "value": "-4624",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T06",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "type": "D",
+        "type-name": "Demand",
+        "value": "24317",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T06",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "type": "DF",
+        "type-name": "Day-ahead demand forecast",
+        "value": "23947",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T06",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "type": "NG",
+        "type-name": "Net generation",
+        "value": "18847",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T06",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "type": "TI",
+        "type-name": "Total interchange",
+        "value": "-4288",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T07",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "type": "D",
+        "type-name": "Demand",
+        "value": "23918",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T07",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "type": "DF",
+        "type-name": "Day-ahead demand forecast",
+        "value": "23082",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T07",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "type": "NG",
+        "type-name": "Net generation",
+        "value": "18614",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T07",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "type": "TI",
+        "type-name": "Total interchange",
+        "value": "-4087",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T08",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "type": "D",
+        "type-name": "Demand",
+        "value": "23066",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T08",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "type": "DF",
+        "type-name": "Day-ahead demand forecast",
+        "value": "22052",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T08",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "type": "NG",
+        "type-name": "Net generation",
+        "value": "17925",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T08",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "type": "TI",
+        "type-name": "Total interchange",
+        "value": "-3686",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T09",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "type": "D",
+        "type-name": "Demand",
+        "value": "22365",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T09",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "type": "DF",
+        "type-name": "Day-ahead demand forecast",
+        "value": "21350",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T09",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "type": "NG",
+        "type-name": "Net generation",
+        "value": "17478",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T09",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "type": "TI",
+        "type-name": "Total interchange",
+        "value": "-3375",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T10",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "type": "D",
+        "type-name": "Demand",
+        "value": "21604",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T10",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "type": "DF",
+        "type-name": "Day-ahead demand forecast",
+        "value": "20538",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T10",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "type": "NG",
+        "type-name": "Net generation",
+        "value": "17025",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T10",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "type": "TI",
+        "type-name": "Total interchange",
+        "value": "-3534",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T11",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "type": "D",
+        "type-name": "Demand",
+        "value": "21007",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T11",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "type": "DF",
+        "type-name": "Day-ahead demand forecast",
+        "value": "20008",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T11",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "type": "NG",
+        "type-name": "Net generation",
+        "value": "16193",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T11",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "type": "TI",
+        "type-name": "Total interchange",
+        "value": "-3610",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T12",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "type": "D",
+        "type-name": "Demand",
+        "value": "20402",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T12",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "type": "DF",
+        "type-name": "Day-ahead demand forecast",
+        "value": "19605",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T12",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "type": "NG",
+        "type-name": "Net generation",
+        "value": "15571",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T12",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "type": "TI",
+        "type-name": "Total interchange",
+        "value": "-3495",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T13",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "type": "D",
+        "type-name": "Demand",
+        "value": "20119",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T13",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "type": "DF",
+        "type-name": "Day-ahead demand forecast",
+        "value": "19635",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T13",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "type": "NG",
+        "type-name": "Net generation",
+        "value": "15279",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T13",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "type": "TI",
+        "type-name": "Total interchange",
+        "value": "-3396",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T14",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "type": "D",
+        "type-name": "Demand",
+        "value": "19740",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T14",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "type": "DF",
+        "type-name": "Day-ahead demand forecast",
+        "value": "20003",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T14",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "type": "NG",
+        "type-name": "Net generation",
+        "value": "15130",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T14",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "type": "TI",
+        "type-name": "Total interchange",
+        "value": "-3389",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T15",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "type": "D",
+        "type-name": "Demand",
+        "value": "20059",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T15",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "type": "DF",
+        "type-name": "Day-ahead demand forecast",
+        "value": "20690",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T15",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "type": "NG",
+        "type-name": "Net generation",
+        "value": "15477",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T15",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "type": "TI",
+        "type-name": "Total interchange",
+        "value": "-3482",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T16",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "type": "D",
+        "type-name": "Demand",
+        "value": "20697",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T16",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "type": "DF",
+        "type-name": "Day-ahead demand forecast",
+        "value": "21006",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T16",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "type": "NG",
+        "type-name": "Net generation",
+        "value": "16054",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T16",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "type": "TI",
+        "type-name": "Total interchange",
+        "value": "-3766",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T17",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "type": "D",
+        "type-name": "Demand",
+        "value": "21060",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T17",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "type": "DF",
+        "type-name": "Day-ahead demand forecast",
+        "value": "20285",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T17",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "type": "NG",
+        "type-name": "Net generation",
+        "value": "16174",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T17",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "type": "TI",
+        "type-name": "Total interchange",
+        "value": "-3120",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T18",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "type": "D",
+        "type-name": "Demand",
+        "value": "20827",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T18",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "type": "DF",
+        "type-name": "Day-ahead demand forecast",
+        "value": "19084",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T18",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "type": "NG",
+        "type-name": "Net generation",
+        "value": "16732",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T18",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "type": "TI",
+        "type-name": "Total interchange",
+        "value": "-2706",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T19",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "type": "D",
+        "type-name": "Demand",
+        "value": "20608",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T19",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "type": "DF",
+        "type-name": "Day-ahead demand forecast",
+        "value": "17958",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T19",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "type": "NG",
+        "type-name": "Net generation",
+        "value": "17003",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T19",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "type": "TI",
+        "type-name": "Total interchange",
+        "value": "-1511",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T20",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "type": "D",
+        "type-name": "Demand",
+        "value": "20707",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T20",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "type": "DF",
+        "type-name": "Day-ahead demand forecast",
+        "value": "17158",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T20",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "type": "NG",
+        "type-name": "Net generation",
+        "value": "18391",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T20",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "type": "TI",
+        "type-name": "Total interchange",
+        "value": "-900",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T21",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "type": "D",
+        "type-name": "Demand",
+        "value": "20191",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T21",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "type": "DF",
+        "type-name": "Day-ahead demand forecast",
+        "value": "16974",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T21",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "type": "NG",
+        "type-name": "Net generation",
+        "value": "18585",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T21",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "type": "TI",
+        "type-name": "Total interchange",
+        "value": "93",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T22",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "type": "D",
+        "type-name": "Demand",
+        "value": "19778",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T22",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "type": "DF",
+        "type-name": "Day-ahead demand forecast",
+        "value": "17339",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T22",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "type": "NG",
+        "type-name": "Net generation",
+        "value": "19175",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T22",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "type": "TI",
+        "type-name": "Total interchange",
+        "value": "391",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T23",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "type": "D",
+        "type-name": "Demand",
+        "value": "19756",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T23",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "type": "DF",
+        "type-name": "Day-ahead demand forecast",
+        "value": "18339",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T23",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "type": "NG",
+        "type-name": "Net generation",
+        "value": "19356",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T23",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "type": "TI",
+        "type-name": "Total interchange",
+        "value": "605",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-02T00",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "type": "D",
+        "type-name": "Demand",
+        "value": "19820",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-02T00",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "type": "DF",
+        "type-name": "Day-ahead demand forecast",
+        "value": "20092",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-02T00",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "type": "NG",
+        "type-name": "Net generation",
+        "value": "19733",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-02T00",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "type": "TI",
+        "type-name": "Total interchange",
+        "value": "-1063",
+        "value-units": "megawatthours"
+      }
+    ],
+    "description": "Hourly demand, day-ahead demand forecast, net generation, and interchange by balancing authority.  \n    Source: Form EIA-930\n    Product: Hourly Electric Grid Monitor"
+  },
+  "request": {
+    "command": "/v2/electricity/rto/region-data/data/",
+    "params": {
+      "frequency": "hourly",
+      "data": [
+        "value"
+      ],
+      "facets": {
+        "respondent": [
+          "CISO"
+        ]
+      },
+      "start": "2024-01-01T00",
+      "end": "2024-01-02T00",
+      "length": "5000",
+      "sort": [
+        {
+          "column": "period",
+          "direction": "asc"
+        }
+      ]
+    }
+  },
+  "apiVersion": "2.1.14",
+  "ExcelAddInVersion": "2.1.0"
+}

@@ -31,12 +31,12 @@ Purpose for the owner: a data science internship portfolio piece that shows prob
 | Source | Use | Access | Notes |
 |---|---|---|---|
 | EIA Open Data API v2, route `electricity/rto/region-data` | demand (D), day-ahead demand forecast (DF), net generation (NG), interchange (TI) | free key via `EIA_API_KEY` | JSON capped at 5,000 rows/page → paginate |
-| EIA API v2, route `electricity/rto/fuel-type-data` | net generation by fuel | same key | fuel codes to be confirmed by probe (plan 02, Task 1) |
+| EIA API v2, route `electricity/rto/fuel-type-data` | net generation by fuel | same key | fuel codes verified by live probe (plan 02, Task 1) |
 | EIA-930 bulk CSV/XLSX | fallback for history | no key | not used in MVP |
 | IPCC AR5 lifecycle emission medians | emission factors | static YAML in repo | verify values against source before publishing (plan 03, Task 1) |
 | Open-Meteo archive + forecast | weather features (v1 only) | no key, non-commercial, CC BY 4.0 attribution | plan 08 |
 
-**Unverified assumptions** (must be checked by the probe task, then this table updated): hourly `period` format (`YYYY-MM-DDTHH`, UTC), facet names (`respondent`, `type`, `fueltype`), numeric values returned as strings, exact fuel codes, how EIA flags revisions.
+**Verified EIA facts** (live probe 2026-10-12; sanitized API v2.1.14 fixtures in `tests/fixtures/eia/`): `frequency=hourly` is explicitly UTC and periods use `YYYY-MM-DDTHH` (`%Y-%m-%dT%H`). Region facets are `respondent`, `type`; fuel facets are `respondent`, `fueltype`. Metric codes are `D`, `DF`, `NG`, `TI`. The fuel facet endpoint lists 16 distinct codes: `BAT`, `COL`, `GEO`, `NG`, `NUC`, `OES`, `OIL`, `OTH`, `PS`, `SNB`, `SUN`, `UES`, `UNK`, `WAT`, `WNB`, `WND`; repeated IDs have different display labels, so deduplicate IDs. The CISO 2024 sample has eight fuel codes (`COL`, `NG`, `NUC`, `OIL`, `OTH`, `SUN`, `WAT`, `WND`). Values and `response.total` are strings. Both start and end are inclusive: 2024-01-01T00 through 2024-01-02T00 has 25 hours, 100 regional rows and 200 fuel rows. Units are megawatthours. No revision identifier occurs in the sampled rows; incremental refresh treats new observations as replacements. Null handling remains defensive and will be covered by synthetic tests.
 
 ## 4. Key decisions
 

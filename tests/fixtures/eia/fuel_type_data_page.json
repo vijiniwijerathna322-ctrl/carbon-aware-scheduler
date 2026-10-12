@@ -1,0 +1,1835 @@
+{
+  "response": {
+    "total": "200",
+    "dateFormat": "YYYY-MM-DD\"T\"HH24",
+    "frequency": "hourly",
+    "data": [
+      {
+        "period": "2024-01-01T00",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "fueltype": "COL",
+        "type-name": "Coal",
+        "value": "0",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T00",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "fueltype": "NG",
+        "type-name": "Natural Gas",
+        "value": "10409",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T00",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "fueltype": "NUC",
+        "type-name": "Nuclear",
+        "value": "2232",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T00",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "fueltype": "OIL",
+        "type-name": "Petroleum",
+        "value": "46",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T00",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "fueltype": "OTH",
+        "type-name": "Other",
+        "value": "-131",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T00",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "fueltype": "SUN",
+        "type-name": "Solar",
+        "value": "4340",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T00",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "fueltype": "WAT",
+        "type-name": "Hydro",
+        "value": "1746",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T00",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "fueltype": "WND",
+        "type-name": "Wind",
+        "value": "98",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T01",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "fueltype": "COL",
+        "type-name": "Coal",
+        "value": "0",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T01",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "fueltype": "NG",
+        "type-name": "Natural Gas",
+        "value": "11235",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T01",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "fueltype": "NUC",
+        "type-name": "Nuclear",
+        "value": "2233",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T01",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "fueltype": "OIL",
+        "type-name": "Petroleum",
+        "value": "46",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T01",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "fueltype": "OTH",
+        "type-name": "Other",
+        "value": "672",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T01",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "fueltype": "SUN",
+        "type-name": "Solar",
+        "value": "2146",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T01",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "fueltype": "WAT",
+        "type-name": "Hydro",
+        "value": "2014",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T01",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "fueltype": "WND",
+        "type-name": "Wind",
+        "value": "133",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T02",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "fueltype": "COL",
+        "type-name": "Coal",
+        "value": "0",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T02",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "fueltype": "NG",
+        "type-name": "Natural Gas",
+        "value": "12189",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T02",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "fueltype": "NUC",
+        "type-name": "Nuclear",
+        "value": "2232",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T02",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "fueltype": "OIL",
+        "type-name": "Petroleum",
+        "value": "46",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T02",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "fueltype": "OTH",
+        "type-name": "Other",
+        "value": "1147",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T02",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "fueltype": "SUN",
+        "type-name": "Solar",
+        "value": "461",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T02",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "fueltype": "WAT",
+        "type-name": "Hydro",
+        "value": "2925",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T02",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "fueltype": "WND",
+        "type-name": "Wind",
+        "value": "185",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T03",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "fueltype": "COL",
+        "type-name": "Coal",
+        "value": "0",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T03",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "fueltype": "NG",
+        "type-name": "Natural Gas",
+        "value": "12660",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T03",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "fueltype": "NUC",
+        "type-name": "Nuclear",
+        "value": "2237",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T03",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "fueltype": "OIL",
+        "type-name": "Petroleum",
+        "value": "46",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T03",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "fueltype": "OTH",
+        "type-name": "Other",
+        "value": "2515",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T03",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "fueltype": "SUN",
+        "type-name": "Solar",
+        "value": "-2",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T03",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "fueltype": "WAT",
+        "type-name": "Hydro",
+        "value": "3433",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T03",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "fueltype": "WND",
+        "type-name": "Wind",
+        "value": "254",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T04",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "fueltype": "COL",
+        "type-name": "Coal",
+        "value": "0",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T04",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "fueltype": "NG",
+        "type-name": "Natural Gas",
+        "value": "12493",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T04",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "fueltype": "NUC",
+        "type-name": "Nuclear",
+        "value": "2239",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T04",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "fueltype": "OIL",
+        "type-name": "Petroleum",
+        "value": "46",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T04",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "fueltype": "OTH",
+        "type-name": "Other",
+        "value": "1793",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T04",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "fueltype": "SUN",
+        "type-name": "Solar",
+        "value": "-32",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T04",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "fueltype": "WAT",
+        "type-name": "Hydro",
+        "value": "3431",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T04",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "fueltype": "WND",
+        "type-name": "Wind",
+        "value": "291",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T05",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "fueltype": "COL",
+        "type-name": "Coal",
+        "value": "0",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T05",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "fueltype": "NG",
+        "type-name": "Natural Gas",
+        "value": "12361",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T05",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "fueltype": "NUC",
+        "type-name": "Nuclear",
+        "value": "2239",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T05",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "fueltype": "OIL",
+        "type-name": "Petroleum",
+        "value": "46",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T05",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "fueltype": "OTH",
+        "type-name": "Other",
+        "value": "1648",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T05",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "fueltype": "SUN",
+        "type-name": "Solar",
+        "value": "-32",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T05",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "fueltype": "WAT",
+        "type-name": "Hydro",
+        "value": "3087",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T05",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "fueltype": "WND",
+        "type-name": "Wind",
+        "value": "253",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T06",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "fueltype": "COL",
+        "type-name": "Coal",
+        "value": "0",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T06",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "fueltype": "NG",
+        "type-name": "Natural Gas",
+        "value": "12400",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T06",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "fueltype": "NUC",
+        "type-name": "Nuclear",
+        "value": "2237",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T06",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "fueltype": "OIL",
+        "type-name": "Petroleum",
+        "value": "46",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T06",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "fueltype": "OTH",
+        "type-name": "Other",
+        "value": "905",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T06",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "fueltype": "SUN",
+        "type-name": "Solar",
+        "value": "-32",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T06",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "fueltype": "WAT",
+        "type-name": "Hydro",
+        "value": "3037",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T06",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "fueltype": "WND",
+        "type-name": "Wind",
+        "value": "254",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T07",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "fueltype": "COL",
+        "type-name": "Coal",
+        "value": "0",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T07",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "fueltype": "NG",
+        "type-name": "Natural Gas",
+        "value": "12258",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T07",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "fueltype": "NUC",
+        "type-name": "Nuclear",
+        "value": "2240",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T07",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "fueltype": "OIL",
+        "type-name": "Petroleum",
+        "value": "46",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T07",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "fueltype": "OTH",
+        "type-name": "Other",
+        "value": "834",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T07",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "fueltype": "SUN",
+        "type-name": "Solar",
+        "value": "-32",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T07",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "fueltype": "WAT",
+        "type-name": "Hydro",
+        "value": "3025",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T07",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "fueltype": "WND",
+        "type-name": "Wind",
+        "value": "243",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T08",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "fueltype": "COL",
+        "type-name": "Coal",
+        "value": "0",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T08",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "fueltype": "NG",
+        "type-name": "Natural Gas",
+        "value": "12470",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T08",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "fueltype": "NUC",
+        "type-name": "Nuclear",
+        "value": "2241",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T08",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "fueltype": "OIL",
+        "type-name": "Petroleum",
+        "value": "46",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T08",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "fueltype": "OTH",
+        "type-name": "Other",
+        "value": "236",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T08",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "fueltype": "SUN",
+        "type-name": "Solar",
+        "value": "-22",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T08",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "fueltype": "WAT",
+        "type-name": "Hydro",
+        "value": "2521",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T08",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "fueltype": "WND",
+        "type-name": "Wind",
+        "value": "435",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T09",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "fueltype": "COL",
+        "type-name": "Coal",
+        "value": "0",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T09",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "fueltype": "NG",
+        "type-name": "Natural Gas",
+        "value": "12439",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T09",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "fueltype": "NUC",
+        "type-name": "Nuclear",
+        "value": "2242",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T09",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "fueltype": "OIL",
+        "type-name": "Petroleum",
+        "value": "46",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T09",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "fueltype": "OTH",
+        "type-name": "Other",
+        "value": "93",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T09",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "fueltype": "SUN",
+        "type-name": "Solar",
+        "value": "-4",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T09",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "fueltype": "WAT",
+        "type-name": "Hydro",
+        "value": "2258",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T09",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "fueltype": "WND",
+        "type-name": "Wind",
+        "value": "404",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T10",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "fueltype": "COL",
+        "type-name": "Coal",
+        "value": "0",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T10",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "fueltype": "NG",
+        "type-name": "Natural Gas",
+        "value": "12060",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T10",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "fueltype": "NUC",
+        "type-name": "Nuclear",
+        "value": "2241",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T10",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "fueltype": "OIL",
+        "type-name": "Petroleum",
+        "value": "46",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T10",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "fueltype": "OTH",
+        "type-name": "Other",
+        "value": "487",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T10",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "fueltype": "SUN",
+        "type-name": "Solar",
+        "value": "-7",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T10",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "fueltype": "WAT",
+        "type-name": "Hydro",
+        "value": "1865",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T10",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "fueltype": "WND",
+        "type-name": "Wind",
+        "value": "333",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T11",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "fueltype": "COL",
+        "type-name": "Coal",
+        "value": "0",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T11",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "fueltype": "NG",
+        "type-name": "Natural Gas",
+        "value": "11590",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T11",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "fueltype": "NUC",
+        "type-name": "Nuclear",
+        "value": "2242",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T11",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "fueltype": "OIL",
+        "type-name": "Petroleum",
+        "value": "46",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T11",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "fueltype": "OTH",
+        "type-name": "Other",
+        "value": "138",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T11",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "fueltype": "SUN",
+        "type-name": "Solar",
+        "value": "-2",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T11",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "fueltype": "WAT",
+        "type-name": "Hydro",
+        "value": "1807",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T11",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "fueltype": "WND",
+        "type-name": "Wind",
+        "value": "371",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T12",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "fueltype": "COL",
+        "type-name": "Coal",
+        "value": "0",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T12",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "fueltype": "NG",
+        "type-name": "Natural Gas",
+        "value": "11307",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T12",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "fueltype": "NUC",
+        "type-name": "Nuclear",
+        "value": "2241",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T12",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "fueltype": "OIL",
+        "type-name": "Petroleum",
+        "value": "46",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T12",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "fueltype": "OTH",
+        "type-name": "Other",
+        "value": "-144",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T12",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "fueltype": "SUN",
+        "type-name": "Solar",
+        "value": "-19",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T12",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "fueltype": "WAT",
+        "type-name": "Hydro",
+        "value": "1791",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T12",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "fueltype": "WND",
+        "type-name": "Wind",
+        "value": "349",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T13",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "fueltype": "COL",
+        "type-name": "Coal",
+        "value": "0",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T13",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "fueltype": "NG",
+        "type-name": "Natural Gas",
+        "value": "11111",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T13",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "fueltype": "NUC",
+        "type-name": "Nuclear",
+        "value": "2243",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T13",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "fueltype": "OIL",
+        "type-name": "Petroleum",
+        "value": "46",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T13",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "fueltype": "OTH",
+        "type-name": "Other",
+        "value": "-153",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T13",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "fueltype": "SUN",
+        "type-name": "Solar",
+        "value": "-28",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T13",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "fueltype": "WAT",
+        "type-name": "Hydro",
+        "value": "1727",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T13",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "fueltype": "WND",
+        "type-name": "Wind",
+        "value": "333",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T14",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "fueltype": "COL",
+        "type-name": "Coal",
+        "value": "0",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T14",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "fueltype": "NG",
+        "type-name": "Natural Gas",
+        "value": "10897",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T14",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "fueltype": "NUC",
+        "type-name": "Nuclear",
+        "value": "2243",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T14",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "fueltype": "OIL",
+        "type-name": "Petroleum",
+        "value": "46",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T14",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "fueltype": "OTH",
+        "type-name": "Other",
+        "value": "-102",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T14",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "fueltype": "SUN",
+        "type-name": "Solar",
+        "value": "-33",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T14",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "fueltype": "WAT",
+        "type-name": "Hydro",
+        "value": "1745",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T14",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "fueltype": "WND",
+        "type-name": "Wind",
+        "value": "334",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T15",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "fueltype": "COL",
+        "type-name": "Coal",
+        "value": "0",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T15",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "fueltype": "NG",
+        "type-name": "Natural Gas",
+        "value": "10757",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T15",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "fueltype": "NUC",
+        "type-name": "Nuclear",
+        "value": "2244",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T15",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "fueltype": "OIL",
+        "type-name": "Petroleum",
+        "value": "46",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T15",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "fueltype": "OTH",
+        "type-name": "Other",
+        "value": "61",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T15",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "fueltype": "SUN",
+        "type-name": "Solar",
+        "value": "-33",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T15",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "fueltype": "WAT",
+        "type-name": "Hydro",
+        "value": "2053",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T15",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "fueltype": "WND",
+        "type-name": "Wind",
+        "value": "350",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T16",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "fueltype": "COL",
+        "type-name": "Coal",
+        "value": "0",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T16",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "fueltype": "NG",
+        "type-name": "Natural Gas",
+        "value": "10916",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T16",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "fueltype": "NUC",
+        "type-name": "Nuclear",
+        "value": "2243",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T16",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "fueltype": "OIL",
+        "type-name": "Petroleum",
+        "value": "46",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T16",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "fueltype": "OTH",
+        "type-name": "Other",
+        "value": "320",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T16",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "fueltype": "SUN",
+        "type-name": "Solar",
+        "value": "-30",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T16",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "fueltype": "WAT",
+        "type-name": "Hydro",
+        "value": "2168",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T16",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "fueltype": "WND",
+        "type-name": "Wind",
+        "value": "391",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T17",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "fueltype": "COL",
+        "type-name": "Coal",
+        "value": "0",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T17",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "fueltype": "NG",
+        "type-name": "Natural Gas",
+        "value": "10228",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T17",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "fueltype": "NUC",
+        "type-name": "Nuclear",
+        "value": "2243",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T17",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "fueltype": "OIL",
+        "type-name": "Petroleum",
+        "value": "46",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T17",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "fueltype": "OTH",
+        "type-name": "Other",
+        "value": "339",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T17",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "fueltype": "SUN",
+        "type-name": "Solar",
+        "value": "881",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T17",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "fueltype": "WAT",
+        "type-name": "Hydro",
+        "value": "2099",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T17",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "fueltype": "WND",
+        "type-name": "Wind",
+        "value": "339",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T18",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "fueltype": "COL",
+        "type-name": "Coal",
+        "value": "0",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T18",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "fueltype": "NG",
+        "type-name": "Natural Gas",
+        "value": "8205",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T18",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "fueltype": "NUC",
+        "type-name": "Nuclear",
+        "value": "2244",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T18",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "fueltype": "OIL",
+        "type-name": "Petroleum",
+        "value": "46",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T18",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "fueltype": "OTH",
+        "type-name": "Other",
+        "value": "-252",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T18",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "fueltype": "SUN",
+        "type-name": "Solar",
+        "value": "4654",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T18",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "fueltype": "WAT",
+        "type-name": "Hydro",
+        "value": "1597",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T18",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "fueltype": "WND",
+        "type-name": "Wind",
+        "value": "238",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T19",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "fueltype": "COL",
+        "type-name": "Coal",
+        "value": "0",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T19",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "fueltype": "NG",
+        "type-name": "Natural Gas",
+        "value": "7792",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T19",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "fueltype": "NUC",
+        "type-name": "Nuclear",
+        "value": "2244",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T19",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "fueltype": "OIL",
+        "type-name": "Petroleum",
+        "value": "46",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T19",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "fueltype": "OTH",
+        "type-name": "Other",
+        "value": "-1277",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T19",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "fueltype": "SUN",
+        "type-name": "Solar",
+        "value": "6738",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T19",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "fueltype": "WAT",
+        "type-name": "Hydro",
+        "value": "1267",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T19",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "fueltype": "WND",
+        "type-name": "Wind",
+        "value": "194",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T20",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "fueltype": "COL",
+        "type-name": "Coal",
+        "value": "0",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T20",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "fueltype": "NG",
+        "type-name": "Natural Gas",
+        "value": "8818",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T20",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "fueltype": "NUC",
+        "type-name": "Nuclear",
+        "value": "2244",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T20",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "fueltype": "OIL",
+        "type-name": "Petroleum",
+        "value": "46",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T20",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "fueltype": "OTH",
+        "type-name": "Other",
+        "value": "-2570",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T20",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "fueltype": "SUN",
+        "type-name": "Solar",
+        "value": "8571",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T20",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "fueltype": "WAT",
+        "type-name": "Hydro",
+        "value": "1011",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T20",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "fueltype": "WND",
+        "type-name": "Wind",
+        "value": "270",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T21",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "fueltype": "COL",
+        "type-name": "Coal",
+        "value": "0",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T21",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "fueltype": "NG",
+        "type-name": "Natural Gas",
+        "value": "9245",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T21",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "fueltype": "NUC",
+        "type-name": "Nuclear",
+        "value": "2244",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T21",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "fueltype": "OIL",
+        "type-name": "Petroleum",
+        "value": "46",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T21",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "fueltype": "OTH",
+        "type-name": "Other",
+        "value": "-3040",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T21",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "fueltype": "SUN",
+        "type-name": "Solar",
+        "value": "8890",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T21",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "fueltype": "WAT",
+        "type-name": "Hydro",
+        "value": "869",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T21",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "fueltype": "WND",
+        "type-name": "Wind",
+        "value": "331",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T22",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "fueltype": "COL",
+        "type-name": "Coal",
+        "value": "0",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T22",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "fueltype": "NG",
+        "type-name": "Natural Gas",
+        "value": "9268",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T22",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "fueltype": "NUC",
+        "type-name": "Nuclear",
+        "value": "2243",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T22",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "fueltype": "OIL",
+        "type-name": "Petroleum",
+        "value": "46",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T22",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "fueltype": "OTH",
+        "type-name": "Other",
+        "value": "-3040",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T22",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "fueltype": "SUN",
+        "type-name": "Solar",
+        "value": "9433",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T22",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "fueltype": "WAT",
+        "type-name": "Hydro",
+        "value": "831",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T22",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "fueltype": "WND",
+        "type-name": "Wind",
+        "value": "394",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T23",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "fueltype": "COL",
+        "type-name": "Coal",
+        "value": "0",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T23",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "fueltype": "NG",
+        "type-name": "Natural Gas",
+        "value": "9027",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T23",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "fueltype": "NUC",
+        "type-name": "Nuclear",
+        "value": "2244",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T23",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "fueltype": "OIL",
+        "type-name": "Petroleum",
+        "value": "46",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T23",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "fueltype": "OTH",
+        "type-name": "Other",
+        "value": "-2883",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T23",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "fueltype": "SUN",
+        "type-name": "Solar",
+        "value": "9635",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T23",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "fueltype": "WAT",
+        "type-name": "Hydro",
+        "value": "836",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-01T23",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "fueltype": "WND",
+        "type-name": "Wind",
+        "value": "452",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-02T00",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "fueltype": "COL",
+        "type-name": "Coal",
+        "value": "0",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-02T00",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "fueltype": "NG",
+        "type-name": "Natural Gas",
+        "value": "8050",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-02T00",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "fueltype": "NUC",
+        "type-name": "Nuclear",
+        "value": "2243",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-02T00",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "fueltype": "OIL",
+        "type-name": "Petroleum",
+        "value": "46",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-02T00",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "fueltype": "OTH",
+        "type-name": "Other",
+        "value": "-1678",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-02T00",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "fueltype": "SUN",
+        "type-name": "Solar",
+        "value": "9683",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-02T00",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "fueltype": "WAT",
+        "type-name": "Hydro",
+        "value": "997",
+        "value-units": "megawatthours"
+      },
+      {
+        "period": "2024-01-02T00",
+        "respondent": "CISO",
+        "respondent-name": "California Independent System Operator",
+        "fueltype": "WND",
+        "type-name": "Wind",
+        "value": "391",
+        "value-units": "megawatthours"
+      }
+    ],
+    "description": "Hourly net generation by balancing authority and energy source.  \n    Source: Form EIA-930\n    Product: Hourly Electric Grid Monitor"
+  },
+  "request": {
+    "command": "/v2/electricity/rto/fuel-type-data/data/",
+    "params": {
+      "frequency": "hourly",
+      "data": [
+        "value"
+      ],
+      "facets": {
+        "respondent": [
+          "CISO"
+        ]
+      },
+      "start": "2024-01-01T00",
+      "end": "2024-01-02T00",
+      "length": "5000",
+      "sort": [
+        {
+          "column": "period",
+          "direction": "asc"
+        }
+      ]
+    }
+  },
+  "apiVersion": "2.1.14",
+  "ExcelAddInVersion": "2.1.0"
+}

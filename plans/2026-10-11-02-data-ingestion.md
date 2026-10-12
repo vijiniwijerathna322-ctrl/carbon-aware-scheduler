@@ -8,7 +8,7 @@
 
 **Tech Stack:** httpx, tenacity, pandas, pyarrow, respx (tests).
 
-**Spec:** `docs/superpowers/specs/2026-10-11-carbon-aware-scheduler-design.md` (§3 Data sources, §6 Data contracts)
+**Spec:** `specs/2026-10-11-carbon-aware-scheduler-design.md` (§3 Data sources, §6 Data contracts)
 
 ## Global Constraints
 
@@ -36,14 +36,14 @@
 
 **Files:**
 - Create: `scripts/probe_eia.py`, `tests/fixtures/eia/region_data_page.json`, `tests/fixtures/eia/fuel_type_data_page.json`, `tests/fixtures/eia/route_meta_region_data.json`, `tests/fixtures/eia/route_meta_fuel_type_data.json`
-- Modify: `docs/superpowers/specs/…-design.md` §3 (replace the "Unverified assumptions" paragraph with verified facts)
+- Modify: `specs/…-design.md` §3 (replace the "Unverified assumptions" paragraph with verified facts)
 
 **Interfaces:** Produces verified constants used below: `REGION_DATA_ROUTE = "electricity/rto/region-data"`, `FUEL_TYPE_ROUTE = "electricity/rto/fuel-type-data"`, set of `fueltype` codes, set of `type` codes (`D`, `DF`, `NG`, `TI` expected), exact `period` format.
 
-- [ ] **Step 1: Get a free key** at the EIA registration page; put it in `.env` (not committed).
-- [ ] **Step 2: Write `scripts/probe_eia.py`:** GET `https://api.eia.gov/v2/electricity/rto/region-data/` (route metadata: facets, frequencies, data columns) and `…/fuel-type-data/`; then GET each `/data/` with `frequency=hourly&data[0]=value&facets[respondent][]=CISO&start=2024-01-01T00&end=2024-01-02T00&length=24&sort[0][column]=period&sort[0][direction]=asc`. Save raw JSON (with the `api_key` stripped from any echoed URL) into the four fixture files.
-- [ ] **Step 3: Run it:** `uv run python scripts/probe_eia.py` → Expected: four files written, HTTP 200.
-- [ ] **Step 4: Inspect and record** in the spec §3: actual `period` format, facet names, `type` and `fueltype` codes, whether `value` is a string, whether `start`/`end` are inclusive, and `response.total`. If anything contradicts the plan's interfaces below, fix this plan first (gate G1).
+- [x] **Step 1: Get a free key** at the EIA registration page; put it in `.env` (not committed).
+- [ ] **Step 2: Write `scripts/probe_eia.py`:** GET `https://api.eia.gov/v2/electricity/rto/region-data/` (route metadata: facets, frequencies, data columns) and `…/fuel-type-data/`; then GET each `/data/` with `frequency=hourly&data[0]=value&facets[respondent][]=CISO&start=2024-01-01T00&end=2024-01-02T00&length=5000&sort[0][column]=period&sort[0][direction]=asc`. Save raw JSON (with the `api_key` stripped from any echoed URL) into the four fixture files.
+- [x] **Step 3: Run it:** `uv run python scripts/probe_eia.py` → Verified: four route/page files plus two facet-code files written, all HTTP 200. Full 5000 limit records every category at both inclusive boundaries.
+- [x] **Step 4: Inspect and record** in the spec §3: actual `period` format, facet names, `type` and `fueltype` codes, whether `value` is a string, whether `start`/`end` are inclusive, and `response.total`. If anything contradicts the plan's interfaces below, fix this plan first (gate G1).
 - [ ] **Step 5: Commit** `docs: verify EIA API shape and record fixtures`
 
 ### Task 2: `EiaClient` with pagination, retry and throttle
