@@ -9,13 +9,17 @@ not appear in representations or logs.
 ## Decision
 
 Use pydantic-settings with environment variables overriding a project-root `.env` file.
+Explicit constructor arguments accept normal field names and take precedence over both
+sources, including an explicit `None` credential for offline operation.
 Store the EIA key as SecretStr and require it only in operations that use the live API.
 Resolve default and relative data/model paths against the nearest pyproject.toml above
 the package; if unavailable (for example an installed wheel), use the process working
 directory. Absolute overrides are preserved. Validate log levels explicitly.
 
-Region metadata remains assigned to config/regions.yaml in the ingestion plan; this
-foundation implements the application-settings portion of spec decision D10.
+Region metadata is loaded from project-relative `config/regions.yaml`. The typed registry
+validates safe codes, IANA timezones and coordinates. Unknown lookups list configured
+choices. CISO uses America/Los_Angeles, latitude 36.7 and longitude -119.4; stored data
+continues to use UTC.
 
 ## Consequences
 

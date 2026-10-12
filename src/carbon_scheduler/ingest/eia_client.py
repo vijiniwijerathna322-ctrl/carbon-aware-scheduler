@@ -73,7 +73,11 @@ class EiaClient:
             _QuerySecretFilter.secrets.add(api_key)
         self._key = api_key
         self._base_url = base_url.rstrip("/")
-        self._http = http if http is not None else httpx.Client(timeout=30)
+        self._http = (
+            http
+            if http is not None
+            else httpx.Client(timeout=httpx.Timeout(connect=30, read=90, write=30, pool=30))
+        )
         for name in tuple(logging.Logger.manager.loggerDict):
             if name.startswith("httpcore"):
                 logger = logging.getLogger(name)
@@ -109,6 +113,11 @@ class EiaClient:
                 params=httpx.QueryParams(tuple(params)),
             )
         except httpx.TransportError:
+            if self._owns_http:
+                self._http.close()
+                self._http = httpx.Client(
+                    timeout=httpx.Timeout(connect=30, read=90, write=30, pool=30)
+                )
             raise _Retryable("EIA transport failed") from None
         if response.status_code in (401, 403):
             raise EiaAuthError("EIA rejected the API key")

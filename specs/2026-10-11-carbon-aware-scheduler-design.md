@@ -47,7 +47,7 @@ Purpose for the owner: a data science internship portfolio piece that shows prob
 | D3 | Features use only information available at issue time. Seasonal anchors: `y[t+h-24·ceil(h/24)]`, `y[t+h-168·ceil(h/168)]` | Prevents leakage; fixes lag meaning for every horizon |
 | D4 | Intervals via **conformalized quantile regression** (CQR), calibrated on a chronologically later window, per horizon bucket (1–6, 7–24, 25–48) | Distribution-free, finite-sample coverage under exchangeability; honest about drift |
 | D5 | Splits are chronological only; evaluation by rolling-origin backtest | Time-series integrity |
-| D6 | Storage: Parquet files under `data/{interim,processed}/{region}/`; no database | YAGNI |
+| D6 | Storage: Parquet files under `data/{raw,interim,processed}/{region}/`; no database | YAGNI |
 | D7 | Scheduler strategies: `median` (minimise expected emissions) and `upper` (risk-averse, minimise the upper bound). Non-interruptible first; interruptible is a stretch task | Shows decision-under-uncertainty trade-off |
 | D8 | Demo image bakes a small data snapshot and trained model; live refresh is optional | Anyone can run it with no key |
 | D9 | Own implementations for conformal, PSI/KS drift and metrics (≈30–60 lines each) with tests; Evidently only for an optional HTML report | Fewer fragile dependencies, shows understanding |
@@ -71,7 +71,8 @@ Package: `src/carbon_scheduler/{config,logging,cli}.py` and subpackages `ingest/
 
 ## 6. Data contracts
 
-- **Hourly frame** (interim/processed): index `DatetimeIndex` tz=UTC, hourly, no gaps (NaN allowed). Columns: `demand_mwh`, `demand_forecast_mwh`, `net_generation_mwh`, `net_interchange_mwh`, `gen_<fuel>_mwh` per fuel. Processed adds `carbon_intensity_g_per_kwh`.
+- **Raw observations**: `raw/{region}/hourly.parquet` preserves pre-cleaning values for incremental revisions and audit. Cleaning produces interim output; processed is reserved for carbon intensity (ADR 0006).
+- **Hourly frame** (raw/interim/processed): index `DatetimeIndex` tz=UTC, hourly, no gaps (NaN allowed). Columns: `demand_mwh`, `demand_forecast_mwh`, `net_generation_mwh`, `net_interchange_mwh`, `gen_<fuel>_mwh` per fuel. Processed adds `carbon_intensity_g_per_kwh`.
 - **Forecast frame**: columns `issue_time`, `target_time` (UTC), `horizon` (int 1..48), `lower`, `median`, `upper`, `target` (`demand_mwh`|`carbon_intensity_g_per_kwh`).
 - **Ingestion quality report**: `gap_fraction` counts hours incomplete in any of the four required regional series; absent required columns count as missing for every hour. `n_remaining_gaps` counts these hours. Interpolation counts filled cells across numeric columns, and remaining missing-cell totals include virtual absent required columns. Fuel missingness, first/last observed UTC ISO timestamps and interior missing counts are diagnostics; G2 does not certify carbon-mix completeness. Cleaning rejects infinite values, flags demand <= 0 and centered 168-hour median/MAD spikes, then fills only complete bounded interior gaps of at most three hours. This retrospective cleaning uses future observations; historical forecast evaluation must avoid leakage. See ADR 0011.
 - **Model artifact**: directory with `model.joblib` and `metadata.json` (keys: `region`, `target`, `trained_at`, `data_start`, `data_end`, `train_end`, `calibration_end`, `alpha`, `feature_columns`, `metrics`, `versions`, `git_sha`).

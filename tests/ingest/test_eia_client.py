@@ -213,3 +213,47 @@ assert "[REDACTED]" in stream.getvalue()
         [sys.executable, "-c", script], capture_output=True, text=True, check=False
     )
     assert result.returncode == 0, result.stderr
+
+
+def test_owned_transport_is_recreated_after_connect_failure(monkeypatch):
+    created = []
+
+    def factory(**kwargs):
+        def handler(request):
+            if len(created) == 1:
+                raise httpx.ConnectError("temporary connection failure", request=request)
+            return httpx.Response(200, json={"response": {"total": "0", "data": []}})
+
+        http = original_client(transport=httpx.MockTransport(handler), **kwargs)
+        created.append(http)
+        return http
+
+    original_client = httpx.Client
+    monkeypatch.setattr("carbon_scheduler.ingest.eia_client.httpx.Client", factory)
+    with client() as c:
+        assert fetch(c) == []
+        assert len(created) == 2
+        assert created[0].is_closed
+        assert not created[1].is_closed
+        assert created[1].timeout.connect == 30
+        assert created[1].timeout.read == 90
+        assert created[1].timeout.write == 30
+        assert created[1].timeout.pool == 30
+    assert created[1].is_closed
+
+
+def test_injected_transport_survives_failed_retry():
+    attempts = 0
+
+    def handler(request):
+        nonlocal attempts
+        attempts += 1
+        if attempts == 1:
+            raise httpx.ConnectError("temporary connection failure", request=request)
+        return httpx.Response(200, json={"response": {"total": "0", "data": []}})
+
+    with httpx.Client(transport=httpx.MockTransport(handler)) as http:
+        with client(http=http) as c:
+            assert fetch(c) == []
+        assert not http.is_closed
+        assert attempts == 2

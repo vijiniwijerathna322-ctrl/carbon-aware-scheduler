@@ -2,7 +2,7 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** Pull EIA-930 hourly demand, forecast, generation, interchange and per-fuel generation for a region into a validated, gap-free hourly Parquet dataset, with incremental updates.
+**Goal:** Pull EIA-930 hourly demand, forecast, generation, interchange and per-fuel generation for a region into a validated Parquet dataset with a complete hourly index, explicit missing observations and incremental updates.
 
 **Architecture:** A thin `EiaClient` (pagination, retry, throttle) → route-specific fetchers → pure transform to a wide hourly frame → pure validation/cleaning that returns a `QualityReport` → Parquet store. CLI `ingest` orchestrates.
 
@@ -131,7 +131,7 @@
 - [x] **Step 2: Run** → FAIL
 - [x] **Step 3: Implement** as above.
 - [x] **Step 4: Run** → PASS
-- [ ] **Step 5: Commit** `feat(ingest): validation and cleaning with quality report`
+- [x] **Step 5: Commit** `feat(ingest): validation and cleaning with quality report` (commit `7a14074`).
 
 ### Task 6: Parquet store and incremental `ingest` command
 
@@ -142,27 +142,52 @@
 
 **Interfaces:**
 - Produces:
-  - `def write_hourly(df: pd.DataFrame, region: str, stage: Literal["interim","processed"], data_dir: Path) -> Path`
-  - `def read_hourly(region: str, stage: Literal["interim","processed"], data_dir: Path) -> pd.DataFrame` (raises `FileNotFoundError` with a hint to run `ingest`)
-  - `def run_ingest(region: str, start: str, end: str | None, settings: Settings, client: EiaClient | None = None, overlap_hours: int = 48) -> QualityReport` — if an interim file exists, fetch from `max(index) - overlap_hours`, merge with the new data (new wins), re-validate the merged frame, write.
+  - `def write_hourly(df: pd.DataFrame, region: str, stage: Literal["raw","interim","processed"], data_dir: Path) -> Path`
+  - `def read_hourly(region: str, stage: Literal["raw","interim","processed"], data_dir: Path) -> pd.DataFrame` (raises `FileNotFoundError` with a hint to run `ingest`)
+  - `def run_ingest(region: str, start: str, end: str | None, settings: Settings, client: EiaClient | None = None, overlap_hours: int = 48) -> QualityReport` — if a raw file exists (legacy interim fallback), fetch from `max(index) - overlap_hours`, merge with the new data (new wins), re-validate the merged frame, write.
   - `@dataclass(frozen=True) class Region: code: str; timezone: str; lat: float; lon: float` and `def load_regions(path: Path = Path("config/regions.yaml")) -> dict[str, Region]` in `src/carbon_scheduler/regions.py` (validates the IANA timezone; unknown code lookups raise `UnknownRegionError` listing known codes). Plans 08 and 10 extend this (weather points, second region).
   - CLI: `carbon-scheduler ingest --region CISO --start 2021-01-01T00 [--end …]`
 
-- [ ] **Step 1: Failing tests:**
+- [x] **Step 1: Failing tests:**
   - `test_write_read_roundtrip_preserves_index_tz_and_dtypes`
   - `test_ingest_is_idempotent` (run twice with a stub client → equal frames)
   - `test_ingest_revision_replaces_recent_value` (second run returns a changed value inside the overlap → stored value updated)
   - `test_incremental_fetches_from_overlap_start` (stub client records `start` argument)
   - `test_cli_ingest_without_key_fails_with_clear_message`
-- [ ] **Step 2: Run** → FAIL
-- [ ] **Step 3: Implement.** Region codes validated against `config/regions.yaml` (create it with `CISO` now: `timezone: America/Los_Angeles`, `lat: 36.7`, `lon: -119.4`).
-- [ ] **Step 4: Run** → PASS
-- [ ] **Step 5: Live check (opt-in):** `EIA_API_KEY=… uv run carbon-scheduler ingest --region CISO --start 2021-01-01T00` → Expected: file `data/interim/CISO/hourly.parquet`, report logged; gap_fraction < 0.02 (gate G2). Add this as `tests/ingest/test_live.py` marked `live`.
-- [ ] **Step 6: Commit** `feat(ingest): parquet store and incremental ingest command`
+- [x] **Step 2: Run** → FAIL
+- [x] **Step 3: Implement.** Region codes validated against `config/regions.yaml` (create it with `CISO` now: `timezone: America/Los_Angeles`, `lat: 36.7`, `lon: -119.4`).
+- [x] **Step 4: Run** → PASS
+- [x] **Step 5: Live check (opt-in):** `EIA_API_KEY=… uv run carbon-scheduler ingest --region CISO --start 2021-01-01T00` → Expected: file `data/interim/CISO/hourly.parquet`, report logged; gap_fraction < 0.02 (gate G2). Add this as `tests/ingest/test_live.py` marked `live`.
+- [x] **Step 6: Commit** `feat(ingest): parquet store and incremental ingest command`
+
+Live-query reliability refinement (ADR 0006): partition both routes into adjacent
+calendar-year UTC intervals before aggregating. This bounds deep-offset latency
+without reducing the requested history, and inclusive endpoints never overlap.
+After both routes finish a year, raw merged observations are atomically checkpointed;
+failed later windows can resume from completed raw history with the normal overlap.
+Interim cleaning and G2 reporting occur only after all requested windows finish.
+Historical backfills before the cache minimum defer checkpoints until full success,
+preserving the original cache and unfinished older prefix on failure.
+
+Storage contract refinement (ADR 0006): raw observations are kept in `data/raw`;
+cleaned ingestion output stays in `data/interim`. `processed` remains reserved for
+the carbon-intensity stage. Cache merges use raw, avoiding repeated-cleaning drift.
 
 ## Definition of Done
 
-- [ ] Task 1 facts recorded in spec; fixtures committed
-- [ ] `ingest` produces CISO hourly data from 2021 with `gap_fraction < 0.02`, or an ADR chooses another region (G2)
-- [ ] Re-running `ingest` makes no changes
-- [ ] Quality gate green; master plan status updated
+- [x] Task 1 facts recorded in spec; fixtures committed
+- [x] `ingest` produces CISO hourly data from 2021 with `gap_fraction < 0.02`, or an ADR chooses another region (G2)
+- [x] Re-running `ingest` makes no changes
+- [x] Quality gate green; master plan status updated
+
+Verification on 2026-10-12: full CLI history from 2021-01-01T00 through
+2026-10-12T05 produced 50,646 rows with 623 incomplete core hours,
+`gap_fraction=0.012301070173360186` (G2 PASS), 109 interpolated cells and no
+source duplicates. GEO begins 2025-12-16T09; prior absence stays missing.
+Raw/interim Parquet and quality JSON SHA-256 hashes were unchanged on the
+identical-bounds, 48-hour-overlap live rerun. The initial full CLI used normal DNS;
+the rerun used a temporary process-only public-DNS address after the local resolver
+returned NXDOMAIN. HTTPS hostname/certificate validation stayed enabled; no
+system DNS configuration or product source was changed for that workaround.
+Final local gate: 92 tests passed, one opt-in live test deselected, 96.90% coverage;
+Ruff lint/format and mypy passed.

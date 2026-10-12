@@ -25,7 +25,9 @@ class MissingApiKeyError(RuntimeError):
 class Settings(BaseSettings):
     """Application configuration; constructing settings does not require a key."""
 
-    model_config = SettingsConfigDict(env_file=PROJECT_ROOT / ".env", extra="ignore")
+    model_config = SettingsConfigDict(
+        env_file=PROJECT_ROOT / ".env", extra="ignore", populate_by_name=True
+    )
 
     eia_api_key: SecretStr | None = Field(default=None, validation_alias="EIA_API_KEY")
     log_level: Literal["DEBUG", "INFO", "WARNING", "ERROR"] = Field(

@@ -75,6 +75,28 @@ def test_settings_are_cached(monkeypatch):
     assert get_settings().log_level == "WARNING"
 
 
+def test_constructor_field_names_override_environment_and_dotenv(monkeypatch, tmp_path):
+    dotenv = tmp_path / ".env"
+    dotenv.write_text("EIA_API_KEY=fixture-dotenv-key\nLOG_LEVEL=DEBUG\n")
+    monkeypatch.setenv("EIA_API_KEY", "fixture-env-key")
+    monkeypatch.setenv("LOG_LEVEL", "ERROR")
+    monkeypatch.setenv("CARBON_DATA_DIR", str(tmp_path / "environment-data"))
+    monkeypatch.setenv("CARBON_MODELS_DIR", str(tmp_path / "environment-models"))
+    settings = Settings(
+        _env_file=dotenv,
+        eia_api_key="fixture-constructor-key",
+        log_level="WARNING",
+        data_dir=tmp_path / "constructor-data",
+        models_dir=tmp_path / "constructor-models",
+    )
+    assert settings.require_eia_key() == "fixture-constructor-key"
+    assert settings.log_level == "WARNING"
+    assert settings.data_dir == tmp_path / "constructor-data"
+    assert settings.models_dir == tmp_path / "constructor-models"
+    with pytest.raises(MissingApiKeyError):
+        Settings(_env_file=dotenv, eia_api_key=None).require_eia_key()
+
+
 def test_logging_uses_utc(monkeypatch):
     calls = {}
     monkeypatch.setattr(logging, "basicConfig", lambda **kwargs: calls.update(kwargs))
