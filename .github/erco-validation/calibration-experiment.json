@@ -1,0 +1,7 @@
+{
+  "region": "ERCO",
+  "target": "demand_mwh",
+  "validation_period": "March 2025",
+  "calibration_days": [90, 180],
+  "purpose": "Exploratory comparison only; no automatic parameter selection or promotion"
+}
