@@ -106,7 +106,7 @@ jobs:
           PY
       - name: Restore region history
         id: history
-        uses: actions/cache/restore@v4
+        uses: actions/cache/restore@v6
         with:
           path: |
             data/raw/${{ matrix.region }}
@@ -129,7 +129,7 @@ jobs:
         run: uv run --frozen carbon-scheduler monitor --region "$REGION"
       - name: Preserve completed ingestion even after a monitoring alert
         if: ${{ !cancelled() && steps.ingest.outcome == 'success' }}
-        uses: actions/cache/save@v4
+        uses: actions/cache/save@v6
         with:
           path: |
             data/raw/${{ matrix.region }}

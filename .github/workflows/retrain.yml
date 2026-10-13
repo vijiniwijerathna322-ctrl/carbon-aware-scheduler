@@ -92,7 +92,7 @@ jobs:
           path: .tools/previous
       - name: Restore region history
         id: history
-        uses: actions/cache/restore@v4
+        uses: actions/cache/restore@v6
         with:
           path: |
             data/raw/${{ inputs.region }}
@@ -128,7 +128,7 @@ jobs:
           uv run --frozen pytest -q
       - name: Save successfully refreshed history
         if: ${{ !cancelled() && steps.ingest.outcome == 'success' }}
-        uses: actions/cache/save@v4
+        uses: actions/cache/save@v6
         with:
           path: |
             data/raw/${{ inputs.region }}
