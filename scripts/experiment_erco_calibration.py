@@ -44,8 +44,11 @@ def main() -> None:
         "source_provenance": provenance,
         "fixed_parameters": {"seed": 42, "issue_step_h": 3, "alpha": 0.2},
         "variants": results,
-        "limitations": "Longer calibration also moves the training cutoff; this is a pipeline comparison. "
-        "One earlier month cannot establish deployment coverage. Final future validation remains required.",
+        "limitations": (
+            "Longer calibration also moves the training cutoff; this is a pipeline comparison. "
+            "One earlier month cannot establish deployment coverage. "
+            "Final future validation remains required."
+        ),
     }
     (output / "comparison.json").write_text(json.dumps(payload, indent=2, allow_nan=False) + "\n")
 
