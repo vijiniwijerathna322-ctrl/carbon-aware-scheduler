@@ -66,10 +66,10 @@
 **Files:**
 - Create: `.github/workflows/refresh.yml`
 
-- [ ] **Step 1: Write the workflow:** triggers `schedule` + `workflow_dispatch`; matrix over `[CISO, ERCO]`; steps: checkout, setup-uv, restore cache for `data/`, `uv sync --frozen`, `ingest`, `build-dataset`, `monitor` (non-zero on alert), upload `reports/` as artifact, save cache; on failure of `monitor` create a GitHub issue via `gh issue create` with the report reasons (job-level `permissions: issues: write`).
-- [ ] **Step 2: Validate syntax:** `uv run python -c "import yaml,sys;yaml.safe_load(open('.github/workflows/refresh.yml'))"` → no error; also review with `actionlint` if installed.
+- [x] **Step 1: Write the workflow:** triggers `schedule` + `workflow_dispatch`; matrix over `[CISO, ERCO]`; steps: checkout, setup-uv, restore cache for `data/`, `uv sync --frozen`, `ingest`, `build-dataset`, `monitor` (non-zero on alert), upload `reports/` as artifact, save cache; on failure of `monitor` create a GitHub issue via `gh issue create` with the report reasons (job-level `permissions: issues: write`).
+- [x] **Step 2: Validate syntax:** `uv run python -c "import yaml,sys;yaml.safe_load(open('.github/workflows/refresh.yml'))"` → no error; also review with `actionlint` if installed.
 - [ ] **Step 3: Add the `EIA_API_KEY` secret** in the repo settings (you do this yourself) and run the workflow via `workflow_dispatch`; confirm artifact appears and the log contains no key.
-- [ ] **Step 4: Commit** `ci: scheduled refresh and monitoring workflow`
+- [x] **Step 4: Commit** `ci: scheduled refresh and monitoring workflow`
 
 ### Task 4: Retrain-by-PR workflow
 
@@ -114,3 +114,11 @@ Task 1 gate: ruff check, ruff format check and mypy passed; full suite 301 passe
 Config propagation and ERCO metadata are implemented; full ERCO evaluation is pending EIA DNS recovery (Windows getaddrinfo error 11001 on 2026-10-13). The published second-region record explicitly leaves metrics unavailable. Task 2 is not complete. Tests use a unique filename to avoid collision with existing ingestion region tests. Store/registry/report writer interfaces add optional keyword-only regions_path arguments; settings-aware callers pass the configured path. CLI omission selects the first config entry, preserving the shipped ordering; API omission selects the service's region. No region identifiers remain hard-coded in src. Existing test doubles accept the new keyword arguments. Tests exercised the changes and failures were fixed before publication.
 
 Task 2 code verification: 307 tests passed, 1 deselected, 93.08% coverage; ruff, formatting and mypy green. Synthetic custom-region API requests without an explicit region and saved monitoring status also passed. Live ERCO measurements remain pending and Task 2 is not marked complete.
+
+## Task 3 execution record
+
+Implemented refresh.yml with Monday 06:00 UTC scheduling, manual dispatch, independent region jobs, locked uv setup, isolated data cache restore/save, ingestion, dataset construction, monitoring, always-on diagnostics and issue creation on monitor failure. Alert exits remain job failures. Completed ingestion is saved after alerts; failed ingestion is not cached. No retraining or model promotion occurs.
+
+Fresh runners require reviewed model and earlier held-out baseline artifacts because local ignored models/reports are absent from checkout. Region-specific MODELS_RUN_ID variables select successful main-branch runs; artifacts from pull-request runs are rejected. A public artifact inventory on 2026-10-13 found no monitoring-models-CISO or monitoring-models-ERCO bundles. Live dispatch, artifact review and live secret-log review remain pending prerequisites; Task 3 Step 3 is not complete. Operations are documented in docs/automation-refresh.md.
+
+Verification: YAML and embedded Python parsed; official checksum-verified actionlint 1.7.12 passed all workflows; actionlint validation added to CI. Ruff, formatting and mypy passed; full suite 307 passed, 1 deselected, coverage 93.08%.

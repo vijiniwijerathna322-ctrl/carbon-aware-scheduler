@@ -1,0 +1,156 @@
+name: Weekly refresh and monitoring
+
+on:
+  schedule:
+    - cron: '0 6 * * 1'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: refresh-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    permissions:
+      contents: read
+      actions: read
+      issues: write
+    strategy:
+      fail-fast: false
+      matrix:
+        region: [CISO, ERCO]
+    env:
+      REGION: ${{ matrix.region }}
+      MODEL_RUN_ID: ${{ vars[format('{0}_MODELS_RUN_ID', matrix.region)] }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: astral-sh/setup-uv@v7
+        with:
+          version: '0.13.0'
+          enable-cache: true
+      - name: Install locked environment
+        run: |
+          uv python install
+          uv sync --frozen
+      - name: Check prerequisites and approved artifact source
+        env:
+          EIA_API_KEY: ${{ secrets.EIA_API_KEY }}
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          set +x
+          if [ -z "$EIA_API_KEY" ]; then
+            echo '::error::Configure the EIA_API_KEY Actions secret.'
+            exit 1
+          fi
+          if [[ ! "$MODEL_RUN_ID" =~ ^[0-9]+$ ]]; then
+            echo "::error::Configure ${REGION}_MODELS_RUN_ID with a successful main-branch deployment artifact run."
+            exit 1
+          fi
+          gh api "repos/$GH_REPO/actions/runs/$MODEL_RUN_ID" > /tmp/model-run.json
+          python - <<'PY'
+          import json
+          import os
+          with open('/tmp/model-run.json') as stream:
+              run = json.load(stream)
+          assert run['repository']['full_name'] == os.environ['GH_REPO'], 'Wrong repository'
+          assert run['head_branch'] == 'main', 'Models must come from a reviewed main-branch run'
+          assert run['event'] != 'pull_request', 'PR artifacts cannot be deployed'
+          assert run['status'] == 'completed' and run['conclusion'] == 'success', 'Model run failed'
+          PY
+      - name: Download reviewed models and earlier backtest baselines
+        uses: actions/download-artifact@v4
+        with:
+          name: monitoring-models-${{ matrix.region }}
+          run-id: ${{ env.MODEL_RUN_ID }}
+          github-token: ${{ github.token }}
+          path: .
+      - name: Validate monitoring bundle
+        run: |
+          uv run --frozen python - <<'PY'
+          import os
+          from pathlib import Path
+          from carbon_scheduler.config import get_settings
+          from carbon_scheduler.models.registry import load_model
+          from carbon_scheduler.models.reporting import TARGETS
+          settings = get_settings()
+          region = os.environ['REGION']
+          for target in TARGETS:
+              load_model(region, target, settings.models_dir, regions_path=settings.regions_path)
+              for suffix in ('json', 'parquet'):
+                  path = Path('reports') / f'backtest_{region}_{target}_cqr.{suffix}'
+                  assert path.is_file(), f'Missing held-out baseline: {path}'
+          assert not (Path('reports') / f'monitor_{region}.json').exists(), 'Bundle must not contain stale monitor reports'
+          PY
+      - name: Restore region history
+        id: history
+        uses: actions/cache/restore@v4
+        with:
+          path: |
+            data/raw/${{ matrix.region }}
+            data/interim/${{ matrix.region }}
+          key: refresh-v1-${{ runner.os }}-${{ matrix.region }}-${{ github.run_id }}-${{ github.run_attempt }}
+          restore-keys: |
+            refresh-v1-${{ runner.os }}-${{ matrix.region }}-
+      - name: Ingest complete hourly routes
+        id: ingest
+        env:
+          EIA_API_KEY: ${{ secrets.EIA_API_KEY }}
+        run: |
+          set +x
+          uv run --frozen carbon-scheduler ingest --region "$REGION"
+      - name: Build processed dataset
+        id: dataset
+        run: uv run --frozen carbon-scheduler build-dataset --region "$REGION"
+      - name: Monitor deployed model
+        id: monitor
+        run: uv run --frozen carbon-scheduler monitor --region "$REGION"
+      - name: Preserve completed ingestion even after a monitoring alert
+        if: ${{ !cancelled() && steps.ingest.outcome == 'success' }}
+        uses: actions/cache/save@v4
+        with:
+          path: |
+            data/raw/${{ matrix.region }}
+            data/interim/${{ matrix.region }}
+          key: ${{ steps.history.outputs.cache-primary-key }}
+      - name: Upload diagnostics even on failure
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: refresh-${{ matrix.region }}-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            reports/monitor_${{ matrix.region }}.*
+            data/interim/${{ matrix.region }}/*report.json
+            data/processed/${{ matrix.region }}/*report.json
+          if-no-files-found: warn
+          retention-days: 30
+      - name: Open a monitoring failure issue
+        if: ${{ !cancelled() && steps.monitor.outcome == 'failure' }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          uv run --frozen python - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+          region = os.environ['REGION']
+          path = Path('reports') / f'monitor_{region}.json'
+          reasons = ['Monitor command failed before a report was available; inspect the run logs.']
+          if path.is_file():
+              report = json.loads(path.read_text())
+              reasons = report['reasons']
+          body = f"Monitoring failed for {region}.\n\nRun and diagnostics: {os.environ['RUN_URL']}\n\n"
+          body += '```text\n' + '\n'.join(str(reason).replace('```', "'''") for reason in reasons)[:20000] + '\n```\n'
+          body += '\nNo models were retrained or promoted. Review the saved diagnostics before taking action.\n'
+          Path('/tmp/monitor-issue.md').write_text(body)
+          PY
+          gh issue create --title "Monitoring failure: $REGION (run $GITHUB_RUN_ID)" --body-file /tmp/monitor-issue.md

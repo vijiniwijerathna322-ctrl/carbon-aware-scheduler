@@ -286,3 +286,10 @@ Region metadata is configurable through `CARBON_REGIONS_PATH` (default
 requests without a region use the region served by the service. ERCO is configured
 in `America/Chicago`. Its [execution record](docs/results/second-region-erco.md)
 documents the live EIA DNS failure; measured ERCO evaluation remains pending.
+
+The [weekly refresh workflow](.github/workflows/refresh.yml) runs both regions
+without retraining. It preserves monitoring failures, uploads diagnostics and
+opens an issue when monitoring fails. See [refresh operations](docs/automation-refresh.md)
+for the EIA secret, reviewed model/baseline artifact contract and repository
+variables required before a live dispatch. The schedule starts after this workflow
+reaches the default branch; Plan 10 is still in progress.
