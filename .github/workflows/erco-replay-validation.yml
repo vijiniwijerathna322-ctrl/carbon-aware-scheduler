@@ -45,6 +45,29 @@ jobs:
           mkdir -p reports
           cp .tools/erco-candidate/reports/backtest_ERCO_* reports/
           uv run --frozen carbon-scheduler schedule-backtest --region ERCO
+      - name: Compare retained CQR forecasts against seasonal naive
+        run: |
+          uv run --frozen python - <<'PY'
+          import json
+          from pathlib import Path
+          import pandas as pd
+          from carbon_scheduler.config import get_settings
+          from carbon_scheduler.models.reporting import run_backtest
+          from carbon_scheduler.models.evaluate import compare_point_forecasts, coverage_verdict, summarize
+          results = {}
+          for target in ('demand_mwh', 'carbon_intensity_g_per_kwh'):
+              stem = Path('reports') / f'backtest_ERCO_{target}_cqr'
+              info = json.loads(stem.with_suffix('.json').read_text())
+              path = run_backtest('ERCO', target, 'naive', get_settings(),
+                                  test_start=pd.Timestamp(info['test_start']),
+                                  test_end=pd.Timestamp(info['test_end']))
+              naive = pd.read_parquet(path.with_suffix('.parquet'))
+              candidate = pd.read_parquet(stem.with_suffix('.parquet'))
+              comparison = compare_point_forecasts(naive, candidate).rename(columns={'mae_lgbm': 'mae_cqr_median'})
+              results[target] = {'paired': comparison.to_dict(orient='index'),
+                                 'g4_pass': coverage_verdict(summarize(candidate))}
+          Path('reports/ERCO-baseline-comparison.json').write_text(json.dumps(results, indent=2, allow_nan=False))
+          PY
       - name: Record current candidate monitor diagnostics
         env:
           CARBON_MODELS_DIR: .tools/erco-candidate/candidates/ERCO/38349279499-1/demo/models
@@ -66,5 +89,8 @@ jobs:
           path: |
             reports/schedule_backtest_ERCO.*
             reports/monitor*
+            reports/ERCO-baseline-comparison.json
+            reports/backtest_ERCO_*_naive.*
           if-no-files-found: error
           retention-days: 30
+

@@ -1,5 +1,5 @@
 {
   "candidate_run": 38349279499,
   "region": "ERCO",
-  "purpose": "Score retained held-out scheduling and record candidate monitoring without promotion"
+  "purpose": "Score retained scheduling, compare matched seasonal-naive forecasts, and record candidate monitoring without promotion"
 }
