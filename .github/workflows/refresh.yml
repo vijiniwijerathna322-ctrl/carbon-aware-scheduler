@@ -39,6 +39,15 @@ jobs:
         run: |
           uv python install
           uv sync --frozen
+      - name: Resolve retained reviewed bundle when no explicit override is configured
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          if [ -z "$MODEL_RUN_ID" ]; then
+            MODEL_RUN_ID="$(uv run --frozen python scripts/find_deployment.py --repository "$GH_REPO" --region "$REGION")"
+            echo "MODEL_RUN_ID=$MODEL_RUN_ID" >> "$GITHUB_ENV"
+          fi
       - name: Check prerequisites and approved artifact source
         env:
           EIA_API_KEY: ${{ secrets.EIA_API_KEY }}

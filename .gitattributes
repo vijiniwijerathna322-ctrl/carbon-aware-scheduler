@@ -2,6 +2,7 @@
 demo/** -text
 # Candidate demo manifests also hash exact artifact bytes.
 candidates/** -text
+deployment-baselines/** -text
 # Trained carbon metadata records the exact factor-file digest as well.
 config/emission_factors.yaml -text
 # Bash scripts must execute with LF on every platform.

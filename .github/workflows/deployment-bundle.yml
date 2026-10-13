@@ -1,0 +1,60 @@
+name: Publish reviewed monitoring bundles
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'demo/**'
+      - 'deployment-baselines/**'
+      - '.github/workflows/deployment-bundle.yml'
+      - 'scripts/prepare_deployment.py'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  quality-gate:
+    uses: ./.github/workflows/ci.yml
+    permissions:
+      contents: read
+  ciso:
+    if: github.ref == 'refs/heads/main'
+    needs: quality-gate
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: astral-sh/setup-uv@v7
+        with:
+          version: '0.13.0'
+      - name: Install locked runtime
+        run: |
+          uv python install
+          uv sync --frozen
+      - name: Validate the already-reviewed demo models and held-out baselines
+        run: |
+          uv run --frozen python - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+          from scripts.prepare_deployment import prepare_bundle
+          from carbon_scheduler.config import get_settings
+          settings = get_settings().model_copy(update={
+              'models_dir': Path('demo/models').resolve(),
+              'reports_dir': Path('deployment-baselines/CISO').resolve(),
+          })
+          manifest = prepare_bundle('CISO', settings, Path('monitoring-bundle-CISO'))
+          manifest['approval'] = 'existing main-reviewed demo selection; no new model promotion'
+          manifest['source_revision'] = os.environ['GITHUB_SHA']
+          Path('monitoring-bundle-CISO/deployment-manifest.json').write_text(json.dumps(manifest, indent=2))
+          print(json.dumps(manifest, indent=2))
+          PY
+      - name: Publish verified CISO bundle
+        uses: actions/upload-artifact@v4
+        with:
+          name: monitoring-models-CISO
+          path: monitoring-bundle-CISO/
+          if-no-files-found: error
+          retention-days: 90
