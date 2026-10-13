@@ -1,0 +1,146 @@
+{
+  "region": "ERCO",
+  "old": {},
+  "new": {
+    "demand_mwh": {
+      "1-6": {
+        "n": 1098,
+        "n_interval": 1098,
+        "mae": 861.1438930897466,
+        "coverage": 0.8342440801457195,
+        "mean_width": 3748.50996499623,
+        "pinball_lo": 222.30002171543336,
+        "pinball_hi": 246.4561860048712,
+        "winkler": 4687.562077203045
+      },
+      "7-24": {
+        "n": 3293,
+        "n_interval": 3293,
+        "mae": 2383.259496071263,
+        "coverage": 0.7279076829638628,
+        "mean_width": 7179.070919603882,
+        "pinball_lo": 603.6944344828825,
+        "pinball_hi": 613.5312707194889,
+        "winkler": 12172.257052023713
+      },
+      "25-48": {
+        "n": 4367,
+        "n_interval": 4367,
+        "mae": 3059.7898965193867,
+        "coverage": 0.7398671857110144,
+        "mean_width": 9168.905919217885,
+        "pinball_lo": 749.5146573374158,
+        "pinball_hi": 666.7700299209096,
+        "winkler": 14162.846872583254
+      },
+      "all": {
+        "n": 8758,
+        "n_interval": 8758,
+        "mae": 2529.768439515343,
+        "coverage": 0.7472025576615665,
+        "mean_width": 7741.1688318161605,
+        "pinball_lo": 628.5889135862267,
+        "pinball_hi": 594.0571006368162,
+        "winkler": 12226.460142230431
+      }
+    },
+    "carbon_intensity_g_per_kwh": {
+      "1-6": {
+        "n": 1092,
+        "n_interval": 1092,
+        "mae": 22.168973641848407,
+        "coverage": 0.8122710622710623,
+        "mean_width": 78.4464387440876,
+        "pinball_lo": 5.312941975718339,
+        "pinball_hi": 4.52584140265217,
+        "winkler": 98.3878337837051
+      },
+      "7-24": {
+        "n": 3275,
+        "n_interval": 3275,
+        "mae": 30.031115818031502,
+        "coverage": 0.7972519083969466,
+        "mean_width": 105.70151212303475,
+        "pinball_lo": 6.83648526681881,
+        "pinball_hi": 7.236082778536756,
+        "winkler": 140.72568045355567
+      },
+      "25-48": {
+        "n": 4343,
+        "n_interval": 4343,
+        "mae": 40.399131664020395,
+        "coverage": 0.7886253741653235,
+        "mean_width": 129.56250154704193,
+        "pinball_lo": 8.701715955664746,
+        "pinball_hi": 8.656232572566156,
+        "winkler": 173.579485282309
+      },
+      "all": {
+        "n": 8710,
+        "n_interval": 8710,
+        "mae": 34.21513804107832,
+        "coverage": 0.7948335246842709,
+        "mean_width": 114.18207893573887,
+        "pinball_lo": 7.57551943533502,
+        "pinball_hi": 7.604409641108938,
+        "winkler": 151.7992907644396
+      }
+    }
+  },
+  "counts": {
+    "demand_mwh": {
+      "old_rows": 8832,
+      "new_rows": 8832,
+      "matched_keys": 8832,
+      "unmatched_old": 0,
+      "unmatched_new": 0,
+      "excluded_nonfinite": 74,
+      "different_labels": 0,
+      "paired_finite_rows": 8758,
+      "previous_missing": true
+    },
+    "carbon_intensity_g_per_kwh": {
+      "old_rows": 8832,
+      "new_rows": 8832,
+      "matched_keys": 8832,
+      "unmatched_old": 0,
+      "unmatched_new": 0,
+      "excluded_nonfinite": 122,
+      "different_labels": 0,
+      "paired_finite_rows": 8710,
+      "previous_missing": true
+    }
+  },
+  "provenance": {
+    "demand_mwh": {
+      "old": null,
+      "new": {
+        "calibration_days": 90,
+        "data_source": "raw",
+        "input_sha256": "5c940bc300699ef96f42853e6fd30df5b06a5b709a5fb0e1eb821a8382397b28",
+        "limitations": "Latest-revision snapshot; zero observation latency assumed; no publication-vintage archive.",
+        "model_parameters": "{\"colsample_bytree\": 0.8, \"issue_step_h\": 3, \"learning_rate\": 0.05, \"min_child_samples\": 50, \"n_estimators\": 400, \"n_jobs\": 1, \"num_leaves\": 31, \"seed\": 42, \"subsample\": 0.8, \"subsample_freq\": 1, \"verbose\": -1}",
+        "preprocessing": "Pointwise raw observations; no interpolation or centered spike filtering.",
+        "test_end": "2026-10-13T05:00:00+00:00",
+        "test_start": "2026-04-13T05:00:00+00:00",
+        "timezone": "America/Chicago"
+      }
+    },
+    "carbon_intensity_g_per_kwh": {
+      "old": null,
+      "new": {
+        "calibration_days": 90,
+        "carbon_scope": "Observed covered generation mix; partial fuel observations and excluded OTH; imports ignored.",
+        "data_source": "raw",
+        "factors_sha256": "5697a2fcd173474d398380d385cd6885099815473909971d1a75c99fee8b1d64",
+        "input_sha256": "5c940bc300699ef96f42853e6fd30df5b06a5b709a5fb0e1eb821a8382397b28",
+        "limitations": "Latest-revision snapshot; zero observation latency assumed; no publication-vintage archive.",
+        "model_parameters": "{\"colsample_bytree\": 0.8, \"issue_step_h\": 3, \"learning_rate\": 0.05, \"min_child_samples\": 50, \"n_estimators\": 400, \"n_jobs\": 1, \"num_leaves\": 31, \"seed\": 42, \"subsample\": 0.8, \"subsample_freq\": 1, \"verbose\": -1}",
+        "preprocessing": "Pointwise raw observations; no interpolation or centered spike filtering.",
+        "test_end": "2026-10-13T05:00:00+00:00",
+        "test_start": "2026-04-13T05:00:00+00:00",
+        "timezone": "America/Chicago"
+      }
+    }
+  }
+}

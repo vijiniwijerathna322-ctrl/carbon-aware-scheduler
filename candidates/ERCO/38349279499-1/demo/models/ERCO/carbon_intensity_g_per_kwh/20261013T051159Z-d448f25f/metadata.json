@@ -1,0 +1,110 @@
+{
+  "alpha": 0.2,
+  "calibration_days": 90,
+  "calibration_end": "2026-10-12T04:00:00+00:00",
+  "calibration_start": "2026-07-14T04:00:00+00:00",
+  "carbon_scope": "Observed covered generation mix; partial fuel observations and excluded OTH; imports ignored.",
+  "corrections": {
+    "1-6": 1.7015076591910656,
+    "25-48": -2.3553604856425636,
+    "7-24": -4.194133503357534
+  },
+  "data_end": "2026-10-12T04:00:00+00:00",
+  "data_source": "raw",
+  "data_start": "2021-01-01T00:00:00+00:00",
+  "exog_columns": [],
+  "exog_source": null,
+  "factors_sha256": "5697a2fcd173474d398380d385cd6885099815473909971d1a75c99fee8b1d64",
+  "feature_columns": [
+    "horizon",
+    "y_issue",
+    "y_lag1",
+    "y_lag24",
+    "roll_mean_24",
+    "roll_std_24",
+    "anchor_24",
+    "anchor_168",
+    "hour_local",
+    "dow_local",
+    "month_local",
+    "is_us_holiday"
+  ],
+  "fit_end": "2026-10-12T04:00:00+00:00",
+  "git_sha": "912b865b2164aa3186cd95d282e8f6c4efdb7342",
+  "input_sha256": "5c940bc300699ef96f42853e6fd30df5b06a5b709a5fb0e1eb821a8382397b28",
+  "issue_step_h": 3,
+  "lgbm_parameters": {
+    "colsample_bytree": 0.8,
+    "learning_rate": 0.05,
+    "min_child_samples": 50,
+    "n_estimators": 400,
+    "num_leaves": 31,
+    "subsample": 0.8,
+    "subsample_freq": 1,
+    "verbose": -1
+  },
+  "limitations": "Latest-revision snapshot; zero observation latency assumed; no publication-vintage archive.",
+  "metrics": {
+    "calibration": {
+      "1-6": {
+        "coverage": 0.8003709714815673,
+        "mae": 18.19367309678238,
+        "mean_width": 65.2286211998906,
+        "n": 4313,
+        "n_interval": 4313,
+        "pinball_hi": 4.23568566485189,
+        "pinball_lo": 4.414870847864193,
+        "winkler": 86.50556512716082
+      },
+      "25-48": {
+        "coverage": 0.8000941841299741,
+        "mae": 33.81163263848968,
+        "mean_width": 110.70815523243073,
+        "n": 16988,
+        "n_interval": 16988,
+        "pinball_hi": 7.283772375409667,
+        "pinball_lo": 7.4193977547529695,
+        "winkler": 147.03170130162638
+      },
+      "7-24": {
+        "coverage": 0.80018652366519,
+        "mae": 26.75249614935097,
+        "mean_width": 90.89121589422267,
+        "n": 12867,
+        "n_interval": 12867,
+        "pinball_hi": 6.117640334330432,
+        "pinball_lo": 6.106314469779756,
+        "winkler": 122.23954804110188
+      },
+      "all": {
+        "coverage": 0.8001638960430812,
+        "mae": 29.181857155314447,
+        "mean_width": 97.50463765027584,
+        "n": 34168,
+        "n_interval": 34168,
+        "pinball_hi": 6.459872265505598,
+        "pinball_lo": 6.54565720285758,
+        "winkler": 130.05529468363181
+      }
+    },
+    "scope": "reused calibration window; not held-out"
+  },
+  "model_sha256": "5e2cfe1fd8ba8d022d0529f735dcc2a67c1b7bc2b588fcbfb3032f8c8ae9b3a1",
+  "n_calibration": 34168,
+  "n_train": 775000,
+  "preprocessing": "Pointwise raw observations; no interpolation or centered spike filtering.",
+  "region": "ERCO",
+  "seed": 42,
+  "target": "carbon_intensity_g_per_kwh",
+  "train_end": "2026-07-14T04:00:00+00:00",
+  "trained_at": "2026-10-13T05:11:59.645671+00:00",
+  "tz": "America/Chicago",
+  "version": "20261013T051159Z-d448f25f",
+  "versions": {
+    "joblib": "1.6.0",
+    "lightgbm": "4.7.0",
+    "numpy": "2.4.6",
+    "pandas": "3.0.6",
+    "python": "3.11.17"
+  }
+}
