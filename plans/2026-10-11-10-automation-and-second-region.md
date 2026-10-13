@@ -8,7 +8,7 @@
 
 **Tech Stack:** GitHub Actions, GHCR, Dependabot, existing CLI.
 
-**Spec:** `docs/superpowers/specs/2026-10-11-carbon-aware-scheduler-design.md` (§2 v1, §8)
+**Spec:** `specs/2026-10-11-carbon-aware-scheduler-design.md` (§2 v1, §8)
 
 ## Global Constraints
 
@@ -36,11 +36,11 @@
 - Modify: `src/carbon_scheduler/ingest/store.py`, `src/carbon_scheduler/models/registry.py`
 - Test: `tests/ingest/test_store_atomic.py`
 
-- [ ] **Step 1: Failing tests:** `test_failed_write_leaves_previous_file_intact` (monkeypatch `to_parquet` to raise midway), `test_no_temp_files_left_after_success`
-- [ ] **Step 2: Run** → FAIL
-- [ ] **Step 3: Implement** write-to-temp-then-`os.replace` in `write_hourly`; same for the registry `current.json` pointer.
-- [ ] **Step 4: Run** → PASS
-- [ ] **Step 5: Commit** `fix(store): atomic writes`
+- [x] **Step 1: Regression tests:** interrupted serialization/replacement and successful cleanup for hourly stores and registry pointers.
+- [x] **Step 2: Existing implementation audit:** atomic writes already implemented; no redundant implementation or red-first claim.
+- [x] **Step 3: Confirm** same-directory temporary files, os.replace and finally cleanup in both existing implementations.
+- [x] **Step 4: Run** → PASS
+- [x] **Step 5: Commit** `test(store): verify atomic writes preserve previous snapshots`
 
 ### Task 2: Regions config generalisation and ERCO run
 
@@ -102,3 +102,9 @@
 - [ ] A retrain PR was produced and reviewed
 - [ ] Published image runs the smoke test
 - [ ] ERCO results documented; master plan status updated
+
+## Execution record: Task 1
+
+The executing-plans sub-skill is not installed; the plan is followed directly. Task 1 already had same-directory temporary writes, os.replace and finally cleanup in both hourly storage and registry pointers. Six regression cases now exercise interrupted Parquet serialization, interrupted pointer serialization, replacement failures for both stores, successful replacement and cleanup. Existing implementations were retained. Quality evidence is recorded after the gate completes; Tasks 2?5 remain pending.
+
+Task 1 gate: ruff check, ruff format check and mypy passed; full suite 301 passed, 1 deselected, coverage 92.95%.
