@@ -46,7 +46,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 45
     permissions:
-      contents: read
+      contents: write
       packages: write
     env:
       IMAGE: ${{ needs.release-source.outputs.image }}
@@ -113,3 +113,14 @@ jobs:
           } >> "$GITHUB_STEP_SUMMARY"
         env:
           PUBLISHED_REFERENCE: ${{ steps.registry.outputs.reference }}
+      - name: Publish research release notes after digest verification
+        if: github.ref_name == 'v0.2.0'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          PUBLISHED_REFERENCE: ${{ steps.registry.outputs.reference }}
+        run: |
+          cp docs/releases/v0.2.0-draft.md /tmp/research-release.md
+          printf '\nVerified container digest: `%s`\n' "$PUBLISHED_REFERENCE" >> /tmp/research-release.md
+          gh release create "$GITHUB_REF_NAME" --verify-tag --prerelease \
+            --title 'v0.2.0 research release' --notes-file /tmp/research-release.md
