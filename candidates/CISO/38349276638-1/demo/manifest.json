@@ -1,0 +1,22 @@
+{
+  "region": "CISO",
+  "data_source": "raw",
+  "history_days": 400,
+  "data_start": "2025-09-08T06:00:00+00:00",
+  "data_end": "2026-10-13T05:00:00+00:00",
+  "models": {
+    "demand_mwh": "20261013T051021Z-8fb42d55",
+    "carbon_intensity_g_per_kwh": "20261013T051117Z-0e198a4f"
+  },
+  "weather_models": {},
+  "sha256": {
+    "models/CISO/demand_mwh/current.json": "bf9c4f150e044b568abb7f7f9967414c5e337aba10955698667bcbbe9deb8791",
+    "models/CISO/demand_mwh/20261013T051021Z-8fb42d55/metadata.json": "3601e6ea92fd29a6534199e741e8fb3038e025b86d140766eb2fdcfe97eacb86",
+    "models/CISO/demand_mwh/20261013T051021Z-8fb42d55/model.joblib": "162ce5abb592995e867851ceca685c983e52843266191e18abf5ed61d1499835",
+    "models/CISO/carbon_intensity_g_per_kwh/current.json": "ae06046c1e7df4847b9d1b2ec86f5126807e2f2014c07856c8935406d8e3c059",
+    "models/CISO/carbon_intensity_g_per_kwh/20261013T051117Z-0e198a4f/metadata.json": "7b2ccd7c309a5e1c7efa0aad7b1d71621c6ede0403d3ad75ba769bcec8befebb",
+    "models/CISO/carbon_intensity_g_per_kwh/20261013T051117Z-0e198a4f/model.joblib": "915eb66ff65e9b1d12c69f02bfd46fe1606e361d58e8fd011f33b504d172ea84",
+    "data/raw/CISO/hourly.parquet": "8e4102342fee0348cedbd420ebc83711b6a1621eb397e57f8e1861e40e96faf4"
+  },
+  "limitations": "Frozen latest-revision snapshot; zero observation latency; carbon G4 missed nominal coverage."
+}
