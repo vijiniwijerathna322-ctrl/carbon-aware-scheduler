@@ -1,0 +1,115 @@
+name: Release verified container
+
+on:
+  push:
+    tags: ['v*']
+
+permissions:
+  contents: read
+
+concurrency:
+  group: container-release
+  cancel-in-progress: false
+
+jobs:
+  release-source:
+    runs-on: ubuntu-latest
+    outputs:
+      image: ${{ steps.source.outputs.image }}
+      version: ${{ steps.source.outputs.version }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Validate stable tag and reviewed main ancestry
+        id: source
+        run: |
+          if [[ ! "$GITHUB_REF_NAME" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo '::error::Release tags must be stable vMAJOR.MINOR.PATCH versions.'
+            exit 1
+          fi
+          git merge-base --is-ancestor "$GITHUB_SHA" origin/main || {
+            echo '::error::Release commit must already be merged into main.'
+            exit 1
+          }
+          echo "image=ghcr.io/${GITHUB_REPOSITORY,,}" >> "$GITHUB_OUTPUT"
+          echo "version=${GITHUB_REF_NAME#v}" >> "$GITHUB_OUTPUT"
+  quality-gate:
+    needs: release-source
+    uses: ./.github/workflows/ci.yml
+    permissions:
+      contents: read
+  publish:
+    needs: [release-source, quality-gate]
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    permissions:
+      contents: read
+      packages: write
+    env:
+      IMAGE: ${{ needs.release-source.outputs.image }}
+      VERSION: ${{ needs.release-source.outputs.version }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+      - uses: docker/setup-buildx-action@v3
+      - name: Build candidate once and load the tested image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          platforms: linux/amd64
+          load: true
+          push: false
+          provenance: false
+          tags: ${{ env.IMAGE }}:${{ env.VERSION }}
+          labels: |
+            org.opencontainers.image.source=${{ github.server_url }}/${{ github.repository }}
+            org.opencontainers.image.revision=${{ github.sha }}
+            org.opencontainers.image.version=${{ env.VERSION }}
+      - name: Smoke-test the exact candidate before registry writes
+        env:
+          IMAGE: ${{ env.IMAGE }}:${{ env.VERSION }}
+          SMOKE_MODE: local
+        run: bash scripts/smoke_docker.sh
+      - name: Log in to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ github.token }}
+      - name: Publish the already-tested version and resolve its registry digest
+        id: registry
+        run: |
+          if docker buildx imagetools inspect "$IMAGE:$VERSION" >/dev/null 2>&1; then
+            echo '::error::Version already exists; release tags must not overwrite published versions.'
+            exit 1
+          fi
+          docker push "$IMAGE:$VERSION"
+          docker pull "$IMAGE:$VERSION"
+          digest_ref="$(docker image inspect --format '{{index .RepoDigests 0}}' "$IMAGE:$VERSION")"
+          if [[ "$digest_ref" != "$IMAGE@sha256:"* ]]; then
+            echo '::error::Could not resolve the published image digest.'
+            exit 1
+          fi
+          echo "reference=$digest_ref" >> "$GITHUB_OUTPUT"
+      - name: Pull and smoke-test the published digest
+        env:
+          IMAGE: ${{ steps.registry.outputs.reference }}
+          SMOKE_MODE: pull
+        run: bash scripts/smoke_docker.sh
+      - name: Update latest only after registry verification
+        run: |
+          docker tag "$IMAGE:$VERSION" "$IMAGE:latest"
+          docker push "$IMAGE:latest"
+          {
+            echo '### Verified container release'
+            echo "Version: $IMAGE:$VERSION"
+            echo "Digest: $PUBLISHED_REFERENCE"
+            echo 'Published digest passed the offline non-root read-only smoke test.'
+          } >> "$GITHUB_STEP_SUMMARY"
+        env:
+          PUBLISHED_REFERENCE: ${{ steps.registry.outputs.reference }}

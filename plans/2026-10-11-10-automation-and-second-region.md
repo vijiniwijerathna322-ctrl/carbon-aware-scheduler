@@ -93,10 +93,10 @@
 **Files:**
 - Create: `.github/workflows/release.yml`, `.github/dependabot.yml`
 
-- [ ] **Step 1: Write `release.yml`:** on tag `v*`; jobs: `needs` the CI workflow result (`workflow_run` or re-run the gate), then `docker/build-push-action` to GHCR with tags `latest` and the version; `permissions: packages: write, contents: read`.
-- [ ] **Step 2: Write `dependabot.yml`:** weekly updates for `pip` (uv) and `github-actions`.
+- [x] **Step 1: Write `release.yml`:** on tag `v*`; jobs: `needs` the CI workflow result (`workflow_run` or re-run the gate), then `docker/build-push-action` to GHCR with tags `latest` and the version; `permissions: packages: write, contents: read`.
+- [x] **Step 2: Write `dependabot.yml`:** weekly updates for `pip` (uv) and `github-actions`.
 - [ ] **Step 3: Tag `v0.2.0` and push;** verify the image appears in GHCR and `docker run ghcr.io/<owner>/carbon-aware-scheduler:0.2.0` passes `scripts/smoke_docker.sh` (parameterise the script by image name).
-- [ ] **Step 4: Commit** `ci: release workflow and dependabot`
+- [x] **Step 4: Commit** `ci: release workflow and dependabot`
 
 ## Definition of Done
 
@@ -134,3 +134,9 @@ Retraining is main-only/manual, with locked dependencies, explicit secret checks
 Local verification: 315 tests passed, 1 deselected, coverage 93.08%; ruff/format/mypy passed. All workflows passed actionlint, Bash syntax checks and embedded Python parsing. A real CISO format preview reused existing held-out files on both sides (zero deltas): 8,756 paired finite demand rows and 8,710 carbon rows, excluding 28 and 74 nonfinite rows respectively. This is not a new model performance experiment. Actual workflow dispatch and PR review remain pending; operations and GITHUB_TOKEN downstream-CI limits are documented in docs/automation-retrain.md.
 
 CI follow-up: the first Linux test job exposed a test-helper import-path difference between python -m pytest and the pytest console entry point. The failure was reproduced locally with pytest.exe; script tests now load the helper from an explicit repository-relative file path. The console-entry-point full gate passed: 315 tests, 93.08% coverage. No production code changed for this correction.
+
+## Task 5 implementation and pending release
+
+Added tag-triggered release.yml with stable version validation and main ancestry, reusable CI on the exact tagged commit, and packages-write permission only for publishing. A single loaded build is smoke-tested before pushing, then its registry digest is pulled and verified before latest updates. Existing published version tags are rejected. Smoke script modes are build/local/pull; normal CI additionally verifies local mode. Dependabot uses the currently documented native uv ecosystem (rather than the plan's older generic pip wording) and github-actions with weekly schedules.
+
+Local gate: 315 tests, 1 deselected, 93.08% coverage; ruff/format/mypy, actionlint, workflow YAML/embedded Bash/Python syntax all pass. Live tag/GHCR publication remains pending. No v0.2.0 tag has been created: the one-plan/one-branch agreement requires the pending ERCO evaluation, refresh live dispatch/artifact review and actual retrain PR review before merging to main; the release guard rejects unmerged commits. Plan 10 remains in progress. See docs/automation-release.md.

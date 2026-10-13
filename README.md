@@ -299,3 +299,10 @@ with versioned candidate artifacts and paired held-out metric deltas. It runs
 the quality gate before opening review and leaves deployment pointers unchanged.
 See [retraining operations](docs/automation-retrain.md) for comparison limits,
 repository permissions and the separate promotion requirement.
+
+The [container release workflow](.github/workflows/release.yml) reruns the full
+CI gate on stable `v*` tags already merged into main. It smoke-tests the exact
+image before publishing and verifies the GHCR digest before updating `latest`.
+Weekly Dependabot updates cover uv and GitHub Actions. See
+[release operations](docs/automation-release.md); v0.2.0 publication remains
+pending the outstanding Plan 10 live validations.

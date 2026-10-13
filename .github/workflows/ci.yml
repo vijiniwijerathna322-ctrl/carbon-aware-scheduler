@@ -3,6 +3,7 @@ name: CI
 on:
   push:
   pull_request:
+  workflow_call:
 
 permissions:
   contents: read
@@ -45,4 +46,8 @@ jobs:
         with:
           python-version: "3.11"
       - name: Build and verify offline non-root read-only container
+        run: bash scripts/smoke_docker.sh
+      - name: Verify existing-image smoke mode used by releases
+        env:
+          SMOKE_MODE: local
         run: bash scripts/smoke_docker.sh

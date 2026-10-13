@@ -26,7 +26,12 @@ cleanup() {
 }
 trap cleanup EXIT
 
-docker build -t "$image" .
+case "${SMOKE_MODE:-build}" in
+  build) docker build -t "$image" . ;;
+  local) docker image inspect "$image" >/dev/null ;;
+  pull) docker pull "$image" ;;
+  *) echo 'SMOKE_MODE must be build, local or pull.' >&2; exit 1 ;;
+esac
 container="$(docker run -d --read-only --tmpfs /tmp:rw,noexec,nosuid,size=64m \
   --cap-drop ALL --security-opt no-new-privileges -p "127.0.0.1:$port:8000" "$image")"
 for _ in $(seq 1 30); do
