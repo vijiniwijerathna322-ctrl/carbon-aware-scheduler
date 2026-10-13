@@ -339,8 +339,7 @@ The [container release workflow](.github/workflows/release.yml) reruns the full
 CI gate on stable `v*` tags already merged into main. It smoke-tests the exact
 image before publishing and verifies the GHCR digest before updating `latest`.
 Weekly Dependabot updates cover uv and GitHub Actions. See
-[release operations](docs/automation-release.md); v0.2.0 publication remains
-pending the outstanding Plan 10 live validations.
+[release operations](docs/automation-release.md). The approved [v0.2.0 research release](https://github.com/vijiniwijerathna322-ctrl/carbon-aware-scheduler/releases/tag/v0.2.0) is published with the existing CISO demo; coverage and production acceptance limitations remain explicit.
 
 ## Scope, attribution and licence
 

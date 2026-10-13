@@ -44,3 +44,13 @@ and repository description/topics/pinning also remain outside verified evidence.
 See [regional results](results/second-region-erco.md),
 [live refresh](results/live-refresh-2026-10-13.md) and
 [calibration experiment](results/erco-calibration-experiment.md) for the measurements.
+
+## Approved research release publication (2026-10-13)
+
+The user explicitly approved v0.2.0 as a research release retaining the existing CISO demo. This supersedes the earlier no-publication status above, without waiving model production acceptance. Release run 38364497209 passed reusable CI, Docker smoke, exact-image pre-push smoke, published-digest pull smoke and latest update. GitHub research prerelease: https://github.com/vijiniwijerathna322-ctrl/carbon-aware-scheduler/releases/tag/v0.2.0.
+
+Image: ghcr.io/vijiniwijerathna322-ctrl/carbon-aware-scheduler:0.2.0
+
+Verified digest: sha256:3b2767ca7dbb212ba7d76f5dad4f61e08f10bb684c2bfabee01cf566174304e6
+
+The first tag run failed ShellCheck before any registry write; its unpublished tag was corrected once to main commit 3e02388 with an exact remote lease. The successful tagged revision and image are retained. No candidate models were promoted; v1.0.0 and full production acceptance are not claimed. Anonymous package visibility remains unverified; registry smoke used the authorized runner login.
