@@ -1,0 +1,149 @@
+name: Retrain candidate for review
+
+on:
+  workflow_dispatch:
+    inputs:
+      region:
+        description: Region to retrain
+        required: true
+        type: choice
+        default: CISO
+        options: [CISO, ERCO]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: retrain-${{ inputs.region }}
+  cancel-in-progress: false
+
+jobs:
+  candidate:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 360
+    permissions:
+      contents: write
+      pull-requests: write
+      actions: read
+    env:
+      REGION: ${{ inputs.region }}
+      MODEL_RUN_ID: ${{ vars[format('{0}_MODELS_RUN_ID', inputs.region)] }}
+      CANDIDATE_ROOT: candidates/${{ inputs.region }}/${{ github.run_id }}-${{ github.run_attempt }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          persist-credentials: false
+      - uses: astral-sh/setup-uv@v7
+        with:
+          version: '0.13.0'
+          enable-cache: true
+      - name: Install locked environment
+        run: |
+          uv python install
+          uv sync --frozen
+      - name: Verify prerequisites and previous reference source
+        env:
+          EIA_API_KEY: ${{ secrets.EIA_API_KEY }}
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          set +x
+          if [ -z "$EIA_API_KEY" ]; then
+            echo '::error::Configure the EIA_API_KEY Actions secret.'
+            exit 1
+          fi
+          if [ -n "$MODEL_RUN_ID" ]; then
+            if [[ ! "$MODEL_RUN_ID" =~ ^[0-9]+$ ]]; then
+              echo '::error::Previous model run ID must be numeric.'
+              exit 1
+            fi
+            gh api "repos/$GH_REPO/actions/runs/$MODEL_RUN_ID" > /tmp/previous-run.json
+            python - <<'PY'
+          import json
+          import os
+          with open('/tmp/previous-run.json') as stream:
+              run = json.load(stream)
+          assert run['repository']['full_name'] == os.environ['GH_REPO'], 'Wrong repository'
+          assert run['head_branch'] == 'main' and run['event'] != 'pull_request', 'Unreviewed source'
+          assert run['status'] == 'completed' and run['conclusion'] == 'success', 'Previous run failed'
+          PY
+          else
+            echo '::warning::No previous deployment configured; the PR will show no comparison.'
+          fi
+      - name: Download previous held-out reference
+        if: env.MODEL_RUN_ID != ''
+        uses: actions/download-artifact@v4
+        with:
+          name: monitoring-models-${{ inputs.region }}
+          run-id: ${{ env.MODEL_RUN_ID }}
+          github-token: ${{ github.token }}
+          path: .tools/previous
+      - name: Restore region history
+        id: history
+        uses: actions/cache/restore@v4
+        with:
+          path: |
+            data/raw/${{ inputs.region }}
+            data/interim/${{ inputs.region }}
+          key: refresh-v1-${{ runner.os }}-${{ inputs.region }}-${{ github.run_id }}-${{ github.run_attempt }}
+          restore-keys: |
+            refresh-v1-${{ runner.os }}-${{ inputs.region }}-
+      - name: Ingest current observations
+        id: ingest
+        env:
+          EIA_API_KEY: ${{ secrets.EIA_API_KEY }}
+        run: |
+          set +x
+          uv run --frozen carbon-scheduler ingest --region "$REGION"
+      - name: Build dataset
+        run: uv run --frozen carbon-scheduler build-dataset --region "$REGION"
+      - name: Fit candidate artifacts
+        run: uv run --frozen carbon-scheduler train --region "$REGION"
+      - name: Evaluate chronological held-out pipeline refits
+        run: |
+          uv run --frozen carbon-scheduler backtest --region "$REGION" --target demand_mwh --model cqr
+          uv run --frozen carbon-scheduler backtest --region "$REGION" --target carbon_intensity_g_per_kwh --model cqr
+      - name: Build verified offline candidate demo and metrics review
+        run: |
+          uv run --frozen carbon-scheduler make-demo --region "$REGION" --out-dir "$CANDIDATE_ROOT/demo"
+          uv run --frozen python scripts/metrics_diff.py --region "$REGION" \
+            --old-dir .tools/previous/reports --new-dir reports --output "$CANDIDATE_ROOT/evaluation"
+      - name: Run required checks before opening review
+        run: |
+          uv run --frozen ruff check .
+          uv run --frozen ruff format --check .
+          uv run --frozen mypy src
+          uv run --frozen pytest -q
+      - name: Save successfully refreshed history
+        if: ${{ !cancelled() && steps.ingest.outcome == 'success' }}
+        uses: actions/cache/save@v4
+        with:
+          path: |
+            data/raw/${{ inputs.region }}
+            data/interim/${{ inputs.region }}
+          key: ${{ steps.history.outputs.cache-primary-key }}
+      - name: Upload candidate and held-out evaluation diagnostics
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: retrain-candidate-${{ inputs.region }}-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            candidates/${{ inputs.region }}/${{ github.run_id }}-${{ github.run_attempt }}/
+            reports/backtest_${{ inputs.region }}_*_cqr.*
+            data/interim/${{ inputs.region }}/*report.json
+            data/processed/${{ inputs.region }}/*report.json
+          if-no-files-found: warn
+          retention-days: 30
+      - name: Open draft candidate review
+        uses: peter-evans/create-pull-request@v8
+        with:
+          token: ${{ github.token }}
+          base: main
+          branch: retrain/${{ inputs.region }}/${{ github.run_id }}-${{ github.run_attempt }}
+          add-paths: ${{ env.CANDIDATE_ROOT }}
+          commit-message: 'models: add ${{ inputs.region }} retraining candidate for review'
+          title: 'Review ${{ inputs.region }} retraining candidate (run ${{ github.run_id }})'
+          body-path: ${{ env.CANDIDATE_ROOT }}/evaluation/review.md
+          draft: true

@@ -293,3 +293,9 @@ opens an issue when monitoring fails. See [refresh operations](docs/automation-r
 for the EIA secret, reviewed model/baseline artifact contract and repository
 variables required before a live dispatch. The schedule starts after this workflow
 reaches the default branch; Plan 10 is still in progress.
+
+The [manual retrain workflow](.github/workflows/retrain.yml) creates a draft PR
+with versioned candidate artifacts and paired held-out metric deltas. It runs
+the quality gate before opening review and leaves deployment pointers unchanged.
+See [retraining operations](docs/automation-retrain.md) for comparison limits,
+repository permissions and the separate promotion requirement.

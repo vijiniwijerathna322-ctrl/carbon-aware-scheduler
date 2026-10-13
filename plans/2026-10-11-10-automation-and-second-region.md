@@ -80,11 +80,13 @@
 **Interfaces:**
 - Produces: `def metrics_diff(old: Mapping[str, Any], new: Mapping[str, Any]) -> str` (Markdown table of metric, old, new, delta)
 
-- [ ] **Step 1: Failing tests:** `test_diff_shows_deltas_and_marks_regressions`, `test_missing_old_metrics_handled`
-- [ ] **Step 2: Run** → FAIL
-- [ ] **Step 3: Implement** the script; workflow (`workflow_dispatch` only): ingest, build-dataset, train, backtest, `make-demo`, then open a PR (`peter-evans/create-pull-request`, pinned) with branch `retrain/<date>` and the metrics diff in the PR body.
-- [ ] **Step 4: Run tests** → PASS; dispatch the workflow once and check the PR body.
-- [ ] **Step 5: Commit** `ci: retrain workflow that opens a reviewable PR`
+- [x] **Step 1: Failing tests:** `test_diff_shows_deltas_and_marks_regressions`, `test_missing_old_metrics_handled`
+- [x] **Step 2: Run** → FAIL
+- [x] **Step 3: Implement** the script; workflow (`workflow_dispatch` only): ingest, build-dataset, train, backtest, `make-demo`, then open a PR (`peter-evans/create-pull-request`, pinned) with branch `retrain/<date>` and the metrics diff in the PR body.
+- [x] **Step 4: Run tests**: eight metrics/review tests pass; full gate recorded below.
+- [ ] **Live validation:** dispatch from main with configured secret/settings and inspect the generated draft PR.
+- [x] **Step 5: Commit** `ci: retrain workflow that opens a reviewable PR`
+
 
 ### Task 5: Release workflow and dependency hygiene
 
@@ -122,3 +124,11 @@ Implemented refresh.yml with Monday 06:00 UTC scheduling, manual dispatch, indep
 Fresh runners require reviewed model and earlier held-out baseline artifacts because local ignored models/reports are absent from checkout. Region-specific MODELS_RUN_ID variables select successful main-branch runs; artifacts from pull-request runs are rejected. A public artifact inventory on 2026-10-13 found no monitoring-models-CISO or monitoring-models-ERCO bundles. Live dispatch, artifact review and live secret-log review remain pending prerequisites; Task 3 Step 3 is not complete. Operations are documented in docs/automation-refresh.md.
 
 Verification: YAML and embedded Python parsed; official checksum-verified actionlint 1.7.12 passed all workflows; actionlint validation added to CI. Ruff, formatting and mypy passed; full suite 307 passed, 1 deselected, coverage 93.08%.
+
+## Task 4 execution record and interface amendments
+
+Metrics tests were run first and failed due to the missing module, then passed after implementation. metrics_diff accepts nested numeric mappings, renders missing/nonfinite values as unavailable and marks MAE/pinball/Winkler regressions; coverage compares distance from 0.8 and width changes require review. paired_metrics enforces unique forecast keys and valid horizons/timestamps/intervals, matches identical finite labels and counts exclusions; at least 100 paired rows are required. build_review generates strict JSON provenance and the PR body from raw weather-free CQR files, never calibration summaries.
+
+Retraining is main-only/manual, with locked dependencies, explicit secret checks, trusted optional old artifact selection, region data caching, ingest/build/train/backtest/make-demo, a quality gate and draft PR creation through create-pull-request v8. Candidate byte-exact demos and reviews are committed under candidates/<region>/<run>-<attempt>/, not directly into the shipped demo. Branch names use region/run/attempt instead of dates to avoid collisions. This is a deliberate promotion boundary: merging retains reviewed candidates but never auto-deploys them. Approved deployment bundle publication remains separate.
+
+Local verification: 315 tests passed, 1 deselected, coverage 93.08%; ruff/format/mypy passed. All workflows passed actionlint, Bash syntax checks and embedded Python parsing. A real CISO format preview reused existing held-out files on both sides (zero deltas): 8,756 paired finite demand rows and 8,710 carbon rows, excluding 28 and 74 nonfinite rows respectively. This is not a new model performance experiment. Actual workflow dispatch and PR review remain pending; operations and GITHUB_TOKEN downstream-CI limits are documented in docs/automation-retrain.md.
