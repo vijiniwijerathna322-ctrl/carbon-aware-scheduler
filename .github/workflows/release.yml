@@ -121,6 +121,6 @@ jobs:
           PUBLISHED_REFERENCE: ${{ steps.registry.outputs.reference }}
         run: |
           cp docs/releases/v0.2.0-draft.md /tmp/research-release.md
-          printf '\nVerified container digest: `%s`\n' "$PUBLISHED_REFERENCE" >> /tmp/research-release.md
+          printf '\nVerified container digest: %s\n' "$PUBLISHED_REFERENCE" >> /tmp/research-release.md
           gh release create "$GITHUB_REF_NAME" --verify-tag --prerelease \
             --title 'v0.2.0 research release' --notes-file /tmp/research-release.md
