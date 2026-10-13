@@ -30,3 +30,21 @@ Replay validation run 38354149330 used the exact retained raw cache and candidat
 The [monitor report](erco-validation/monitor_ERCO.json) records alert status and input drift flags. Both targets have zero usable post-fit realized points, so current coverage and MAE are insufficient-data, not successful performance acceptance. Monitor exit 2 is retained separately. The validation workflow succeeds at collecting diagnostics; it does not assert healthy operation or promote the model.
 
 The retained runner report contained an inherited CISO-specific carbon-G4-failure sentence. The committed report corrects that sentence to region-independent coverage-review wording; numeric results and provenance are unchanged. The report generator is corrected likewise. ERCO full refresh acceptance, promotion review and release remain pending.
+
+## Matched seasonal-naive comparison
+
+Run 38355396267 completed baseline backtests over the exact retained CQR test
+period. ZIP digest verification preceded extraction; [comparison JSON](erco-baseline-validation/ERCO-baseline-comparison.json)
+and naive predictions/metadata are committed. Forecast keys and actual labels
+must match; both models use the same finite scoring cohort.
+
+| ERCO target | Naive MAE | CQR median MAE | Reduction | G3 | G4 |
+|---|---:|---:|---:|---|---|
+| Demand (MWh; 8,758 rows) | 4265.045787 | 2529.768440 | 40.69% | pass, all buckets | fail |
+| Carbon (gCO2e/kWh; 8,710 rows) | 55.473616 | 34.215138 | 38.32% | pass, all buckets | pass |
+
+G4 uses the implementation's fixed overall coverage range 77-83% and minimum
+70% in every horizon bucket. Demand's overall 74.72% misses; carbon's 79.48%
+passes. Neither good point forecasts nor carbon's pass resolves the demand
+interval failure or insufficient post-fit monitoring evidence. No calibration
+parameters were tuned on these held-out results and no candidate was promoted.

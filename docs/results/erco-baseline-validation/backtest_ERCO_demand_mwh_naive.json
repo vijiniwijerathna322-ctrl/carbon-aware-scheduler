@@ -1,0 +1,9 @@
+{
+  "data_source": "raw",
+  "input_sha256": "5c940bc300699ef96f42853e6fd30df5b06a5b709a5fb0e1eb821a8382397b28",
+  "limitations": "Latest-revision snapshot; zero observation latency assumed; no publication-vintage archive.",
+  "preprocessing": "Pointwise raw observations; no interpolation or centered spike filtering.",
+  "test_end": "2026-10-13T05:00:00+00:00",
+  "test_start": "2026-04-13T05:00:00+00:00",
+  "timezone": "America/Chicago"
+}

@@ -1,0 +1,68 @@
+{
+  "demand_mwh": {
+    "paired": {
+      "1-6": {
+        "n": 1098,
+        "mae_naive": 3241.374316939891,
+        "mae_cqr_median": 861.1438930897466,
+        "improvement_percent": 73.4327538603214,
+        "g3_pass": true
+      },
+      "7-24": {
+        "n": 3293,
+        "mae_naive": 4623.109019131491,
+        "mae_cqr_median": 2383.259496071263,
+        "improvement_percent": 48.44898776540233,
+        "g3_pass": true
+      },
+      "25-48": {
+        "n": 4367,
+        "mae_naive": 4252.425921685368,
+        "mae_cqr_median": 3059.7898965193867,
+        "improvement_percent": 28.046015312908796,
+        "g3_pass": true
+      },
+      "all": {
+        "n": 8758,
+        "mae_naive": 4265.045786709295,
+        "mae_cqr_median": 2529.768439515343,
+        "improvement_percent": 40.686019188853976,
+        "g3_pass": true
+      }
+    },
+    "g4_pass": false
+  },
+  "carbon_intensity_g_per_kwh": {
+    "paired": {
+      "1-6": {
+        "n": 1092,
+        "mae_naive": 64.9217938668477,
+        "mae_cqr_median": 22.168973641848407,
+        "improvement_percent": 65.85280177667889,
+        "g3_pass": true
+      },
+      "7-24": {
+        "n": 3275,
+        "mae_naive": 52.46660092414362,
+        "mae_cqr_median": 30.031115818031502,
+        "improvement_percent": 42.76146102650983,
+        "g3_pass": true
+      },
+      "25-48": {
+        "n": 4343,
+        "mae_naive": 55.36552492900699,
+        "mae_cqr_median": 40.399131664020395,
+        "improvement_percent": 27.03197212376728,
+        "g3_pass": true
+      },
+      "all": {
+        "n": 8710,
+        "mae_naive": 55.47361557931635,
+        "mae_cqr_median": 34.21513804107832,
+        "improvement_percent": 38.321781113838874,
+        "g3_pass": true
+      }
+    },
+    "g4_pass": true
+  }
+}

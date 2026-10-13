@@ -11,3 +11,4 @@ config/emission_factors.yaml -text
 docs/results/figure-inputs/** -text
 
 docs/results/erco-validation/*.parquet -text
+docs/results/erco-baseline-validation/*.parquet -text

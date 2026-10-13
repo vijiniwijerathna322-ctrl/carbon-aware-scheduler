@@ -1,0 +1,11 @@
+{
+  "carbon_scope": "Observed covered generation mix; partial fuel observations and excluded OTH; imports ignored.",
+  "data_source": "raw",
+  "factors_sha256": "5697a2fcd173474d398380d385cd6885099815473909971d1a75c99fee8b1d64",
+  "input_sha256": "5c940bc300699ef96f42853e6fd30df5b06a5b709a5fb0e1eb821a8382397b28",
+  "limitations": "Latest-revision snapshot; zero observation latency assumed; no publication-vintage archive.",
+  "preprocessing": "Pointwise raw observations; no interpolation or centered spike filtering.",
+  "test_end": "2026-10-13T05:00:00+00:00",
+  "test_start": "2026-04-13T05:00:00+00:00",
+  "timezone": "America/Chicago"
+}
