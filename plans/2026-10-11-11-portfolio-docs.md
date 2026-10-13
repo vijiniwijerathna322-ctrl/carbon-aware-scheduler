@@ -8,7 +8,7 @@
 
 **Tech Stack:** matplotlib (figures), Markdown; follow the `dataviz` skill for chart design.
 
-**Spec:** `docs/superpowers/specs/2026-10-11-carbon-aware-scheduler-design.md` (§1, §7, §8)
+**Spec:** `specs/2026-10-11-carbon-aware-scheduler-design.md` (§1, §7, §8)
 
 ## Global Constraints
 
@@ -97,3 +97,13 @@
 - [ ] A friend who has never seen the project can run the Docker demo from the README in under 5 minutes
 - [ ] Every number in the README traces to a committed result file
 - [ ] `v1.0.0` tagged; master plan statuses all complete
+
+## Execution record (2026-10-13)
+
+The dataviz and executing-plans sub-skills are unavailable. Standard Matplotlib figures use the colour-blind-safe blue/orange/green palette, labelled units and visible failures. Five PNGs were generated from actual saved raw CISO reports and inspected visually; source hashes and numeric summary are committed. Tests cover five output PNGs, the nominal line and actionable missing inputs. The first figure implementation preceded formal tests; no red-first run is claimed.
+
+README includes a measured results overview, fan-chart hero, architecture diagram, model-card/datasheet links, licence, limitations and roadmap while retaining verified CLI/Docker instructions. Model card and datasheet cross-check the existing results; data-quality and metric JSON snapshots retain source counts. ADR index covers D1?D10. A 1,502-word write-up, MIT code licence and CV/interview material are prepared. No production, ERCO or nominal-carbon coverage success is claimed.
+
+A 64-second rendered native walkthrough is generated from real key-free API responses by record_demo.py, with the JSON capture retained. It is explicitly not a browser/Docker screen recording. The live screen-recording procedure is retained separately. A fresh clone demo check, CI results and local quality gate are recorded after verification. External live acceptance, an independent five-minute trial, repository pin/topics and v1.0.0 publication remain pending. Do not mark all plan statuses complete or create a release tag from incomplete live evidence.
+
+Local final gate: 318 tests passed, 1 deselected, coverage 93.08%; ruff/format/mypy and actionlint green. All local Markdown links resolve. Native walkthrough contains eight visually inspected frames with 64-second duration; capture JSON retains the real historical outputs. Figure development dependencies are now part of the locked dev group so CI executes their tests.

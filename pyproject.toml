@@ -34,7 +34,7 @@ packages = ["src/carbon_scheduler"]
 
 [dependency-groups]
 eda = ["matplotlib", "nbformat", "nbclient", "ipykernel"]
-dev = ["pytest", "pytest-cov", "respx", "ruff", "mypy", "pandas-stubs", "types-PyYAML", "pre-commit"]
+dev = ["pytest", "pytest-cov", "respx", "ruff", "mypy", "pandas-stubs", "types-PyYAML", "pre-commit", "matplotlib"]
 
 [tool.ruff]
 line-length = 100

@@ -5,7 +5,41 @@
 Forecast grid demand and carbon intensity, then schedule flexible jobs with honest uncertainty.
 Implementation follows the [master plan](plans/2026-10-11-00-master-plan.md).
 
+![Held-out carbon forecast week with its nominal interval and actual proxy](docs/figures/forecast-fan.png)
+
+Flexible loads can choose when to run. This project connects hourly forecasts to
+that decision, compares against immediate execution and a hindsight oracle, and
+keeps failed uncertainty checks visible.
+
+| Measured CISO result | Value | Evidence |
+|---|---:|---|
+| Demand held-out coverage (nominal 80%) | 77.35% — gate pass | [CQR results](docs/results/backtest-cqr.md) |
+| Carbon held-out coverage (nominal 80%) | 71.57% — gate fail | [CQR results](docs/results/backtest-cqr.md) |
+| Median / upper mean scenario savings | 29.37% / 27.35% | [Scheduling replay](docs/results/schedule-backtest.md) |
+| Hindsight oracle mean scenario savings | 33.17% | [Scheduling replay](docs/results/schedule-backtest.md) |
+
+Figures and [summary metrics](docs/results/portfolio-summary.json) are regenerated
+from saved raw evaluation outputs using `uv run python scripts/make_figures.py`.
+See the [model card](docs/model_card.md), [datasheet](docs/datasheet.md) and
+[CV/interview wording](docs/cv_bullets.md) for intended use and limitations.
+
+```mermaid
+flowchart LR
+  E[EIA hourly observations] --> R[Atomic raw snapshots]
+  R --> F[Issue-time features]
+  F --> M[Quantile models and calibration]
+  M --> A[Forecast API]
+  A --> S[Deadline-constrained scheduler]
+  R --> B[Chronological held-out replay]
+  M --> D[Post-fit drift and coverage monitoring]
+  B --> V[Reviewable metrics and figures]
+```
+
 ## Offline API demo
+
+See the [64-second native API walkthrough](docs/demo/native-walkthrough.gif),
+generated from real endpoint responses. It is explicitly labelled as a rendered
+walkthrough; a live browser/container screen recording remains pending.
 
 The tracked demo serves real CISO models without an EIA key. With Docker installed:
 
@@ -306,3 +340,31 @@ image before publishing and verifies the GHCR digest before updating `latest`.
 Weekly Dependabot updates cover uv and GitHub Actions. See
 [release operations](docs/automation-release.md); v0.2.0 publication remains
 pending the outstanding Plan 10 live validations.
+
+## Scope, attribution and licence
+
+Carbon intensity is an average observed-generation lifecycle proxy, excludes
+unresolved other/storage categories and ignores imports. It is not a marginal
+emissions estimate. Latest revisions and zero observation latency limit historical
+replay; serial dependence and drift limit conformal coverage guarantees. Savings
+describe equally weighted illustrative jobs, not a measured production fleet.
+ERCO performance and successful production automation are still pending.
+
+EIA, Open-Meteo, IPCC AR5 and the separate POST oil-factor source retain their
+attributions and terms; see the datasheet and factor config. [MIT](LICENSE)
+applies to project code and does not relicense external data or publications.
+
+The roadmap is to complete live regional/automation acceptance, collect observation
+and weather publication vintages, evaluate new calibration choices on a fresh
+cohort, and test fleet-specific workloads with defensible marginal-emissions data.
+
+## Project structure
+
+- `src/carbon_scheduler/`: ingestion, carbon proxy, issue-time features, models, scheduler, API and monitoring.
+- `config/`: region definitions and attributed emission factors.
+- `demo/`: bounded byte-checked offline snapshot and selected artifacts.
+- `scripts/`: experiments, bundle preparation, figures and native demo capture.
+- `docs/`: result sources, model card, datasheet, ADRs and write-up.
+- `.github/workflows/`: CI and review-oriented operational workflows.
+
+Read the [project write-up](docs/writeup.md) and [architecture decision index](docs/adr/README.md) for design rationale.

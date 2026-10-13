@@ -1,0 +1,8 @@
+{
+  "backtest_CISO_demand_mwh_cqr.parquet": "bd7ae45da92229a6a560952b58eeaa83ece9cbca95e91b729a469d2f62f09ddd",
+  "backtest_CISO_demand_mwh_naive.parquet": "b1e1394bb71cef7f6f4ed1b8de12c08d840ce5c3da44d5d1422091970b201b52",
+  "backtest_CISO_carbon_intensity_g_per_kwh_cqr.parquet": "c1e4da091b0b985d434536b76af37c1f117ee8c99f277ede5f80fb9c1755f083",
+  "backtest_CISO_carbon_intensity_g_per_kwh_naive.parquet": "90e7eca3c6b5363934c404b12e6ea1e63413e2ea1f448ac7c85f576e755468d8",
+  "schedule_backtest_CISO.parquet": "aeac39a662b3cc92a17592c4d24bb5ece40efde4053ae993d9e6195ad192770f",
+  "drift_simulation.json": "7e168039b9267d27231186e1337b04c7b2c285b384f6c1ed5a66df7b8d758d9d"
+}
