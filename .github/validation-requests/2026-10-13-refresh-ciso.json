@@ -1,0 +1,5 @@
+{
+  "operation": "refresh-approved",
+  "regions": ["CISO"],
+  "reason": "Validate ingestion, monitoring, diagnostics and alert issue handling using the existing reviewed CISO bundle"
+}

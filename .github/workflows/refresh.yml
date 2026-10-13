@@ -4,6 +4,12 @@ on:
   schedule:
     - cron: '0 6 * * 1'
   workflow_dispatch:
+    inputs:
+      region:
+        description: Region to refresh (all requires approved bundles for both regions)
+        type: choice
+        default: all
+        options: [all, CISO, ERCO]
 
 permissions:
   contents: read
@@ -23,7 +29,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        region: [CISO, ERCO]
+        region: ${{ fromJSON(inputs.region == 'CISO' && '["CISO"]' || inputs.region == 'ERCO' && '["ERCO"]' || '["CISO", "ERCO"]') }}
     env:
       REGION: ${{ matrix.region }}
       MODEL_RUN_ID: ${{ vars[format('{0}_MODELS_RUN_ID', matrix.region)] }}

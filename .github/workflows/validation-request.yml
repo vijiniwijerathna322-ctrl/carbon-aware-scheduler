@@ -38,11 +38,12 @@ jobs:
           requests = [Path(p) for p in changed if p.startswith('.github/validation-requests/') and p.endswith('.json')]
           for path in requests:
               request = json.loads(path.read_text())
-              assert request['operation'] == 'retrain-candidate', 'Unsupported operation'
+              assert request['operation'] in {'retrain-candidate', 'refresh-approved'}, 'Unsupported operation'
               assert request['regions'] and set(request['regions']) <= {'CISO', 'ERCO'}, 'Invalid regions'
               assert len(request['regions']) == len(set(request['regions'])), 'Duplicate regions'
               for region in request['regions']:
-                  subprocess.run(['gh', 'workflow', 'run', 'retrain.yml', '--ref', 'main',
+                  workflow = 'retrain.yml' if request['operation'] == 'retrain-candidate' else 'refresh.yml'
+                  subprocess.run(['gh', 'workflow', 'run', workflow, '--ref', 'main',
                                   '--field', f'region={region}'], check=True)
-                  print(f'Dispatched {region} candidate; review required, no deployment')
+                  print(f'Dispatched {region} {request["operation"]}; no automatic promotion')
           PY
