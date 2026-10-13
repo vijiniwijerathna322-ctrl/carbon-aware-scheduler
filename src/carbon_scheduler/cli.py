@@ -16,11 +16,32 @@ from carbon_scheduler.ingest.pipeline import G2_MAX_GAP_FRACTION, run_ingest
 from carbon_scheduler.logging import configure_logging
 from carbon_scheduler.models.reporting import run_backtest
 from carbon_scheduler.models.training import train_region
+from carbon_scheduler.monitoring.report import build_monitor_report, write_monitor_report
 from carbon_scheduler.scheduler.reporting import run_schedule_backtest
 
 app = typer.Typer(
     help="Carbon-aware energy scheduler.", no_args_is_help=True, pretty_exceptions_enable=False
 )
+
+
+@app.command()
+def monitor(
+    region: str = typer.Option("CISO"),
+    reports_dir: Annotated[Path | None, typer.Option()] = None,
+) -> None:
+    """Write drift and strictly post-fit performance diagnostics; alerts exit 2."""
+    try:
+        settings = get_settings()
+        if reports_dir is not None:
+            settings = settings.model_copy(update={"reports_dir": reports_dir.resolve()})
+        report = build_monitor_report(region, settings)
+        path = write_monitor_report(report, settings.reports_dir)
+    except (OSError, ValueError, KeyError, RuntimeError) as error:
+        typer.echo(f"Monitor failed: {error}", err=True)
+        raise typer.Exit(code=1) from None
+    typer.echo(f"Monitoring {report.status}: {path}")
+    if report.status == "alert":
+        raise typer.Exit(code=2)
 
 
 @app.command()

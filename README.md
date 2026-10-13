@@ -259,3 +259,24 @@ local computation. Reports remain under `reports/`, and the published comparison
 is written to `docs/results/ablation-weather.md`.
 Once both prediction files exist, add `--reuse-weather` to regenerate the report
 without repeating the weather fits; weather and baseline provenance are checked.
+
+## Monitoring
+
+```powershell
+uv run carbon-scheduler monitor --region CISO
+```
+
+Writes self-contained `reports/monitor_CISO.html` and strict JSON. Set
+`CARBON_REPORTS_DIR` or `--reports-dir` to select the report directory, which also
+contains the earlier CQR backtest baseline. Exit code 2 means an alert; 0 means
+ok, warn or insufficient data; 1 means a command failure.
+`GET /v1/monitoring/status?region=CISO` serves the latest saved JSON, returning
+404 with `{"error":"no_report"}` until a report exists (including the baked demo).
+
+Replay scores only issues at or after the deployed artifact's fit cutoff. Newly
+fitted models can therefore have insufficient realized coverage data. Input
+drift, excluded observations and provenance remain visible. Approved weather
+variants require forecast-vintage logs before replay monitoring is supported.
+See the [CISO snapshot](docs/results/monitoring-ciso.md),
+[30% shift simulation](docs/results/drift-simulation.md) and
+[diagnostic limitations](docs/adr/0017-monitoring-cutoffs-and-diagnostics.md).

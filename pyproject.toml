@@ -16,6 +16,7 @@ dependencies = [
     "pyyaml",
     "lightgbm",
     "scikit-learn",
+    "scipy==1.17.1",
     "joblib",
     "fastapi>=0.143.0",
     "uvicorn>=0.54.0",

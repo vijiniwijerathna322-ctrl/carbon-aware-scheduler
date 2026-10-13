@@ -14,6 +14,7 @@ from carbon_scheduler.api.schemas import (
     ScheduleResponse,
 )
 from carbon_scheduler.api.service import ForecastService
+from carbon_scheduler.monitoring.report import read_monitor_report
 from carbon_scheduler.scheduler.models import Job
 from carbon_scheduler.scheduler.optimizer import recommend
 
@@ -111,3 +112,17 @@ def schedule(body: ScheduleRequest, service: Service) -> ScheduleResponse:
 @router.get("/v1/models/current")
 def current_models(service: Service) -> dict[str, Any]:
     return {"region": service.region, "models": service.current_models()}
+
+
+@router.get("/v1/monitoring/status")
+def monitoring_status(service: Service, region: str = "CISO") -> JSONResponse:
+    check_region(region, service)
+    try:
+        report = read_monitor_report(
+            service.settings.reports_dir / f"monitor_{region}.json", region
+        )
+    except FileNotFoundError:
+        return JSONResponse(status_code=404, content={"error": "no_report"})
+    except (OSError, ValueError, TypeError, KeyError):
+        return JSONResponse(status_code=503, content={"error": "report_invalid"})
+    return JSONResponse(content=report)

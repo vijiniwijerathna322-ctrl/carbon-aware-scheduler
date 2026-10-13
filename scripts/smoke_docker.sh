@@ -21,7 +21,7 @@ cleanup() {
   if [[ -n "$container" ]]; then
     docker rm -f "$container" >/dev/null
   fi
-  rm -f "$work/forecast.json" "$work/schedule.json"
+  rm -f "$work/forecast.json" "$work/schedule.json" "$work/monitor.json"
   rmdir "$work"
 }
 trap cleanup EXIT
@@ -40,6 +40,14 @@ curl --fail --silent "http://127.0.0.1:$port/healthz" >/dev/null || {
   exit 1
 }
 curl --fail --silent "http://127.0.0.1:$port/v1/forecast?horizon=6" > "$work/forecast.json"
+monitor_status="$(curl --silent --output "$work/monitor.json" --write-out '%{http_code}' \
+  "http://127.0.0.1:$port/v1/monitoring/status")"
+test "$monitor_status" = "404"
+"$python_command" - "$work/monitor.json" <<'PY'
+import json
+import sys
+assert json.load(open(sys.argv[1])) == {'error': 'no_report'}
+PY
 payload="$("$python_command" - "$work/forecast.json" <<'PY'
 import json
 import sys

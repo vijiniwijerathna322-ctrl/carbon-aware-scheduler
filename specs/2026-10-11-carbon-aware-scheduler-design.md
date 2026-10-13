@@ -124,3 +124,5 @@ Targets (reported honestly even if missed):
 | Generation-based intensity ignores imports | document in model card; sensitivity note |
 | Free hosting terms change | local Docker + recorded demo is the baseline deliverable |
 | Scope creep | MVP line after plan 07; anything else is v1 |
+
+Monitoring implementation of D9: post-fit daily replay only, one latest eligible forecast per realized hour, minimum 100 finite observations, earlier configuration-matched held-out MAE baseline, explicit insufficient data and source provenance. PSI/KS/binomial diagnostics are heuristic under serial dependence and seasonality; see ADR 0017. Approved weather variants require forecast-vintage logs before monitoring replay.
