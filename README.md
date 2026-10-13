@@ -19,7 +19,8 @@ keeps failed uncertainty checks visible.
 | Hindsight oracle mean scenario savings | 33.17% | [Scheduling replay](docs/results/schedule-backtest.md) |
 
 Figures and [summary metrics](docs/results/portfolio-summary.json) are regenerated
-from saved raw evaluation outputs using `uv run python scripts/make_figures.py`.
+from [committed evaluation inputs](docs/results/figure-inputs/README.md) using
+`uv run python scripts/make_figures.py`; no API key is needed.
 See the [model card](docs/model_card.md), [datasheet](docs/datasheet.md) and
 [CV/interview wording](docs/cv_bullets.md) for intended use and limitations.
 

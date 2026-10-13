@@ -7,3 +7,5 @@ deployment-baselines/** -text
 config/emission_factors.yaml -text
 # Bash scripts must execute with LF on every platform.
 *.sh text eol=lf
+
+docs/results/figure-inputs/** -text

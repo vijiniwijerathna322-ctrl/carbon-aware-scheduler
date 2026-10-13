@@ -66,7 +66,7 @@ def fan_figure(predictions):
     axis.set(
         xlabel="Realized target time (UTC)",
         ylabel="Carbon proxy (gCO2e/kWh)",
-        title="One held-out week: uncertainty varies with the generation mix",
+        title="One held-out week: changing interval width and observations outside the band",
     )
     axis.legend(fontsize=8)
     return fig
@@ -200,7 +200,7 @@ def make_figures(reports_dir: Path, out_dir: Path) -> list[Path]:
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--reports-dir", type=Path, default=Path("reports"))
+    parser.add_argument("--reports-dir", type=Path, default=Path("docs/results/figure-inputs"))
     parser.add_argument("--out-dir", type=Path, default=Path("docs/figures"))
     args = parser.parse_args()
     make_figures(args.reports_dir, args.out_dir)

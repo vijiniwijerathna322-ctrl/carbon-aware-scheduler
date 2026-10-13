@@ -38,48 +38,48 @@
 
 - [ ] **Step 1: Failing tests (synthetic report inputs):** `test_returns_five_existing_png_paths`, `test_nominal_line_present_in_coverage_figure` (inspect axes artists), `test_missing_input_raises_actionable_error`
 - [ ] **Step 2: Run** → FAIL
-- [ ] **Step 3: Implement** (load the `dataviz` skill first; one figure per function).
-- [ ] **Step 4: Run** → PASS; open every PNG and check labels and takeaway titles by eye.
-- [ ] **Step 5: Commit** `docs: reproducible figures`
+- [x] **Step 3: Implement** (load the `dataviz` skill first; one figure per function).
+- [x] **Step 4: Run** → PASS; open every PNG and check labels and takeaway titles by eye.
+- [x] **Step 5: Commit** `docs: reproducible figures`
 
 ### Task 2: README
 
 **Files:**
 - Modify: `README.md`
 
-- [ ] **Step 1: Write sections in this order:** one-sentence pitch; hero figure (fan chart) ; "Why this matters" (3 lines); results table (accuracy, coverage, scheduler savings, with links to result files); architecture diagram (from spec §5); quickstart A (Docker demo, no key) with real `curl` output; quickstart B (full pipeline with key); project structure; design decisions (links to ADRs); limitations; data & attribution; licence; roadmap.
+- [x] **Step 1: Write sections in this order:** one-sentence pitch; hero figure (fan chart) ; "Why this matters" (3 lines); results table (accuracy, coverage, scheduler savings, with links to result files); architecture diagram (from spec §5); quickstart A (Docker demo, no key) with real `curl` output; quickstart B (full pipeline with key); project structure; design decisions (links to ADRs); limitations; data & attribution; licence; roadmap.
 - [ ] **Step 2: Verify the quickstart** in a fresh clone in a temp directory (`git clone … && follow README`) → every command succeeds.
-- [ ] **Step 3: Check every link** (`grep -o '](\S*)'` then open or use `lychee` if installed) → no broken relative links.
-- [ ] **Step 4: Commit** `docs: readme`
+- [x] **Step 3: Check every link** (`grep -o '](\S*)'` then open or use `lychee` if installed) → no broken relative links.
+- [x] **Step 4: Commit** `docs: readme`
 
 ### Task 3: Model card and datasheet
 
 **Files:**
 - Create: `docs/model_card.md`, `docs/datasheet.md`
 
-- [ ] **Step 1: Model card sections:** intended use and users; out-of-scope uses; training/calibration/test periods; metrics by horizon bucket and region; calibration results; known failure modes (heat waves, wildfire-driven demand shifts, holidays, data outages); drift monitoring and retrain policy; ethical notes (emissions claims are estimates).
-- [ ] **Step 2: Datasheet sections:** source, collection, licence, cleaning rules and `QualityReport` totals, known quirks (spikes, revisions), update cadence.
-- [ ] **Step 3: Cross-check** each statistic against `docs/results/*`; fix mismatches.
-- [ ] **Step 4: Commit** `docs: model card and datasheet`
+- [x] **Step 1: Model card sections:** intended use and users; out-of-scope uses; training/calibration/test periods; metrics by horizon bucket and region; calibration results; known failure modes (heat waves, wildfire-driven demand shifts, holidays, data outages); drift monitoring and retrain policy; ethical notes (emissions claims are estimates).
+- [x] **Step 2: Datasheet sections:** source, collection, licence, cleaning rules and `QualityReport` totals, known quirks (spikes, revisions), update cadence.
+- [x] **Step 3: Cross-check** each statistic against `docs/results/*`; fix mismatches.
+- [x] **Step 4: Commit** `docs: model card and datasheet`
 
 ### Task 4: ADR set
 
 **Files:**
 - Create: `docs/adr/0004-…md` through whatever remains from decisions D1–D10 not yet recorded (0001–0003 exist from earlier plans)
 
-- [ ] **Step 1: Check** which of D1–D10 lack an ADR; write the missing ones (context, decision, consequences, alternatives considered), each ≤ 1 page.
-- [ ] **Step 2: Add an ADR index** to `docs/adr/README.md`.
-- [ ] **Step 3: Commit** `docs: architecture decision records`
+- [x] **Step 1: Check** which of D1–D10 lack an ADR; write the missing ones (context, decision, consequences, alternatives considered), each ≤ 1 page.
+- [x] **Step 2: Add an ADR index** to `docs/adr/README.md`.
+- [x] **Step 3: Commit** `docs: architecture decision records`
 
 ### Task 5: Write-up and demo recording
 
 **Files:**
 - Create: `docs/writeup.md`, `docs/demo/` (GIF or short video, plus the script used to record it)
 
-- [ ] **Step 1: Write-up outline (1,200–1,800 words):** problem and motivation; data and the intensity definition; forecasting approach and leakage controls; conformal calibration and what coverage means; scheduling and the replay result (with the honest oracle gap); deployment and monitoring (drift simulation); limitations; what I would do next.
+- [x] **Step 1: Write-up outline (1,200–1,800 words):** problem and motivation; data and the intensity definition; forecasting approach and leakage controls; conformal calibration and what coverage means; scheduling and the replay result (with the honest oracle gap); deployment and monitoring (drift simulation); limitations; what I would do next.
 - [ ] **Step 2: Record a 60–90 s demo:** start container, open `/docs`, call `/v1/forecast`, call `/v1/schedule`, show the monitor report. Keep to a script in `docs/demo/script.md`.
 - [ ] **Step 3: Read the write-up aloud once;** remove any sentence you cannot defend in an interview.
-- [ ] **Step 4: Commit** `docs: write-up and demo`
+- [x] **Step 4: Commit** `docs: write-up and demo`
 
 ### Task 6: Repo polish and CV bullets
 
@@ -87,10 +87,10 @@
 - Create: `LICENSE`, `docs/cv_bullets.md`
 
 - [ ] **Step 1: Add MIT `LICENSE`;** set the GitHub repo description, topics (`time-series`, `forecasting`, `conformal-prediction`, `fastapi`, `mlops`, `energy`) and pin the repo.
-- [ ] **Step 2: Fill `docs/cv_bullets.md`** with 3 bullets and 1 "tell me about this project" 60-second answer, using only real measured numbers.
-- [ ] **Step 3: Interview-prep list:** write answers (3–5 sentences each) to: why conformal; how did you prevent leakage; why generation-based intensity; what happens under drift; what would you change with more time.
+- [x] **Step 2: Fill `docs/cv_bullets.md`** with 3 bullets and 1 "tell me about this project" 60-second answer, using only real measured numbers.
+- [x] **Step 3: Interview-prep list:** write answers (3–5 sentences each) to: why conformal; how did you prevent leakage; why generation-based intensity; what happens under drift; what would you change with more time.
 - [ ] **Step 4: Final check:** tag `v1.0.0`, confirm CI green, release image published, README renders on GitHub.
-- [ ] **Step 5: Commit** `docs: licence, cv bullets and interview prep`
+- [x] **Step 5: Commit** `docs: licence, cv bullets and interview prep`
 
 ## Definition of Done
 
@@ -111,3 +111,7 @@ Local final gate: 318 tests passed, 1 deselected, coverage 93.08%; ruff/format/m
 Fresh clone verification: installed the frozen lockfile in an isolated new environment from the published branch; with EIA_API_KEY empty, health plus the exact README forecast and scheduling requests returned HTTP 200 and the documented artifact/selected times. Clean Linux/Docker CI run 38345723850 passed. Native/GitHub artifact checks do not replace the still-pending independent reader trial or production acceptance.
 
 Portfolio software and validated automation publishing can integrate before final live acceptance under the bootstrap approach. Keep Plans 10/11 in progress; no v0.2.0 or v1.0.0 release is implied by that integration.
+
+Frozen CISO figure inputs are now committed under docs/results/figure-inputs, so the default figure command works without an API key or ignored local reports. Fan title describes observed interval behaviour without claiming a causal generation-mix effect. The missingness count explicitly refers to the four core region series.
+
+Live retry request 912b865 was published after the user corrected EIA_API_KEY to a repository secret. CISO run 38349276638 and ERCO run 38349279499 both passed prerequisites and reached ingestion. CISO successfully resolved and downloaded reviewed bundle 38347455143; ERCO has no approved previous bundle, as expected. These running jobs are not acceptance passes.

@@ -6,7 +6,7 @@ EIA-930 hourly balancing-authority demand, demand forecasts, net generation, int
 
 ## Observed quality
 
-The recorded ingestion QualityReport contains 0 negative-demand values, 0 detected demand spikes, 109 interpolated cells, 623 hourly rows with remaining missingness and 44,595 remaining missing cells across columns. The reported row gap fraction is 0.01230107. Geothermal accounts for 43,472 missing cells because its first observed column value is 2025-12-16 09:00 UTC; structural column history must not be confused with an outage of the entire grid. Fuel/net-generation observations end 23 hours before demand in this snapshot.
+The recorded ingestion QualityReport contains 0 negative-demand values, 0 detected demand spikes, 109 interpolated cells, 623 hours missing at least one of the four core region series and 44,595 remaining missing cells across columns. The reported row gap fraction is 0.01230107. Geothermal accounts for 43,472 missing cells because its first observed column value is 2025-12-16 09:00 UTC; structural column history must not be confused with an outage of the entire grid. Fuel/net-generation observations end 23 hours before demand in this snapshot.
 
 These are counts for the cleaned interim ingestion snapshot, not claims that forecasting used interpolated observations. The raw-target forecasting/backtest path applies pointwise validity rules, preserves missing values and avoids retrospective interpolation and centered spike filters. Carbon intensity is calculated only from the available covered generation mix; missing included fuel values and excluded generation are separately counted. Unknown fuel codes raise an error rather than receiving a guessed factor.
 
