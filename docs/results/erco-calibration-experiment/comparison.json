@@ -1,0 +1,112 @@
+{
+  "scope": "Exploratory earlier-period comparison; no promotion or confirmatory claim",
+  "region": "ERCO",
+  "target": "demand_mwh",
+  "validation_start": "2025-03-01T06:00:00+00:00",
+  "validation_end": "2025-03-31T05:00:00+00:00",
+  "history_truncated_at": "2025-03-31T05:00:00+00:00",
+  "source_provenance": {
+    "data_source": "raw",
+    "input_sha256": "5c940bc300699ef96f42853e6fd30df5b06a5b709a5fb0e1eb821a8382397b28",
+    "limitations": "Latest-revision snapshot; zero observation latency assumed; no publication-vintage archive.",
+    "preprocessing": "Pointwise raw observations; no interpolation or centered spike filtering."
+  },
+  "fixed_parameters": {
+    "seed": 42,
+    "issue_step_h": 3,
+    "alpha": 0.2
+  },
+  "variants": {
+    "90": {
+      "summary": {
+        "1-6": {
+          "n": 180,
+          "n_interval": 180,
+          "mae": 902.5128215547956,
+          "coverage": 0.7722222222222223,
+          "mean_width": 2796.6177360511037,
+          "pinball_lo": 204.66724561073866,
+          "pinball_hi": 252.88693101682674,
+          "winkler": 4575.5417662756545
+        },
+        "7-24": {
+          "n": 540,
+          "n_interval": 540,
+          "mae": 2291.269525528133,
+          "coverage": 0.7518518518518519,
+          "mean_width": 6139.208674996726,
+          "pinball_lo": 427.0419744262053,
+          "pinball_hi": 545.0417349463135,
+          "winkler": 9720.837093725188
+        },
+        "25-48": {
+          "n": 696,
+          "n_interval": 696,
+          "mae": 2648.057695499668,
+          "coverage": 0.8074712643678161,
+          "mean_width": 8170.874925772931,
+          "pinball_lo": 549.8805764979554,
+          "pinball_hi": 635.1047755486518,
+          "winkler": 11849.853520466073
+        },
+        "all": {
+          "n": 1416,
+          "n_interval": 1416,
+          "mae": 2290.103112805667,
+          "coverage": 0.7817796610169492,
+          "mean_width": 6712.918661952961,
+          "pinball_lo": 459.15229635781134,
+          "pinball_hi": 552.1716866072738,
+          "winkler": 10113.23982965085
+        }
+      },
+      "g4_pass": true
+    },
+    "180": {
+      "summary": {
+        "1-6": {
+          "n": 180,
+          "n_interval": 180,
+          "mae": 899.3451090670063,
+          "coverage": 0.7888888888888889,
+          "mean_width": 2929.8147047944108,
+          "pinball_lo": 198.25795093789995,
+          "pinball_hi": 253.81166956771523,
+          "winkler": 4520.696205056152
+        },
+        "7-24": {
+          "n": 540,
+          "n_interval": 540,
+          "mae": 2321.3123771803557,
+          "coverage": 0.7074074074074074,
+          "mean_width": 5972.781722217192,
+          "pinball_lo": 437.33877476139827,
+          "pinball_hi": 588.1462846709435,
+          "winkler": 10254.850594323418
+        },
+        "25-48": {
+          "n": 696,
+          "n_interval": 696,
+          "mae": 2759.1000547248577,
+          "coverage": 0.7902298850574713,
+          "mean_width": 7991.185020214739,
+          "pinball_lo": 547.0505103745389,
+          "pinball_hi": 650.2425536679888,
+          "winkler": 11972.930640425277
+        },
+        "all": {
+          "n": 1416,
+          "n_interval": 1416,
+          "mae": 2355.7375998573125,
+          "coverage": 0.7584745762711864,
+          "mean_width": 6578.060417323259,
+          "pinball_lo": 460.87325194961585,
+          "pinball_hi": 576.1680166648434,
+          "winkler": 10370.412686144593
+        }
+      },
+      "g4_pass": false
+    }
+  },
+  "limitations": "Longer calibration also moves the training cutoff; this is a pipeline comparison. One earlier month cannot establish deployment coverage. Final future validation remains required."
+}
