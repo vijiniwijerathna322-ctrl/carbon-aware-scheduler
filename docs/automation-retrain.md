@@ -22,4 +22,4 @@ Merging the draft retains the reviewed candidate; it does not deploy it. Separat
 
 Unit tests cover regression flags, unavailable previous values, coverage distance, pairing exclusions, duplicate/minimum-sample rejection, strict JSON review artifacts and rejection of weather results. Workflow YAML, embedded Python and actionlint are checked. A local review-format preview reuses the existing CISO held-out reports on both sides, so it is a formatting/provenance verification with zero deltas, not a new retraining experiment.
 
-Live dispatch and inspection of an actual generated PR remain pending the Actions secret/settings and availability of upstream EIA data. The workflow is on the Plan 10 implementation branch and is not claimed to have run in production.
+Live dispatch and inspection of an actual generated PR remain pending the Actions secret/settings and availability of upstream EIA data. The workflow code is integrated through the ADR 0018 bootstrap exception; no successful production run is claimed.
