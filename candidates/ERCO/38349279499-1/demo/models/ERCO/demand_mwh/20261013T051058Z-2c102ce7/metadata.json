@@ -1,0 +1,108 @@
+{
+  "alpha": 0.2,
+  "calibration_days": 90,
+  "calibration_end": "2026-10-13T04:00:00+00:00",
+  "calibration_start": "2026-07-15T04:00:00+00:00",
+  "corrections": {
+    "1-6": 940.0764637839166,
+    "25-48": 1494.5708881481987,
+    "7-24": 1107.3430154922826
+  },
+  "data_end": "2026-10-13T04:00:00+00:00",
+  "data_source": "raw",
+  "data_start": "2021-01-01T00:00:00+00:00",
+  "exog_columns": [],
+  "exog_source": null,
+  "feature_columns": [
+    "horizon",
+    "y_issue",
+    "y_lag1",
+    "y_lag24",
+    "roll_mean_24",
+    "roll_std_24",
+    "anchor_24",
+    "anchor_168",
+    "hour_local",
+    "dow_local",
+    "month_local",
+    "is_us_holiday"
+  ],
+  "fit_end": "2026-10-13T04:00:00+00:00",
+  "git_sha": "912b865b2164aa3186cd95d282e8f6c4efdb7342",
+  "input_sha256": "5c940bc300699ef96f42853e6fd30df5b06a5b709a5fb0e1eb821a8382397b28",
+  "issue_step_h": 3,
+  "lgbm_parameters": {
+    "colsample_bytree": 0.8,
+    "learning_rate": 0.05,
+    "min_child_samples": 50,
+    "n_estimators": 400,
+    "num_leaves": 31,
+    "subsample": 0.8,
+    "subsample_freq": 1,
+    "verbose": -1
+  },
+  "limitations": "Latest-revision snapshot; zero observation latency assumed; no publication-vintage archive.",
+  "metrics": {
+    "calibration": {
+      "1-6": {
+        "coverage": 0.8003709714815673,
+        "mae": 1626.476375495384,
+        "mean_width": 5765.045633591281,
+        "n": 4313,
+        "n_interval": 4313,
+        "pinball_hi": 501.9107988805985,
+        "pinball_lo": 414.4547873937718,
+        "winkler": 9163.655862743703
+      },
+      "25-48": {
+        "coverage": 0.8000941841299741,
+        "mae": 2475.3416375228076,
+        "mean_width": 9360.66787133553,
+        "n": 16988,
+        "n_interval": 16988,
+        "pinball_hi": 585.3694910032627,
+        "pinball_lo": 724.6066962548034,
+        "winkler": 13099.761872580662
+      },
+      "7-24": {
+        "coverage": 0.8001088054713609,
+        "mae": 1927.7425093688337,
+        "mean_width": 6963.7627998830685,
+        "n": 12867,
+        "n_interval": 12867,
+        "pinball_hi": 521.7674230283059,
+        "pinball_lo": 530.05831232712,
+        "winkler": 10518.25735355426
+      },
+      "all": {
+        "coverage": 0.8001346288925311,
+        "mae": 2161.9749243092315,
+        "mean_width": 8004.167746488604,
+        "n": 34168,
+        "n_interval": 34168,
+        "pinball_hi": 550.8832715066923,
+        "pinball_lo": 612.1933492952174,
+        "winkler": 11630.766208019098
+      }
+    },
+    "scope": "reused calibration window; not held-out"
+  },
+  "model_sha256": "25a866e624a5dc7869b56541ce1bcf5a8f1b4c2dad7b3e97e8622b93571dcd3e",
+  "n_calibration": 34168,
+  "n_train": 775752,
+  "preprocessing": "Pointwise raw observations; no interpolation or centered spike filtering.",
+  "region": "ERCO",
+  "seed": 42,
+  "target": "demand_mwh",
+  "train_end": "2026-07-15T04:00:00+00:00",
+  "trained_at": "2026-10-13T05:10:58.023635+00:00",
+  "tz": "America/Chicago",
+  "version": "20261013T051058Z-2c102ce7",
+  "versions": {
+    "joblib": "1.6.0",
+    "lightgbm": "4.7.0",
+    "numpy": "2.4.6",
+    "pandas": "3.0.6",
+    "python": "3.11.17"
+  }
+}

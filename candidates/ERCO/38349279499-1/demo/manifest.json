@@ -1,0 +1,22 @@
+{
+  "region": "ERCO",
+  "data_source": "raw",
+  "history_days": 400,
+  "data_start": "2025-09-08T06:00:00+00:00",
+  "data_end": "2026-10-13T05:00:00+00:00",
+  "models": {
+    "demand_mwh": "20261013T051058Z-2c102ce7",
+    "carbon_intensity_g_per_kwh": "20261013T051159Z-d448f25f"
+  },
+  "weather_models": {},
+  "sha256": {
+    "models/ERCO/demand_mwh/current.json": "590f57c5fd1a59a1efe06914fff0efe90adafba61b246ffa4c763dec87cb709f",
+    "models/ERCO/demand_mwh/20261013T051058Z-2c102ce7/metadata.json": "44b582c2ecce1ece189b29351a2f731ca9fa3abb2c37af8b9d6c8b4d9c77de4b",
+    "models/ERCO/demand_mwh/20261013T051058Z-2c102ce7/model.joblib": "25a866e624a5dc7869b56541ce1bcf5a8f1b4c2dad7b3e97e8622b93571dcd3e",
+    "models/ERCO/carbon_intensity_g_per_kwh/current.json": "766af578ca40814d8c4969d37147dd0460bdaf1603e732e20deeabb89a5a151d",
+    "models/ERCO/carbon_intensity_g_per_kwh/20261013T051159Z-d448f25f/metadata.json": "85d65b9e03db90e9eb5d077a2f1301e0308d5503bb015dd54dacaa14c9d814c0",
+    "models/ERCO/carbon_intensity_g_per_kwh/20261013T051159Z-d448f25f/model.joblib": "5e2cfe1fd8ba8d022d0529f735dcc2a67c1b7bc2b588fcbfb3032f8c8ae9b3a1",
+    "data/raw/ERCO/hourly.parquet": "bd79dbbcdecbf24df06d7fa7471863c0f84ae0d1a5ecb4043f65db007127ba36"
+  },
+  "limitations": "Frozen latest-revision snapshot; zero observation latency; carbon G4 missed nominal coverage."
+}
