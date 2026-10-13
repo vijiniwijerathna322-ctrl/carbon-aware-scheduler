@@ -1,4 +1,5 @@
 name: Retrain candidate for review
+run-name: Retrain ${{ inputs.region }} candidate
 
 on:
   workflow_dispatch:

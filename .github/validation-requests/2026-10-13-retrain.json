@@ -1,0 +1,5 @@
+{
+  "operation": "retrain-candidate",
+  "regions": ["CISO", "ERCO"],
+  "reason": "User requested completion after confirming EIA Actions secret and PR creation settings; run existing manual candidate workflows on GitHub-hosted runners."
+}

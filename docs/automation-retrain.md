@@ -23,3 +23,7 @@ Merging the draft retains the reviewed candidate; it does not deploy it. Separat
 Unit tests cover regression flags, unavailable previous values, coverage distance, pairing exclusions, duplicate/minimum-sample rejection, strict JSON review artifacts and rejection of weather results. Workflow YAML, embedded Python and actionlint are checked. A local review-format preview reuses the existing CISO held-out reports on both sides, so it is a formatting/provenance verification with zero deltas, not a new retraining experiment.
 
 Live dispatch and inspection of an actual generated PR remain pending the Actions secret/settings and availability of upstream EIA data. The workflow code is integrated through the ADR 0018 bootstrap exception; no successful production run is claimed.
+
+## Committed validation requests
+
+A newly added JSON file under `.github/validation-requests/` on main can request the existing manual retrain workflow for explicitly listed CISO/ERCO regions. The dispatcher only accepts new files and the retrain-candidate operation, with actions write permission scoped to its job. It never reads or exports the EIA secret, promotes models, merges PRs or dispatches arbitrary workflows. This bridge is used when the connected repository tools cannot dispatch workflows directly. GitHub documents workflow_dispatch as an exception to token-trigger suppression. The 2026-10-13 request records the user-confirmed secret/settings and preserves human review.

@@ -1,0 +1,48 @@
+name: Dispatch committed live validation request
+
+on:
+  push:
+    branches: [main]
+    paths: ['.github/validation-requests/*.json']
+
+permissions:
+  contents: read
+
+jobs:
+  dispatch:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      actions: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Dispatch only explicit new retrain requests
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          BEFORE: ${{ github.event.before }}
+        run: |
+          python - <<'PY'
+          import json
+          import os
+          import subprocess
+          from pathlib import Path
+          before = os.environ['BEFORE']
+          assert before and set(before) != {'0'}, 'Initial repository pushes are not validation requests'
+          changed = subprocess.check_output(
+              ['git', 'diff', '--name-only', '--diff-filter=A', before, 'HEAD'], text=True
+          ).splitlines()
+          requests = [Path(p) for p in changed if p.startswith('.github/validation-requests/') and p.endswith('.json')]
+          for path in requests:
+              request = json.loads(path.read_text())
+              assert request['operation'] == 'retrain-candidate', 'Unsupported operation'
+              assert request['regions'] and set(request['regions']) <= {'CISO', 'ERCO'}, 'Invalid regions'
+              assert len(request['regions']) == len(set(request['regions'])), 'Duplicate regions'
+              for region in request['regions']:
+                  subprocess.run(['gh', 'workflow', 'run', 'retrain.yml', '--ref', 'main',
+                                  '--field', f'region={region}'], check=True)
+                  print(f'Dispatched {region} candidate; review required, no deployment')
+          PY
