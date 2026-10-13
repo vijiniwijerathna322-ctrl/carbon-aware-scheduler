@@ -199,7 +199,7 @@ def build_monitor_report(  # noqa: PLR0915, PLR0912
     if generated.tzinfo is None:
         raise ValueError("now must be timezone-aware")
     generated = generated.tz_convert("UTC")
-    tz = load_regions()[region].timezone
+    tz = load_regions(settings.regions_path)[region].timezone
     ratios: dict[str, float | None] = {}
     versions, drifts, coverages, replay, baselines, provenance_all = (
         {},
@@ -226,7 +226,9 @@ def build_monitor_report(  # noqa: PLR0915, PLR0912
             reasons.append(
                 f"{target}: input snapshot is stale; window ends at {window_end.isoformat()}."
             )
-        metadata = read_metadata(region, target, settings.models_dir)
+        metadata = read_metadata(
+            region, target, settings.models_dir, regions_path=settings.regions_path
+        )
         pointer = settings.models_dir / region / target / "weather.json"
         if pointer.is_file():
             choice = json.loads(pointer.read_text(encoding="utf-8"))
@@ -243,7 +245,13 @@ def build_monitor_report(  # noqa: PLR0915, PLR0912
         fit_end = pd.Timestamp(metadata["fit_end"])
         if fit_end > generated:
             raise ValueError("Requested time precedes the model fit cutoff")
-        model = load_model(region, target, settings.models_dir, metadata["version"])
+        model = load_model(
+            region,
+            target,
+            settings.models_dir,
+            metadata["version"],
+            regions_path=settings.regions_path,
+        )
         versions[target], provenance_all[target] = metadata["version"], provenance
         features = _features(series)
         reference = features.loc[fit_end - pd.Timedelta(days=180) + pd.Timedelta(hours=1) : fit_end]
@@ -364,8 +372,10 @@ def to_html(report: MonitorReport) -> str:
     )
 
 
-def write_monitor_report(report: MonitorReport, directory: Path) -> Path:
-    load_regions()[report.region]
+def write_monitor_report(
+    report: MonitorReport, directory: Path, *, regions_path: Path | None = None
+) -> Path:
+    load_regions(regions_path)[report.region]
     directory.mkdir(parents=True, exist_ok=True)
     output = directory / f"monitor_{report.region}.json"
     for path, content in (

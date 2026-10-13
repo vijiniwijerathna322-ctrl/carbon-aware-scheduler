@@ -22,19 +22,26 @@ def _check_index(df: pd.DataFrame) -> None:
         raise ValueError("Stored index must be regular, unique and increasing")
 
 
-def hourly_path(region: str, stage: str, data_dir: Path) -> Path:
+def hourly_path(
+    region: str, stage: str, data_dir: Path, *, regions_path: Path | None = None
+) -> Path:
     if stage not in ("raw", "interim", "processed"):
         raise ValueError("stage must be raw, interim or processed")
-    load_regions()[region]
+    load_regions(regions_path)[region]
     return data_dir / stage / region / "hourly.parquet"
 
 
 def write_hourly(
-    df: pd.DataFrame, region: str, stage: Literal["raw", "interim", "processed"], data_dir: Path
+    df: pd.DataFrame,
+    region: str,
+    stage: Literal["raw", "interim", "processed"],
+    data_dir: Path,
+    *,
+    regions_path: Path | None = None,
 ) -> Path:
     """Replace a complete file atomically; equal frames leave bytes untouched."""
     _check_index(df)
-    path = hourly_path(region, stage, data_dir)
+    path = hourly_path(region, stage, data_dir, regions_path=regions_path)
     if path.exists() and pd.read_parquet(path).equals(df):
         return path
     path.parent.mkdir(parents=True, exist_ok=True)
@@ -49,10 +56,14 @@ def write_hourly(
 
 
 def read_hourly(
-    region: str, stage: Literal["raw", "interim", "processed"], data_dir: Path
+    region: str,
+    stage: Literal["raw", "interim", "processed"],
+    data_dir: Path,
+    *,
+    regions_path: Path | None = None,
 ) -> pd.DataFrame:
     """Read a stored frame, with actionable instructions if absent."""
-    path = hourly_path(region, stage, data_dir)
+    path = hourly_path(region, stage, data_dir, regions_path=regions_path)
     if not path.is_file():
         raise FileNotFoundError(f"No hourly data at {path}; run carbon-scheduler ingest first")
     frame = pd.read_parquet(path)

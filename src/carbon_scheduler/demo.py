@@ -24,8 +24,20 @@ def _copy_weather_assets(region: str, settings: Settings, stage: Path) -> dict[s
         choice = json.loads(pointer.read_text(encoding="utf-8"))
         if not isinstance(choice, dict) or choice.get("approved") is not True:
             raise ValueError("Demo weather variant must be explicitly approved")
-        metadata = read_metadata(region, target, settings.models_dir, choice["version"])
-        load_model(region, target, settings.models_dir, choice["version"])
+        metadata = read_metadata(
+            region,
+            target,
+            settings.models_dir,
+            choice["version"],
+            regions_path=settings.regions_path,
+        )
+        load_model(
+            region,
+            target,
+            settings.models_dir,
+            choice["version"],
+            regions_path=settings.regions_path,
+        )
         if metadata.get("exog_source") != "issue_vintage_forecast":
             raise ValueError("Demo weather variant requires issue-vintage provenance")
         version = metadata["version"]
@@ -69,17 +81,26 @@ def make_demo_assets(  # noqa: PLR0912
     for source_root in (settings.data_dir.resolve(), settings.models_dir.resolve()):
         if output.is_relative_to(source_root) or source_root.is_relative_to(output):
             raise ValueError("Demo output must be separate from source data and model directories")
-    frame = read_hourly(region, "raw", settings.data_dir)
+    frame = read_hourly(region, "raw", settings.data_dir, regions_path=settings.regions_path)
     if frame.empty:
         raise ValueError("No source observations for demo")
     frame = frame.iloc[-history_days * 24 :].copy()
     if len(frame) < 8 * 24:  # noqa: PLR2004
         raise ValueError("Demo snapshot needs at least 8 days of hourly history")
     metadata_by_target = {
-        target: read_metadata(region, target, settings.models_dir) for target in TARGETS
+        target: read_metadata(
+            region, target, settings.models_dir, regions_path=settings.regions_path
+        )
+        for target in TARGETS
     }
     for target, metadata in metadata_by_target.items():
-        load_model(region, target, settings.models_dir, metadata["version"])
+        load_model(
+            region,
+            target,
+            settings.models_dir,
+            metadata["version"],
+            regions_path=settings.regions_path,
+        )
         if metadata.get("data_source") != "raw":
             raise ValueError("Demo requires raw-trained models")
     output.parent.mkdir(parents=True, exist_ok=True)
@@ -87,7 +108,7 @@ def make_demo_assets(  # noqa: PLR0912
     with _staging_directory(output.parent) as temporary:
         stage = Path(temporary) / "assets"
         stage.mkdir()
-        write_hourly(frame, region, "raw", stage / "data")
+        write_hourly(frame, region, "raw", stage / "data", regions_path=settings.regions_path)
         for target, metadata in metadata_by_target.items():
             version = metadata["version"]
             source = settings.models_dir / region / target / version

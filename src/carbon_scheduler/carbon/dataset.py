@@ -36,7 +36,7 @@ def build_dataset(
     Coverage describes observed positive generation only. Missing fuel columns
     are listed separately; missing-cell counts cover present included columns.
     """
-    frame = read_hourly(region, "interim", settings.data_dir)
+    frame = read_hourly(region, "interim", settings.data_dir, regions_path=settings.regions_path)
     resolved = factors_path if factors_path.is_absolute() else PROJECT_ROOT / factors_path
     factors = load_emission_factors(resolved)
     frame["carbon_intensity_g_per_kwh"] = compute_intensity(frame, factors)
@@ -69,7 +69,9 @@ def build_dataset(
         "absent_factor_codes": sorted(set(factors.factors) - set(fuels.values())),
         "coverage_scope": "Observed positive fuel generation; unobserved generation is unknown.",
         "input_sha256": hashlib.sha256(
-            hourly_path(region, "interim", settings.data_dir).read_bytes()
+            hourly_path(
+                region, "interim", settings.data_dir, regions_path=settings.regions_path
+            ).read_bytes()
         ).hexdigest(),
         "factors_sha256": hashlib.sha256(resolved.read_bytes()).hexdigest(),
         "quality": {
@@ -82,6 +84,8 @@ def build_dataset(
             "excluded_generation_mwh": float(omitted.sum()),
         },
     }
-    path = write_hourly(frame, region, "processed", settings.data_dir)
+    path = write_hourly(
+        frame, region, "processed", settings.data_dir, regions_path=settings.regions_path
+    )
     _write_report(path.with_name("carbon-quality-report.json"), report)
     return path

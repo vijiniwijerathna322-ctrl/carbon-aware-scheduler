@@ -34,8 +34,8 @@ class ModelIncompatibleError(RuntimeError):
     """Artifact contract, path or integrity does not match this runtime."""
 
 
-def _base(region: str, target: str, models_dir: Path) -> Path:
-    load_regions()[region]
+def _base(region: str, target: str, models_dir: Path, regions_path: Path | None) -> Path:
+    load_regions(regions_path)[region]
     if target not in ("demand_mwh", "carbon_intensity_g_per_kwh"):
         raise ModelIncompatibleError("Unsupported target")
     root = models_dir.resolve()
@@ -77,14 +77,16 @@ def _atomic_json(path: Path, values: Mapping[str, Any]) -> None:
         temporary.unlink(missing_ok=True)
 
 
-def save_model(
+def save_model(  # noqa: PLR0913
     model: ForecastModel,
     region: str,
     models_dir: Path,
     metrics: Mapping[str, Any] | None = None,
     data_end: pd.Timestamp | None = None,
+    *,
+    regions_path: Path | None = None,
 ) -> Path:
-    base = _base(region, model.target, models_dir)
+    base = _base(region, model.target, models_dir, regions_path)
     metadata = model.metadata()
     if data_end is not None and data_end.isoformat() != metadata["data_end"]:
         raise ValueError("data_end must match the fitted model's actual history end")
@@ -125,8 +127,10 @@ def save_model(
     return path
 
 
-def _artifact(region: str, target: str, models_dir: Path, version: str | None) -> Path:
-    base = _base(region, target, models_dir)
+def _artifact(
+    region: str, target: str, models_dir: Path, version: str | None, regions_path: Path | None
+) -> Path:
+    base = _base(region, target, models_dir, regions_path)
     hint = f"Model unavailable for {region}/{target}; run carbon-scheduler train --region {region}"
     if version is None:
         try:
@@ -153,8 +157,10 @@ def read_metadata(
     target: str,
     models_dir: Path,
     version: str | None = None,
+    *,
+    regions_path: Path | None = None,
 ) -> dict[str, Any]:
-    path = _artifact(region, target, models_dir, version)
+    path = _artifact(region, target, models_dir, version, regions_path)
     try:
         result = json.loads((path / "metadata.json").read_text(encoding="utf-8"))
     except json.JSONDecodeError as error:
@@ -173,9 +179,11 @@ def load_model(
     target: str,
     models_dir: Path,
     version: str | None = None,
+    *,
+    regions_path: Path | None = None,
 ) -> ForecastModel:
-    path = _artifact(region, target, models_dir, version)
-    metadata = read_metadata(region, target, models_dir, path.name)
+    path = _artifact(region, target, models_dir, version, regions_path)
+    metadata = read_metadata(region, target, models_dir, path.name, regions_path=regions_path)
     columns = metadata.get("exog_columns", [])
     try:
         expected = (

@@ -37,11 +37,13 @@ def load_backtest_series(
         raise ValueError(f"target must be one of {TARGETS}")
     if data_source not in ("raw", "processed"):
         raise ValueError("data_source must be raw or processed")
-    frame = read_hourly(region, data_source, settings.data_dir)
+    frame = read_hourly(region, data_source, settings.data_dir, regions_path=settings.regions_path)
     metadata = {
         "data_source": data_source,
         "input_sha256": hashlib.sha256(
-            hourly_path(region, data_source, settings.data_dir).read_bytes()
+            hourly_path(
+                region, data_source, settings.data_dir, regions_path=settings.regions_path
+            ).read_bytes()
         ).hexdigest(),
         "limitations": (
             "Latest-revision snapshot; zero observation latency assumed; "
@@ -160,7 +162,7 @@ def run_backtest(  # noqa: PLR0913
     """Run the last six calendar months by default and persist predictions/report."""
     if model not in ("naive", "lgbm", "cqr"):
         raise ValueError("model must be naive, lgbm or cqr")
-    timezone = load_regions()[region].timezone
+    timezone = load_regions(settings.regions_path)[region].timezone
     series, metadata = load_backtest_series(region, target, settings, data_source)
     end = utc_hour(test_end) if test_end is not None else pd.Timestamp(series.index[-1])
     start = (

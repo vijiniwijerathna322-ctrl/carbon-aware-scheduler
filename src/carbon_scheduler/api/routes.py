@@ -39,10 +39,11 @@ def health(service: Service) -> JSONResponse:
 @router.get("/v1/forecast", response_model=ForecastResponse)
 def forecast(
     service: Service,
-    region: str = "CISO",
+    region: str | None = None,
     target: str = "carbon_intensity_g_per_kwh",
     horizon: Annotated[int, Query(ge=1, le=48)] = 48,
 ) -> ForecastResponse:
+    region = service.region if region is None else region
     check_region(region, service)
     try:
         frame, meta = service.forecast(target, horizon)
@@ -62,7 +63,7 @@ def forecast(
 
 @router.post("/v1/schedule", response_model=ScheduleResponse)
 def schedule(body: ScheduleRequest, service: Service) -> ScheduleResponse:
-    check_region(body.region, service)
+    check_region(service.region if body.region is None else body.region, service)
     frame, meta = service.forecast("carbon_intensity_g_per_kwh")
     first = pd.Timestamp(frame.target_time.iloc[0])
     last_end = pd.Timestamp(frame.target_time.iloc[-1]) + pd.Timedelta(hours=1)
@@ -115,7 +116,8 @@ def current_models(service: Service) -> dict[str, Any]:
 
 
 @router.get("/v1/monitoring/status")
-def monitoring_status(service: Service, region: str = "CISO") -> JSONResponse:
+def monitoring_status(service: Service, region: str | None = None) -> JSONResponse:
+    region = service.region if region is None else region
     check_region(region, service)
     try:
         report = read_monitor_report(

@@ -61,17 +61,23 @@ def run_ingest(  # noqa: PLR0913, PLR0917
     overlap_hours: int = 48,
 ) -> QualityReport:
     """Refresh an inclusive interval; new rows replace old rows, including nulls."""
-    load_regions()[region]
+    load_regions(settings.regions_path)[region]
     beginning = _hour(start)
     ending = _hour(end) if end is not None else pd.Timestamp.now(tz="UTC").floor("h")
     if beginning > ending or overlap_hours < 0:
         raise ValueError("start must not exceed end and overlap_hours must be nonnegative")
     cache_stage: Literal["raw", "interim"] = (
-        "raw" if hourly_path(region, "raw", settings.data_dir).exists() else "interim"
+        "raw"
+        if hourly_path(
+            region, "raw", settings.data_dir, regions_path=settings.regions_path
+        ).exists()
+        else "interim"
     )
     old = (
-        read_hourly(region, cache_stage, settings.data_dir)
-        if hourly_path(region, cache_stage, settings.data_dir).exists()
+        read_hourly(region, cache_stage, settings.data_dir, regions_path=settings.regions_path)
+        if hourly_path(
+            region, cache_stage, settings.data_dir, regions_path=settings.regions_path
+        ).exists()
         else pd.DataFrame()
     )
     fetch_start = beginning
@@ -98,7 +104,9 @@ def run_ingest(  # noqa: PLR0913, PLR0917
             # Only checkpoint a complete pair of routes; a failed year leaves the
             # previous completed history available for an overlap-based retry.
             if not backfill:
-                write_hourly(merged, region, "raw", settings.data_dir)
+                write_hourly(
+                    merged, region, "raw", settings.data_dir, regions_path=settings.regions_path
+                )
     finally:
         if owned:
             active.close()
@@ -113,8 +121,10 @@ def run_ingest(  # noqa: PLR0913, PLR0917
     cleaned, report = validate_and_clean(merged)
     report = replace(report, n_duplicates=duplicates)
     unchanged = not old.empty and old.equals(merged)
-    write_hourly(merged, region, "raw", settings.data_dir)
-    interim_path = write_hourly(cleaned, region, "interim", settings.data_dir)
+    write_hourly(merged, region, "raw", settings.data_dir, regions_path=settings.regions_path)
+    interim_path = write_hourly(
+        cleaned, region, "interim", settings.data_dir, regions_path=settings.regions_path
+    )
     diagnostics = {
         "region": region,
         "requested_start": beginning.isoformat(),

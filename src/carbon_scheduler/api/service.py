@@ -34,17 +34,26 @@ class ForecastMeta:
 
 
 class ForecastService:
-    def __init__(self, settings: Settings, region: str = "CISO") -> None:
+    def __init__(self, settings: Settings, region: str | None = None) -> None:
         self.settings = settings
+        region = region or next(iter(load_regions(settings.regions_path)))
         self.region = region
         self._reason = "ok"
         self._forecasts: dict[str, tuple[pd.DataFrame, ForecastMeta]] = {}
         self._models: dict[str, dict[str, Any]] = {}
         try:
-            load_regions()[region]
+            load_regions(settings.regions_path)[region]
             for target in TARGETS:
-                metadata = read_metadata(region, target, settings.models_dir)
-                model = load_model(region, target, settings.models_dir, metadata["version"])
+                metadata = read_metadata(
+                    region, target, settings.models_dir, regions_path=settings.regions_path
+                )
+                model = load_model(
+                    region,
+                    target,
+                    settings.models_dir,
+                    metadata["version"],
+                    regions_path=settings.regions_path,
+                )
                 if metadata.get("data_source") != "raw" or metadata.get("exog_columns"):
                     raise ModelIncompatibleError(
                         "Serving requires a raw-trained weather-free fallback"
@@ -62,7 +71,13 @@ class ForecastService:
                     raise ModelIncompatibleError("Model returned nonfinite predictions")
                 meta = ForecastMeta(issue, issue, metadata["version"], float(metadata["alpha"]))
                 frame, meta = self._with_weather(target, series, frame, meta, provenance)
-                metadata = read_metadata(region, target, settings.models_dir, meta.model_version)
+                metadata = read_metadata(
+                    region,
+                    target,
+                    settings.models_dir,
+                    meta.model_version,
+                    regions_path=settings.regions_path,
+                )
                 self._forecasts[target] = (frame.copy(deep=True), meta)
                 self._models[target] = {
                     key: metadata[key]
@@ -104,7 +119,11 @@ class ForecastService:
             if not isinstance(choice, dict):
                 raise WeatherUnavailable("Invalid weather variant pointer")
             metadata = read_metadata(
-                self.region, target, self.settings.models_dir, choice["version"]
+                self.region,
+                target,
+                self.settings.models_dir,
+                choice["version"],
+                regions_path=self.settings.regions_path,
             )
             if (
                 choice.get("approved") is not True
@@ -118,7 +137,13 @@ class ForecastService:
                 "factors_sha256"
             ):
                 raise WeatherUnavailable("Weather variant carbon factors differ")
-            model = load_model(self.region, target, self.settings.models_dir, choice["version"])
+            model = load_model(
+                self.region,
+                target,
+                self.settings.models_dir,
+                choice["version"],
+                regions_path=self.settings.regions_path,
+            )
             if self.settings.demo_mode:
                 weather = pd.read_parquet(
                     self.settings.data_dir / "weather" / f"{self.region}_forecast.parquet"
@@ -127,7 +152,8 @@ class ForecastService:
                 client = WeatherClient(self.settings.data_dir / "weather" / "cache")
                 try:
                     weather = client.fetch_forecast(
-                        load_regions()[self.region].weather_points, issue_time=meta.issue_time
+                        load_regions(self.settings.regions_path)[self.region].weather_points,
+                        issue_time=meta.issue_time,
                     )
                 finally:
                     client.close()

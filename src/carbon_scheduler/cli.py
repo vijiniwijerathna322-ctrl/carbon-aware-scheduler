@@ -17,6 +17,7 @@ from carbon_scheduler.logging import configure_logging
 from carbon_scheduler.models.reporting import run_backtest
 from carbon_scheduler.models.training import train_region
 from carbon_scheduler.monitoring.report import build_monitor_report, write_monitor_report
+from carbon_scheduler.regions import load_regions
 from carbon_scheduler.scheduler.reporting import run_schedule_backtest
 
 app = typer.Typer(
@@ -26,16 +27,21 @@ app = typer.Typer(
 
 @app.command()
 def monitor(
-    region: str = typer.Option("CISO"),
+    region: str | None = typer.Option(
+        None, help="Region code; defaults to the first configured region."
+    ),
     reports_dir: Annotated[Path | None, typer.Option()] = None,
 ) -> None:
     """Write drift and strictly post-fit performance diagnostics; alerts exit 2."""
     try:
+        region = region or next(iter(load_regions(get_settings().regions_path)))
         settings = get_settings()
         if reports_dir is not None:
             settings = settings.model_copy(update={"reports_dir": reports_dir.resolve()})
         report = build_monitor_report(region, settings)
-        path = write_monitor_report(report, settings.reports_dir)
+        path = write_monitor_report(
+            report, settings.reports_dir, regions_path=settings.regions_path
+        )
     except (OSError, ValueError, KeyError, RuntimeError) as error:
         typer.echo(f"Monitor failed: {error}", err=True)
         raise typer.Exit(code=1) from None
@@ -46,12 +52,15 @@ def monitor(
 
 @app.command()
 def make_demo(
-    region: str = typer.Option("CISO"),
+    region: str | None = typer.Option(
+        None, help="Region code; defaults to the first configured region."
+    ),
     out_dir: Annotated[Path, typer.Option()] = Path("demo"),
     history_days: int = typer.Option(400, min=8),
 ) -> None:
     """Copy current raw-model artifacts into a new offline demo directory."""
     try:
+        region = region or next(iter(load_regions(get_settings().regions_path)))
         make_demo_assets(region, get_settings(), out_dir, history_days)
     except (OSError, ValueError, RuntimeError) as error:
         typer.echo(f"Make demo failed: {error}", err=True)
@@ -61,11 +70,14 @@ def make_demo(
 
 @app.command()
 def schedule_backtest(
-    region: str = typer.Option("CISO"),
+    region: str | None = typer.Option(
+        None, help="Region code; defaults to the first configured region."
+    ),
     reports_dir: Annotated[Path, typer.Option()] = Path("reports"),
 ) -> None:
     """Replay both scheduling strategies using saved CQR carbon forecasts."""
     try:
+        region = region or next(iter(load_regions(get_settings().regions_path)))
         path = run_schedule_backtest(region, get_settings(), reports_dir)
     except (OSError, ValueError, KeyError) as error:
         typer.echo(f"Schedule backtest failed: {error}", err=True)
@@ -75,11 +87,14 @@ def schedule_backtest(
 
 @app.command()
 def train(
-    region: str = typer.Option("CISO"),
+    region: str | None = typer.Option(
+        None, help="Region code; defaults to the first configured region."
+    ),
     fit_end: str | None = typer.Option(None),
 ) -> None:
     """Train both raw-target calibrated models and save local artifacts."""
     try:
+        region = region or next(iter(load_regions(get_settings().regions_path)))
         timestamp = None
         if fit_end is not None:
             import pandas as pd  # noqa: PLC0415
@@ -100,7 +115,9 @@ def train(
 
 @app.command()
 def backtest(
-    region: str = typer.Option("CISO"),
+    region: str | None = typer.Option(
+        None, help="Region code; defaults to the first configured region."
+    ),
     target: str = typer.Option("carbon_intensity_g_per_kwh"),
     model: str = typer.Option("naive"),
     data_source: str = typer.Option("raw"),
@@ -108,6 +125,7 @@ def backtest(
 ) -> None:
     """Compare chronological forecasts using raw observations by default."""
     try:
+        region = region or next(iter(load_regions(get_settings().regions_path)))
         if data_source not in ("raw", "processed"):
             raise ValueError("data-source must be raw or processed")
         path = run_backtest(
@@ -139,11 +157,14 @@ def version() -> None:
 
 @app.command()
 def build_dataset(
-    region: str = typer.Option("CISO"),
+    region: str | None = typer.Option(
+        None, help="Region code; defaults to the first configured region."
+    ),
     factors_path: Annotated[Path, typer.Option()] = Path("config/emission_factors.yaml"),
 ) -> None:
     """Build processed intensity and coverage diagnostics from interim data."""
     try:
+        region = region or next(iter(load_regions(get_settings().regions_path)))
         path = build_processed_dataset(region, get_settings(), factors_path)
     except (OSError, ValueError) as error:
         typer.echo(f"Build dataset failed: {error}", err=True)
@@ -154,12 +175,15 @@ def build_dataset(
 
 @app.command()
 def ingest(
-    region: str = typer.Option("CISO"),
+    region: str | None = typer.Option(
+        None, help="Region code; defaults to the first configured region."
+    ),
     start: str = typer.Option("2021-01-01T00"),
     end: str | None = typer.Option(None),
 ) -> None:
     """Fetch inclusive UTC hours and report completeness."""
     try:
+        region = region or next(iter(load_regions(get_settings().regions_path)))
         report = run_ingest(region, start, end, get_settings())
     except (MissingApiKeyError, EiaAuthError, EiaRequestError, ValueError) as error:
         typer.echo(f"Ingest failed: {error}", err=True)

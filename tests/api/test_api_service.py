@@ -41,8 +41,8 @@ def test_service_staleness_and_model_metadata(trained_settings):
 
 
 def test_incompatible_factors_fail_closed(trained_settings, monkeypatch):
-    def wrong_factors(*args):
-        result = read_metadata(*args)
+    def wrong_factors(*args, **kwargs):
+        result = read_metadata(*args, **kwargs)
         result["factors_sha256"] = "different"
         return result
 

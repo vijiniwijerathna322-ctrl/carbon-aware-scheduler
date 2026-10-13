@@ -31,7 +31,7 @@ def train_region(
     cannot certify held-out interval coverage. Overrides support small tests;
     the CLI trains with the documented full default parameters.
     """
-    tz = load_regions()[region].timezone
+    tz = load_regions(settings.regions_path)[region].timezone
     if not targets or len(set(targets)) != len(targets) or set(targets) - set(TARGETS):
         raise ValueError("targets must be distinct supported forecast targets")
     paths = {}
@@ -51,8 +51,16 @@ def train_region(
             "scope": "reused calibration window; not held-out",
             "calibration": model.calibration_summary().to_dict(orient="index"),
         }
-        path = save_model(model, region, settings.models_dir, metrics)
-        loaded = load_model(region, target, settings.models_dir, version=path.name)
+        path = save_model(
+            model, region, settings.models_dir, metrics, regions_path=settings.regions_path
+        )
+        loaded = load_model(
+            region,
+            target,
+            settings.models_dir,
+            version=path.name,
+            regions_path=settings.regions_path,
+        )
         pd.testing.assert_frame_equal(model.predict(series, end), loaded.predict(series, end))
         logger.info("Saved %s; identical reloaded predictions verified", path)
         paths[target] = path

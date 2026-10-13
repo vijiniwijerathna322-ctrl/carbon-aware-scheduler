@@ -8,7 +8,7 @@ from zoneinfo import ZoneInfo
 
 import yaml
 
-from carbon_scheduler.config import PROJECT_ROOT
+from carbon_scheduler.config import PROJECT_ROOT, get_settings
 
 
 class UnknownRegionError(ValueError):
@@ -51,8 +51,9 @@ class Regions(dict[str, Region]):
         raise UnknownRegionError(f"Unknown region {key!r}; choose from {', '.join(sorted(self))}")
 
 
-def load_regions(path: Path = Path("config/regions.yaml")) -> dict[str, Region]:
+def load_regions(path: Path | None = None) -> dict[str, Region]:
     """Read configured regions and validate IANA timezones and coordinates."""
+    path = get_settings().regions_path if path is None else path
     resolved = path if path.is_absolute() else PROJECT_ROOT / path
     with resolved.open(encoding="utf-8") as stream:
         values = yaml.safe_load(stream)

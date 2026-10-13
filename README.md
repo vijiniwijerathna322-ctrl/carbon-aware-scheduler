@@ -280,3 +280,9 @@ variants require forecast-vintage logs before replay monitoring is supported.
 See the [CISO snapshot](docs/results/monitoring-ciso.md),
 [30% shift simulation](docs/results/drift-simulation.md) and
 [diagnostic limitations](docs/adr/0017-monitoring-cutoffs-and-diagnostics.md).
+
+Region metadata is configurable through `CARBON_REGIONS_PATH` (default
+`config/regions.yaml`). Commands without `--region` use its first entry; API
+requests without a region use the region served by the service. ERCO is configured
+in `America/Chicago`. Its [execution record](docs/results/second-region-erco.md)
+documents the live EIA DNS failure; measured ERCO evaluation remains pending.

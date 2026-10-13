@@ -50,8 +50,8 @@ def scenario(tmp_path, monkeypatch):
         "alpha": 0.2,
         "exog_columns": [],
     }
-    monkeypatch.setattr(module, "read_metadata", lambda *args: metadata)
-    monkeypatch.setattr(module, "load_model", lambda *args: Model())
+    monkeypatch.setattr(module, "read_metadata", lambda *args, **kwargs: metadata)
+    monkeypatch.setattr(module, "load_model", lambda *args, **kwargs: Model())
     monkeypatch.setattr(
         module, "load_backtest_series", lambda *args: (series.copy(), {"data_source": "raw"})
     )

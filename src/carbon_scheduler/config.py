@@ -38,6 +38,9 @@ class Settings(BaseSettings):
     reports_dir: Path = Field(
         default=PROJECT_ROOT / "reports", validation_alias="CARBON_REPORTS_DIR"
     )
+    regions_path: Path = Field(
+        default=PROJECT_ROOT / "config/regions.yaml", validation_alias="CARBON_REGIONS_PATH"
+    )
     demo_mode: bool = Field(default=False, validation_alias="DEMO_MODE")
     max_data_age_hours: float = Field(
         default=6, gt=0, allow_inf_nan=False, validation_alias="MAX_DATA_AGE_HOURS"
@@ -50,7 +53,7 @@ class Settings(BaseSettings):
             return None
         return value
 
-    @field_validator("data_dir", "models_dir", "reports_dir")
+    @field_validator("data_dir", "models_dir", "reports_dir", "regions_path")
     @classmethod
     def resolve_directory(cls, value: Path) -> Path:
         return (PROJECT_ROOT / value).resolve() if not value.is_absolute() else value

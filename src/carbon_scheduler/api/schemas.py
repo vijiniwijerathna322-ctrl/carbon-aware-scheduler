@@ -30,7 +30,6 @@ class ScheduleRequest(BaseModel):
         json_schema_extra={
             "examples": [
                 {
-                    "region": "CISO",
                     "duration_hours": 2,
                     "power_kw": 7,
                     "earliest_start": None,
@@ -41,7 +40,7 @@ class ScheduleRequest(BaseModel):
             ]
         },
     )
-    region: str = "CISO"
+    region: str | None = None
     duration_hours: int = Field(
         ge=1, le=168, strict=True, description="Required one-hour work slots."
     )

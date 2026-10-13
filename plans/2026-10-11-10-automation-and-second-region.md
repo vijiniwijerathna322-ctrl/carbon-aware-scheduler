@@ -46,17 +46,17 @@
 
 **Files:**
 - Modify: `config/regions.yaml`, `src/carbon_scheduler/regions.py` (exists from plan 02/08), `src/carbon_scheduler/config.py` (add `regions_path`)
-- Test: `tests/test_regions.py`
+- Test: `tests/test_region_configuration.py`
 - Create: `docs/results/second-region-erco.md`
 
 **Interfaces:**
 - Consumes: `Region`, `load_regions(path)` from plan 02/08
 - Produces: `Settings.regions_path: Path` (env `CARBON_REGIONS_PATH`, default `config/regions.yaml`) and every pipeline function reading regions through it, so tests can point at a temp YAML
 
-- [ ] **Step 1: Failing tests:** `test_load_regions_validates_timezone` (invalid tz name rejected), `test_unknown_region_error_lists_known_codes`, `test_pipeline_runs_for_synthetic_region_defined_only_in_temp_yaml` (proves no hard-coding)
-- [ ] **Step 2: Run** → FAIL
-- [ ] **Step 3: Implement**; add ERCO entry.
-- [ ] **Step 4: Run** → PASS
+- [x] **Step 1: Failing tests:** `test_load_regions_validates_timezone` (invalid tz name rejected), `test_unknown_region_error_lists_known_codes`, `test_pipeline_runs_for_synthetic_region_defined_only_in_temp_yaml` (proves no hard-coding)
+- [x] **Step 2: Run** → FAIL
+- [x] **Step 3: Implement**; add ERCO entry.
+- [x] **Step 4: Run** → PASS
 - [ ] **Step 5: Manual run:** `ingest`, `build-dataset`, `train`, `backtest --model cqr`, `schedule-backtest`, `monitor` for `ERCO`. Fix `emission_factors.yaml` if new fuel codes appear (ERCO has more wind, little hydro).
 - [ ] **Step 6: Write `docs/results/second-region-erco.md`:** side-by-side CISO vs ERCO table (MAE vs naive, coverage, savings) and what differs and why.
 - [ ] **Step 7: Commit** `feat: second region ERCO and region config loader`
@@ -108,3 +108,9 @@
 The executing-plans sub-skill is not installed; the plan is followed directly. Task 1 already had same-directory temporary writes, os.replace and finally cleanup in both hourly storage and registry pointers. Six regression cases now exercise interrupted Parquet serialization, interrupted pointer serialization, replacement failures for both stores, successful replacement and cleanup. Existing implementations were retained. Quality evidence is recorded after the gate completes; Tasks 2?5 remain pending.
 
 Task 1 gate: ruff check, ruff format check and mypy passed; full suite 301 passed, 1 deselected, coverage 92.95%.
+
+## Task 2 execution amendments
+
+Config propagation and ERCO metadata are implemented; full ERCO evaluation is pending EIA DNS recovery (Windows getaddrinfo error 11001 on 2026-10-13). The published second-region record explicitly leaves metrics unavailable. Task 2 is not complete. Tests use a unique filename to avoid collision with existing ingestion region tests. Store/registry/report writer interfaces add optional keyword-only regions_path arguments; settings-aware callers pass the configured path. CLI omission selects the first config entry, preserving the shipped ordering; API omission selects the service's region. No region identifiers remain hard-coded in src. Existing test doubles accept the new keyword arguments. Tests exercised the changes and failures were fixed before publication.
+
+Task 2 code verification: 307 tests passed, 1 deselected, 93.08% coverage; ruff, formatting and mypy green. Synthetic custom-region API requests without an explicit region and saved monitoring status also passed. Live ERCO measurements remain pending and Task 2 is not marked complete.
