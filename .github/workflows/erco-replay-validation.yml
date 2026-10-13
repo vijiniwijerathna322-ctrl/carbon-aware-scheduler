@@ -1,0 +1,70 @@
+name: Validate retained ERCO scheduling and monitoring
+
+on:
+  push:
+    branches: [main]
+    paths: ['.github/erco-validation/2026-10-13.json']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  replay:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: astral-sh/setup-uv@v7
+        with:
+          version: '0.13.0'
+      - name: Install locked environment
+        run: uv sync --frozen
+      - name: Restore exact retained observation history
+        uses: actions/cache/restore@v4
+        with:
+          path: |
+            data/raw/ERCO
+            data/interim/ERCO
+          key: refresh-v1-Linux-ERCO-38349279499-1
+          fail-on-cache-miss: true
+      - uses: actions/download-artifact@v4
+        with:
+          name: retrain-candidate-ERCO-38349279499-1
+          run-id: 38349279499
+          github-token: ${{ github.token }}
+          path: .tools/erco-candidate
+      - name: Score scheduling with unchanged source provenance
+        env:
+          CARBON_MODELS_DIR: .tools/erco-candidate/candidates/ERCO/38349279499-1/demo/models
+        run: |
+          mkdir -p reports
+          cp .tools/erco-candidate/reports/backtest_ERCO_* reports/
+          uv run --frozen carbon-scheduler schedule-backtest --region ERCO
+      - name: Record current candidate monitor diagnostics
+        env:
+          CARBON_MODELS_DIR: .tools/erco-candidate/candidates/ERCO/38349279499-1/demo/models
+        run: |
+          set +e
+          uv run --frozen carbon-scheduler monitor --region ERCO
+          status=$?
+          set -e
+          echo "$status" > reports/monitor-exit-code.txt
+          if [ "$status" -ne 0 ] && [ "$status" -ne 2 ]; then
+            exit "$status"
+          fi
+          echo "Monitor exit $status recorded; alert exit 2 is a diagnostic, not a healthy acceptance pass."
+      - name: Retain diagnostic reports
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: ERCO-replay-monitor-validation
+          path: |
+            reports/schedule_backtest_ERCO.*
+            reports/monitor*
+          if-no-files-found: error
+          retention-days: 30
