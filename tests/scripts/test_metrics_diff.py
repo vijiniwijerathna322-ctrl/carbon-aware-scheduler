@@ -1,11 +1,17 @@
 import json
+from pathlib import Path
+from runpy import run_path
 
 import numpy as np
 import pandas as pd
 import pytest
 
 from carbon_scheduler.models.reporting import TARGETS
-from scripts.metrics_diff import build_review, metrics_diff, paired_metrics
+
+helpers = run_path(str(Path(__file__).resolve().parents[2] / "scripts/metrics_diff.py"))
+build_review = helpers["build_review"]
+metrics_diff = helpers["metrics_diff"]
+paired_metrics = helpers["paired_metrics"]
 
 
 def test_diff_shows_deltas_and_marks_regressions():
