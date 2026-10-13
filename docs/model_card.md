@@ -37,7 +37,7 @@ Monitoring scores only issues at or after artifact fit_end, selects the latest e
 
 ## Retraining, deployment and generalisation
 
-Retraining creates draft candidates with paired held-out deltas and requires review before separate promotion. The offline Docker demo serves a frozen CISO snapshot without credentials. Workflow code is implemented and verified; live refresh, candidate review and GHCR acceptance remain pending. ERCO is configured but no ERCO accuracy or savings result is claimed. Archive-weather experiments are exploratory and were not promoted: realized weather does not establish live forecast performance.
+Retraining creates draft candidates with paired held-out deltas and requires review before separate promotion. The offline Docker demo serves a frozen CISO snapshot without credentials. Live CISO refresh validated the alert path; drafts 6 and 7 retain real candidates, with no promotion. [ERCO results](results/second-region-erco.md) show demand/carbon MAE reductions of 40.69%/38.32% versus seasonal naive, coverage 74.72%/79.48%, and median/upper replay savings 20.87%/17.95%. Demand G4 fails while carbon passes. The earlier-period 180-day calibration experiment worsened coverage, so the 90-day default remains. Post-fit monitoring performance and GHCR acceptance remain pending. Archive-weather experiments are exploratory and were not promoted: realized weather does not establish live forecast performance.
 
 ## Ethical and physical scope
 

@@ -320,7 +320,7 @@ Region metadata is configurable through `CARBON_REGIONS_PATH` (default
 `config/regions.yaml`). Commands without `--region` use its first entry; API
 requests without a region use the region served by the service. ERCO is configured
 in `America/Chicago`. Its [execution record](docs/results/second-region-erco.md)
-documents the live EIA DNS failure; measured ERCO evaluation remains pending.
+records real ERCO forecasting, matched seasonal-naive comparisons, scheduling replay and monitoring diagnostics. Demand MAE improved 40.69%, carbon MAE 38.32%; demand coverage missed G4. No ERCO candidate was promoted.
 
 The [weekly refresh workflow](.github/workflows/refresh.yml) runs both regions
 without retraining. It preserves monitoring failures, uploads diagnostics and
@@ -349,7 +349,7 @@ unresolved other/storage categories and ignores imports. It is not a marginal
 emissions estimate. Latest revisions and zero observation latency limit historical
 replay; serial dependence and drift limit conformal coverage guarantees. Savings
 describe equally weighted illustrative jobs, not a measured production fleet.
-ERCO performance and successful production automation are still pending.
+ERCO measurements are retained; production acceptance and model promotion remain pending. The live CISO refresh alert path uploaded diagnostics and opened issue 8, preserving the monitor failure.
 
 EIA, Open-Meteo, IPCC AR5 and the separate POST oil-factor source retain their
 attributions and terms; see the datasheet and factor config. [MIT](LICENSE)

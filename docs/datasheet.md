@@ -2,7 +2,7 @@
 
 ## Source and collection
 
-EIA-930 hourly balancing-authority demand, demand forecasts, net generation, interchange and fuel generation are collected through the EIA v2 API. The measured CISO snapshot spans 2021-01-01 00:00 through 2026-10-12 05:00 UTC: 50,646 hourly rows. Files and model metadata retain source digests. API credentials are excluded from version control, demo assets and reports. ERCO collection has not yet completed; its configuration is not evidence of collected Texas data.
+EIA-930 hourly balancing-authority demand, demand forecasts, net generation, interchange and fuel generation are collected through the EIA v2 API. The measured CISO snapshot spans 2021-01-01 00:00 through 2026-10-12 05:00 UTC: 50,646 hourly rows. Files and model metadata retain source digests. API credentials are excluded from version control, demo assets and reports. ERCO collection and real held-out evaluation completed on GitHub runners; see [regional results](results/second-region-erco.md) for source provenance and failed demand coverage acceptance.
 
 ## Observed quality
 
@@ -16,7 +16,7 @@ The lifecycle proxy is the generation-weighted average of configured technology 
 
 ## Revisions, availability and updates
 
-The API supplies latest revisions, not the actual values visible to a historical operator at each forecast issue. Backtests assume zero observation latency; model evaluation is chronologically separated, but publication-vintage uncertainty remains. Incremental ingestion refreshes an overlap window and writes complete hourly snapshots atomically. It may checkpoint complete yearly route pairs before a later upstream failure; incomplete serialization never replaces a prior valid file. The scheduled weekly refresh workflow is implemented, but successful live operational acceptance remains pending.
+The API supplies latest revisions, not the actual values visible to a historical operator at each forecast issue. Backtests assume zero observation latency; model evaluation is chronologically separated, but publication-vintage uncertainty remains. Incremental ingestion refreshes an overlap window and writes complete hourly snapshots atomically. It may checkpoint complete yearly route pairs before a later upstream failure; incomplete serialization never replaces a prior valid file. Live CISO refresh validated ingestion, diagnostic retention and alert issue creation; the monitor reported alert and insufficient post-fit performance support. Healthy operational acceptance remains pending.
 
 ## Reuse and attribution
 

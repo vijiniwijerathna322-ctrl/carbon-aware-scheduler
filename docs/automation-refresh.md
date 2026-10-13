@@ -26,7 +26,7 @@ Reports and quality diagnostics are uploaded with 30-day retention even when the
 
 ## Validation status
 
-Workflow syntax and local quality checks are recorded in Plan 10. A successful live dispatch, downloaded artifact review and secret-free live log review remain pending. ERCO history/model/baseline production is also pending the EIA DNS outage documented in the second-region execution record. The workflow fails with explicit prerequisite errors rather than treating missing deployments as healthy monitoring.
+Workflow syntax and local quality checks are recorded in Plan 10. CISO run 38354869293 completed ingestion/build, retained diagnostics and opened issue 8 after monitor alert exit 2. Artifact digest and reports were reviewed; no secret value was printed. ERCO history, candidate models and evaluations now exist, but no reviewed ERCO deployment bundle is approved. The workflow fails with explicit prerequisite errors rather than treating missing deployments as healthy monitoring.
 
 The artifact transport follows the official [download-artifact contract](https://github.com/actions/download-artifact) and cache behavior follows [actions/cache](https://github.com/actions/cache).
 
