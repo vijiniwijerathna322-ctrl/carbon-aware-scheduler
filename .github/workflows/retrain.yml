@@ -32,7 +32,7 @@ jobs:
       MODEL_RUN_ID: ${{ vars[format('{0}_MODELS_RUN_ID', inputs.region)] }}
       CANDIDATE_ROOT: candidates/${{ inputs.region }}/${{ github.run_id }}-${{ github.run_attempt }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           ref: main
           persist-credentials: false

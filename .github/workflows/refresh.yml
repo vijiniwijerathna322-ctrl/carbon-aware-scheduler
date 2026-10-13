@@ -34,7 +34,7 @@ jobs:
       REGION: ${{ matrix.region }}
       MODEL_RUN_ID: ${{ vars[format('{0}_MODELS_RUN_ID', matrix.region)] }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           persist-credentials: false
       - uses: astral-sh/setup-uv@v7
