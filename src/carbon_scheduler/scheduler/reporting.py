@@ -47,8 +47,8 @@ def run_schedule_backtest(
         "is required, preventing oracle comparisons on unequal support.",
         "Savings are percentages: 100 × (baseline − chosen) / baseline. Zero baselines "
         "use zero by convention. Negative lower bounds are clipped to physical zero. "
-        "Upper is an uncertainty heuristic: carbon G4 failed and summed pointwise "
-        "bounds are not a calibrated job-level confidence interval.",
+        "Upper is an uncertainty heuristic: review this region's carbon coverage gate; "
+        "summed pointwise bounds are not a calibrated job-level confidence interval.",
     ]
     comparison = pd.DataFrame(
         [summarize_replay(result).loc["all"] for result in results],
