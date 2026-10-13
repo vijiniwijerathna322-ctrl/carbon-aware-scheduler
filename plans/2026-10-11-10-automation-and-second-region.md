@@ -57,7 +57,7 @@
 - [x] **Step 2: Run** → FAIL
 - [x] **Step 3: Implement**; add ERCO entry.
 - [x] **Step 4: Run** → PASS
-- [ ] **Step 5: Manual run:** `ingest`, `build-dataset`, `train`, `backtest --model cqr`, `schedule-backtest`, `monitor` for `ERCO`. Fix `emission_factors.yaml` if new fuel codes appear (ERCO has more wind, little hydro).
+- [x] **Step 5: Manual run:** `ingest`, `build-dataset`, `train`, `backtest --model cqr`, `schedule-backtest`, `monitor` for `ERCO`. Fix `emission_factors.yaml` if new fuel codes appear (ERCO has more wind, little hydro).
 - [ ] **Step 6: Write `docs/results/second-region-erco.md`:** side-by-side CISO vs ERCO table (MAE vs naive, coverage, savings) and what differs and why.
 - [ ] **Step 7: Commit** `feat: second region ERCO and region config loader`
 
@@ -150,3 +150,9 @@ Bootstrap quality gate: 315 tests passed, 1 deselected, 93.08% coverage; ruff/fo
 Authenticated live validation was dispatched on 2026-10-13 through the explicit committed request bridge. CISO run 38344315576 and ERCO run 38344317508 both failed prerequisite checks with Configure the EIA_API_KEY Actions secret, before ingestion or model training. The user reported setup complete but the runner did not receive the value; repository-secret placement remains to be clarified. No successful candidate or ERCO metric is claimed.
 
 Reviewed bundle publishing follow-up: deployment-bundle.yml reruns reusable CI before packaging the existing tracked CISO demo selections with frozen raw CQR baseline files. It does not fit or promote a new model. Refresh/retrain discovers retained matching publisher artifacts when region run-ID overrides are absent, rejecting PR sources, expired artifacts and other-region substitutions. The explicit secret prerequisite remains unchanged. Two discovery tests pass; full local gate is now 320 tests and 93.08% coverage.
+
+## Live acceptance follow-up
+
+Both retrain runs completed ingestion, fitting, rolling-origin evaluation, code gates and artifact upload. Only Actions PR creation failed with the explicit repository permission denial; connected GitHub opened drafts 6 and 7. CISO carbon regressed on the matched cohort and ERCO demand coverage missed G4. Neither candidate was promoted. ERCO retained-history replay run 38354149330 passed diagnostic collection: median 20.87%, upper 17.95%, oracle 22.88%, 2726/2760 jobs; monitor alert and zero post-fit performance support are retained. See docs/results/second-region-erco.md.
+
+CISO approved-model refresh run 38354869293 completed ingestion/build, then correctly failed with monitor alert exit 2. Cache save, diagnostics upload and issue 8 creation succeeded. Downloaded artifact digests were verified. This is successful alert-path validation, not healthy deployment. ERCO reviewed bundle, full refresh, human promotion review and release publication remain pending.
