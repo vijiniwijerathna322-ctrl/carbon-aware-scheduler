@@ -1,0 +1,47 @@
+name: Record published research Docker browser demo
+on:
+  push:
+    branches: [main]
+    paths: ['.github/demo-validation/browser-recording.json']
+permissions:
+  contents: read
+  packages: read
+jobs:
+  record:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: astral-sh/setup-uv@v7
+        with:
+          version: '0.13.0'
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ github.token }}
+      - name: Start the exact verified research release
+        run: |
+          docker run -d --name browser-demo --read-only --tmpfs /tmp:rw,noexec,nosuid,size=64m \
+            --cap-drop ALL --security-opt no-new-privileges -p 127.0.0.1:8000:8000 \
+            ghcr.io/vijiniwijerathna322-ctrl/carbon-aware-scheduler@sha256:3b2767ca7dbb212ba7d76f5dad4f61e08f10bb684c2bfabee01cf566174304e6
+          for attempt in $(seq 1 30); do
+            if curl --fail --silent http://127.0.0.1:8000/healthz; then break; fi
+            sleep 1
+          done
+          curl --fail --silent http://127.0.0.1:8000/healthz
+      - name: Install recording-only browser tools
+        run: |
+          uv sync --frozen
+          uv pip install playwright==1.56.0
+          uv run --no-sync python -m playwright install --with-deps chromium
+      - name: Capture actual scripted browser and API responses
+        run: uv run --no-sync python scripts/record_browser_demo.py
+      - uses: actions/upload-artifact@v4
+        with:
+          name: research-release-browser-demo
+          path: reports/browser-demo/
+          if-no-files-found: error
+          retention-days: 90
