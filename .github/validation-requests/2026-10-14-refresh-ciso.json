@@ -1,0 +1,5 @@
+{
+  "operation": "refresh-approved",
+  "regions": ["CISO"],
+  "reason": "Collect new October 14 observations and reassess actual post-fit monitoring support without model promotion"
+}
