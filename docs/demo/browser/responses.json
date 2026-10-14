@@ -1,0 +1,96 @@
+{
+  "Health": {
+    "status": 200,
+    "body": {
+      "status": "ok",
+      "reason": "ok"
+    }
+  },
+  "Six-hour carbon forecast": {
+    "status": 200,
+    "body": {
+      "region": "CISO",
+      "target": "carbon_intensity_g_per_kwh",
+      "issue_time": "2026-10-11T06:00:00Z",
+      "data_as_of": "2026-10-11T06:00:00Z",
+      "model_version": "20261012T115113Z-438177c1",
+      "alpha": 0.2,
+      "points": [
+        {
+          "target_time": "2026-10-11T07:00:00Z",
+          "horizon": 1,
+          "lower": 248.42437793177538,
+          "median": 260.8126065770477,
+          "upper": 301.2394968001054
+        },
+        {
+          "target_time": "2026-10-11T08:00:00Z",
+          "horizon": 2,
+          "lower": 245.1573361905373,
+          "median": 261.49259289942546,
+          "upper": 305.9829167042597
+        },
+        {
+          "target_time": "2026-10-11T09:00:00Z",
+          "horizon": 3,
+          "lower": 231.04903230922588,
+          "median": 260.64140350264535,
+          "upper": 309.3221386045465
+        },
+        {
+          "target_time": "2026-10-11T10:00:00Z",
+          "horizon": 4,
+          "lower": 225.78222060061955,
+          "median": 264.8102436309353,
+          "upper": 308.74944334221624
+        },
+        {
+          "target_time": "2026-10-11T11:00:00Z",
+          "horizon": 5,
+          "lower": 221.66038320060323,
+          "median": 259.801336515817,
+          "upper": 309.4740658141772
+        },
+        {
+          "target_time": "2026-10-11T12:00:00Z",
+          "horizon": 6,
+          "lower": 219.71012768974958,
+          "median": 264.7213193264179,
+          "upper": 312.2519271459959
+        }
+      ],
+      "notes": []
+    }
+  },
+  "Two-hour 7 kW scheduling request": {
+    "status": 200,
+    "body": {
+      "recommendation": {
+        "start": "2026-10-11T18:00:00Z",
+        "end": "2026-10-11T20:00:00Z",
+        "strategy": "median",
+        "emissions_gco2_median": 2271.0566576815477,
+        "emissions_gco2_lower": 1815.2590382689416,
+        "emissions_gco2_upper": 2601.134505879341,
+        "baseline_start": "2026-10-11T07:00:00Z",
+        "baseline_emissions_gco2_median": 3656.136396335312,
+        "expected_savings_pct": 37.88369985436221,
+        "delay_hours": 11,
+        "hours": null
+      },
+      "forecast_issue_time": "2026-10-11T06:00:00Z",
+      "data_as_of": "2026-10-11T06:00:00Z",
+      "model_version": "20261012T115113Z-438177c1",
+      "notes": [
+        "Carbon G4 missed nominal coverage; summed endpoints are not job-level confidence bounds.",
+        "Demo uses a frozen historical snapshot; times are relative to its forecast issue."
+      ]
+    }
+  },
+  "Demo monitoring report absent (expected)": {
+    "status": 404,
+    "body": {
+      "error": "no_report"
+    }
+  }
+}

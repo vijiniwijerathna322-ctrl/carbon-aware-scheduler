@@ -40,7 +40,7 @@ flowchart LR
 
 See the [64-second native API walkthrough](docs/demo/native-walkthrough.gif),
 generated from real endpoint responses. It is explicitly labelled as a rendered
-walkthrough; a live browser/container screen recording remains pending.
+walkthrough. A [65-second scripted Chromium/container recording](docs/demo/browser/README.md) now shows the published research image and real API responses.
 
 The tracked demo serves real CISO models without an EIA key. With Docker installed:
 

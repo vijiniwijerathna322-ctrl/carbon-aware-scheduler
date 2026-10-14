@@ -9,4 +9,8 @@ A [64-second native walkthrough](native-walkthrough.gif) is generated from real 
 5. Open the generated local CISO monitoring HTML report. Show input drift and insufficient post-fit coverage data; do not label absent realized metrics as healthy.
 6. Show the coverage and scheduling figures. Explain the mean scenario result and oracle comparison, with a visible note that the target is an average generation proxy rather than marginal avoided emissions.
 
-Native local API responses and Linux Docker smoke checks have been verified. A real browser/container recording and an independent five-minute quickstart trial are still required before completing Plan 11's live presentation checks.
+Native local API responses and Linux Docker smoke checks have been verified.
+A [scripted real Chromium/container recording](browser/README.md) is now retained
+from the published research image. It is automated, with the historical monitor
+report identified separately; an independent human five-minute quickstart trial
+remains pending.

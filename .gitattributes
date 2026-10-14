@@ -13,3 +13,5 @@ docs/results/figure-inputs/** -text
 docs/results/erco-validation/*.parquet -text
 docs/results/erco-baseline-validation/*.parquet -text
 docs/results/erco-calibration-experiment/*.parquet -text
+
+docs/demo/browser/*.webm -text

@@ -54,3 +54,7 @@ Image: ghcr.io/vijiniwijerathna322-ctrl/carbon-aware-scheduler:0.2.0
 Verified digest: sha256:3b2767ca7dbb212ba7d76f5dad4f61e08f10bb684c2bfabee01cf566174304e6
 
 The first tag run failed ShellCheck before any registry write; its unpublished tag was corrected once to main commit 3e02388 with an exact remote lease. The successful tagged revision and image are retained. No candidate models were promoted; v1.0.0 and full production acceptance are not claimed. Anonymous package visibility remains unverified; registry smoke used the authorized runner login.
+
+## October 14 follow-up
+
+The actual scripted Chromium/published-container recording is complete: docs/demo/browser/research-demo.webm (65.04 seconds), real response JSON retained, artifact digest verified and extracted frames visually inspected. Monitoring refresh run 38521473770 found 46 demand and 47 carbon realized post-fit hours; current performance acceptance is still below minimum 100 and drift alerts persist (issue 9). An independent human quickstart trial and profile description/topics/pinning remain unverified; no supported repository administration/profile tool is available in this session.
