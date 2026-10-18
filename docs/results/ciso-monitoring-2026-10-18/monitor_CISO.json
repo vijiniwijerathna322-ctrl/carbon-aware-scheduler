@@ -1,0 +1,185 @@
+{
+  "region": "CISO",
+  "generated_at": "2026-10-18T08:09:39.744875Z",
+  "model_version": {
+    "demand_mwh": "20261012T114946Z-decc7897",
+    "carbon_intensity_g_per_kwh": "20261012T115113Z-438177c1"
+  },
+  "window_start": "2026-10-04T09:00:00Z",
+  "window_end": "2026-10-18T08:00:00Z",
+  "feature_drift": {
+    "demand_mwh/target": {
+      "n_reference": 4320,
+      "n_current": 335,
+      "excluded_reference": 0,
+      "excluded_current": 1,
+      "overlap_hours": 189,
+      "psi": 0.16034127080725863,
+      "ks_statistic": 0.08254906025428413,
+      "ks_p_value": 0.027170673168790873,
+      "status": "warn"
+    },
+    "demand_mwh/y_issue": {
+      "n_reference": 4320,
+      "n_current": 335,
+      "excluded_reference": 0,
+      "excluded_current": 1,
+      "overlap_hours": 189,
+      "psi": 0.16034127080725863,
+      "ks_statistic": 0.08254906025428413,
+      "ks_p_value": 0.027170673168790873,
+      "status": "warn"
+    },
+    "demand_mwh/roll_mean_24": {
+      "n_reference": 4320,
+      "n_current": 335,
+      "excluded_reference": 0,
+      "excluded_current": 1,
+      "overlap_hours": 189,
+      "psi": 1.330749974743192,
+      "ks_statistic": 0.20928344389165285,
+      "ks_p_value": 2.0286384611604727e-12,
+      "status": "alert"
+    },
+    "demand_mwh/roll_std_24": {
+      "n_reference": 4320,
+      "n_current": 335,
+      "excluded_reference": 0,
+      "excluded_current": 1,
+      "overlap_hours": 189,
+      "psi": 1.5874401401923863,
+      "ks_statistic": 0.32937396351575454,
+      "ks_p_value": 1.6812719166198564e-30,
+      "status": "alert"
+    },
+    "carbon_intensity_g_per_kwh/target": {
+      "n_reference": 4320,
+      "n_current": 310,
+      "excluded_reference": 0,
+      "excluded_current": 26,
+      "overlap_hours": 166,
+      "psi": 2.568612983585157,
+      "ks_statistic": 0.3951164874551971,
+      "ks_p_value": 3.9754985227382196e-41,
+      "status": "alert"
+    },
+    "carbon_intensity_g_per_kwh/y_issue": {
+      "n_reference": 4320,
+      "n_current": 310,
+      "excluded_reference": 0,
+      "excluded_current": 26,
+      "overlap_hours": 166,
+      "psi": 2.568612983585157,
+      "ks_statistic": 0.3951164874551971,
+      "ks_p_value": 3.9754985227382196e-41,
+      "status": "alert"
+    },
+    "carbon_intensity_g_per_kwh/roll_mean_24": {
+      "n_reference": 4320,
+      "n_current": 310,
+      "excluded_reference": 0,
+      "excluded_current": 26,
+      "overlap_hours": 166,
+      "psi": 4.194593451797273,
+      "ks_statistic": 0.5777777777777777,
+      "ks_p_value": 1.662503706365528e-91,
+      "status": "alert"
+    },
+    "carbon_intensity_g_per_kwh/roll_std_24": {
+      "n_reference": 4320,
+      "n_current": 310,
+      "excluded_reference": 0,
+      "excluded_current": 26,
+      "overlap_hours": 166,
+      "psi": 3.129435638269651,
+      "ks_statistic": 0.5795698924731183,
+      "ks_p_value": 3.9998824780554174e-92,
+      "status": "alert"
+    }
+  },
+  "coverage": {
+    "demand_mwh": {
+      "n": 144,
+      "coverage": 0.7708333333333334,
+      "p_value": 0.404104941129457,
+      "status": "ok"
+    },
+    "carbon_intensity_g_per_kwh": {
+      "n": 143,
+      "coverage": 0.6923076923076923,
+      "p_value": 0.0022644796533005784,
+      "status": "alert"
+    }
+  },
+  "mae_ratio": {
+    "demand_mwh": 1.3083536783306584,
+    "carbon_intensity_g_per_kwh": 1.090713199702682
+  },
+  "status": "alert",
+  "reasons": [
+    "demand_mwh/target: input drift warn (PSI/KS; missing values excluded).",
+    "demand_mwh/y_issue: input drift warn (PSI/KS; missing values excluded).",
+    "demand_mwh/roll_mean_24: input drift alert (PSI/KS; missing values excluded).",
+    "demand_mwh/roll_std_24: input drift alert (PSI/KS; missing values excluded).",
+    "carbon_intensity_g_per_kwh/target: input drift alert (PSI/KS; missing values excluded).",
+    "carbon_intensity_g_per_kwh/y_issue: input drift alert (PSI/KS; missing values excluded).",
+    "carbon_intensity_g_per_kwh/roll_mean_24: input drift alert (PSI/KS; missing values excluded).",
+    "carbon_intensity_g_per_kwh/roll_std_24: input drift alert (PSI/KS; missing values excluded).",
+    "carbon_intensity_g_per_kwh: coverage alert; 143 unique realized hours from issues at/after fit_end (minimum 100)."
+  ],
+  "replay": {
+    "demand_mwh": {
+      "issues_considered": 16,
+      "issues_skipped_fit_end": 9,
+      "issues_replayed": 7,
+      "prediction_rows": 266,
+      "duplicate_target_rows_removed": 121,
+      "excluded_nonfinite": 1,
+      "usable_points": 144,
+      "fit_end": "2026-10-12T05:00:00+00:00",
+      "last_finite_observation": "2026-10-18 07:00:00+00:00"
+    },
+    "carbon_intensity_g_per_kwh": {
+      "issues_considered": 16,
+      "issues_skipped_fit_end": 8,
+      "issues_replayed": 8,
+      "prediction_rows": 314,
+      "duplicate_target_rows_removed": 145,
+      "excluded_nonfinite": 26,
+      "usable_points": 143,
+      "fit_end": "2026-10-11T06:00:00+00:00",
+      "last_finite_observation": "2026-10-17 06:00:00+00:00"
+    }
+  },
+  "baseline": {
+    "demand_mwh": {
+      "mae": 999.8727882097404,
+      "n": 4201,
+      "scope": "Earlier raw CQR backtest; latest forecast per target hour; excludes current window",
+      "recent_mae": 1308.1872403169452
+    },
+    "carbon_intensity_g_per_kwh": {
+      "mae": 29.16511676606521,
+      "n": 4201,
+      "scope": "Earlier raw CQR backtest; latest forecast per target hour; excludes current window",
+      "recent_mae": 31.810777827617322
+    }
+  },
+  "provenance": {
+    "demand_mwh": {
+      "data_source": "raw",
+      "input_sha256": "8966674c266321c86650ba74524917f630ff97d95b668193a1158aa05522d2ea",
+      "limitations": "Latest-revision snapshot; zero observation latency assumed; no publication-vintage archive.",
+      "preprocessing": "Pointwise raw observations; no interpolation or centered spike filtering."
+    },
+    "carbon_intensity_g_per_kwh": {
+      "data_source": "raw",
+      "input_sha256": "8966674c266321c86650ba74524917f630ff97d95b668193a1158aa05522d2ea",
+      "limitations": "Latest-revision snapshot; zero observation latency assumed; no publication-vintage archive.",
+      "preprocessing": "Pointwise raw observations; no interpolation or centered spike filtering.",
+      "factors_sha256": "5697a2fcd173474d398380d385cd6885099815473909971d1a75c99fee8b1d64",
+      "carbon_scope": "Observed covered generation mix; partial fuel observations and excluded OTH; imports ignored."
+    }
+  },
+  "limitations": "Latest-revision raw snapshot; zero observation latency assumed. Only issues at or after the artifact fit_end are scored; one latest eligible forecast per realized target hour. KS and binomial p-values are operational diagnostics: serial dependence, ties, seasonality and multiple tests remain. Calibration metrics are never used as a held-out MAE baseline."
+}

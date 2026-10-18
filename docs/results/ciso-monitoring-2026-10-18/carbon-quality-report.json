@@ -1,0 +1,52 @@
+{
+  "absent_factor_codes": [],
+  "configured_exclusions": [
+    "bat",
+    "oes",
+    "oth",
+    "ps",
+    "snb",
+    "ues",
+    "unk",
+    "wnb"
+  ],
+  "coverage_scope": "Observed positive fuel generation; unobserved generation is unknown.",
+  "excluded_codes": [
+    "oth"
+  ],
+  "factors": {
+    "col": 820.0,
+    "geo": 38.0,
+    "ng": 490.0,
+    "nuc": 12.0,
+    "oil": 650.0,
+    "sun": 48.0,
+    "wat": 24.0,
+    "wnd": 11.0
+  },
+  "factors_sha256": "5697a2fcd173474d398380d385cd6885099815473909971d1a75c99fee8b1d64",
+  "included_codes": [
+    "col",
+    "geo",
+    "ng",
+    "nuc",
+    "oil",
+    "sun",
+    "wat",
+    "wnd"
+  ],
+  "input_sha256": "619d2b496d2c24e9b3de1d4a3fa1017a9713df2521e3c2fb47c5f0eeb05114bc",
+  "quality": {
+    "covered_generation_mwh": 1030953318.0,
+    "excluded_generation_mwh": 38698297.0,
+    "missing_included_fuel_cells": 43878,
+    "missing_intensity_hours": 50,
+    "n_rows": 50793,
+    "negative_generation_cells": 53697,
+    "partial_included_mix_hours": 43475
+  },
+  "region": "CISO",
+  "schema_version": 1,
+  "source": "IPCC AR5 WGIII (2014), Annex III, Table A.III.2, p. 1335, lifecycle medians https://www.ipcc.ch/site/assets/uploads/2018/02/ipcc_wg3_ar5_annex-iii.pdf for col, ng, nuc, sun, wnd, wat and geo; oil separately uses UK Parliament POSTnote 268 (2006), p. 2, historical UK oil average proxy (not an IPCC median) https://www.parliament.uk/documents/post/postpn268.pdf",
+  "unit": "gCO2e/kWh"
+}

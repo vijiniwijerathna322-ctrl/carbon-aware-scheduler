@@ -58,3 +58,7 @@ The first tag run failed ShellCheck before any registry write; its unpublished t
 ## October 14 follow-up
 
 The actual scripted Chromium/published-container recording is complete: docs/demo/browser/research-demo.webm (65.04 seconds), real response JSON retained, artifact digest verified and extracted frames visually inspected. Monitoring refresh run 38521473770 found 46 demand and 47 carbon realized post-fit hours; current performance acceptance is still below minimum 100 and drift alerts persist (issue 9). An independent human quickstart trial and profile description/topics/pinning remain unverified; no supported repository administration/profile tool is available in this session.
+
+## October 18 post-fit acceptance outcome
+
+The minimum 100 realized-hour requirement is now met: demand 144 hours, coverage 77.08% (monitor ok); carbon 143 hours, coverage 69.23% (alert). MAE ratios are 1.3084 and 1.0907. Refresh run 39110324437 retained diagnostics and opened issue 10. See docs/results/monitoring-followup-2026-10-18.md. This supersedes earlier insufficient-data status; carbon coverage and input drift still block production acceptance. The research release remains valid within its approved scope.
