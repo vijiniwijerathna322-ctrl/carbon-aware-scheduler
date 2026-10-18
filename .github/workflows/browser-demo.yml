@@ -27,7 +27,7 @@ jobs:
           docker run -d --name browser-demo --read-only --tmpfs /tmp:rw,noexec,nosuid,size=64m \
             --cap-drop ALL --security-opt no-new-privileges -p 127.0.0.1:8000:8000 \
             ghcr.io/vijiniwijerathna322-ctrl/carbon-aware-scheduler@sha256:3b2767ca7dbb212ba7d76f5dad4f61e08f10bb684c2bfabee01cf566174304e6
-          for attempt in $(seq 1 30); do
+          for _ in $(seq 1 30); do
             if curl --fail --silent http://127.0.0.1:8000/healthz; then break; fi
             sleep 1
           done
