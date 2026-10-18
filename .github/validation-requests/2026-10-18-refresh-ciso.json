@@ -1,0 +1,5 @@
+{
+  "operation": "refresh-approved",
+  "regions": ["CISO"],
+  "reason": "Reassess post-fit coverage and MAE with new observations after the October 14 insufficient-data result; retain existing reviewed models"
+}
