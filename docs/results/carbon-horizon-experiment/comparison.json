@@ -1,0 +1,112 @@
+{
+  "scope": "Exploratory March 2025 CISO carbon partition comparison; no promotion",
+  "validation_start": "2025-03-01T08:00:00+00:00",
+  "validation_end": "2025-03-31T07:00:00+00:00",
+  "source_provenance": {
+    "data_source": "raw",
+    "input_sha256": "8966674c266321c86650ba74524917f630ff97d95b668193a1158aa05522d2ea",
+    "limitations": "Latest-revision snapshot; zero observation latency assumed; no publication-vintage archive.",
+    "preprocessing": "Pointwise raw observations; no interpolation or centered spike filtering.",
+    "factors_sha256": "5697a2fcd173474d398380d385cd6885099815473909971d1a75c99fee8b1d64",
+    "carbon_scope": "Observed covered generation mix; partial fuel observations and excluded OTH; imports ignored."
+  },
+  "fixed": {
+    "calibration_days": 90,
+    "seed": 42,
+    "issue_step_h": 3,
+    "alpha": 0.2
+  },
+  "variants": {
+    "bucket": {
+      "summary": {
+        "1-6": {
+          "n": 180,
+          "n_interval": 180,
+          "mae": 26.07656202830562,
+          "coverage": 0.7222222222222222,
+          "mean_width": 71.59695627717839,
+          "pinball_lo": 5.209695764738348,
+          "pinball_hi": 5.9625325547883925,
+          "winkler": 111.72228319526742
+        },
+        "7-24": {
+          "n": 540,
+          "n_interval": 540,
+          "mae": 27.211458582472282,
+          "coverage": 0.774074074074074,
+          "mean_width": 75.91038091272065,
+          "pinball_lo": 6.195526272684585,
+          "pinball_hi": 6.393019190040486,
+          "winkler": 125.88545462725074
+        },
+        "25-48": {
+          "n": 696,
+          "n_interval": 696,
+          "mae": 36.46466478075149,
+          "coverage": 0.6910919540229885,
+          "mean_width": 91.8235907218687,
+          "pinball_lo": 8.352646922772676,
+          "pinball_hi": 8.703695845768678,
+          "winkler": 170.56342768541356
+        },
+        "all": {
+          "n": 1416,
+          "n_interval": 1416,
+          "mae": 31.61537816880867,
+          "coverage": 0.7266949152542372,
+          "mean_width": 83.1838114160889,
+          "pinball_lo": 7.130488476802515,
+          "pinball_hi": 7.47405263498501,
+          "winkler": 146.04541111787526
+        }
+      },
+      "g4_pass": false
+    },
+    "per_horizon": {
+      "summary": {
+        "1-6": {
+          "n": 180,
+          "n_interval": 180,
+          "mae": 26.07656202830562,
+          "coverage": 0.7,
+          "mean_width": 72.1423999512519,
+          "pinball_lo": 5.1469176207634515,
+          "pinball_hi": 5.951504141560293,
+          "winkler": 110.9842176232375
+        },
+        "7-24": {
+          "n": 540,
+          "n_interval": 540,
+          "mae": 27.211458582472282,
+          "coverage": 0.7703703703703704,
+          "mean_width": 76.20179906459254,
+          "pinball_lo": 6.150883620443552,
+          "pinball_hi": 6.420826715331736,
+          "winkler": 125.71710335775289
+        },
+        "25-48": {
+          "n": 696,
+          "n_interval": 696,
+          "mae": 36.46466478075149,
+          "coverage": 0.6910919540229885,
+          "mean_width": 92.04749708679529,
+          "pinball_lo": 8.361197940243489,
+          "pinball_hi": 8.723227816156818,
+          "winkler": 170.84425756400307
+        },
+        "all": {
+          "n": 1416,
+          "n_interval": 1416,
+          "mae": 31.61537816880867,
+          "coverage": 0.722457627118644,
+          "mean_width": 83.4743371882167,
+          "pinball_lo": 7.109686506487576,
+          "pinball_hi": 7.492855742800238,
+          "winkler": 146.02542249287814
+        }
+      },
+      "g4_pass": false
+    }
+  },
+  "limitations": "Latest-revision data, one earlier month, dependent hourly outcomes. No confirmatory future-performance or production acceptance claim."
+}
