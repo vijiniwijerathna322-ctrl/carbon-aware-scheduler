@@ -1,0 +1,33 @@
+name: CISO exploratory horizon calibration comparison
+on:
+  push:
+    branches: [main]
+    paths: ['.github/calibration-validation/carbon-horizons.json']
+permissions:
+  contents: read
+jobs:
+  experiment:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: astral-sh/setup-uv@v7
+        with:
+          version: '0.13.0'
+      - run: uv sync --frozen
+      - uses: actions/cache/restore@v4
+        with:
+          path: |
+            data/raw/CISO
+            data/interim/CISO
+          key: refresh-v1-Linux-CISO-39110324437-1
+          fail-on-cache-miss: true
+      - run: uv run --frozen python scripts/experiment_carbon_horizons.py
+      - uses: actions/upload-artifact@v4
+        with:
+          name: CISO-carbon-horizon-experiment
+          path: reports/carbon-horizon-experiment/
+          if-no-files-found: error
+          retention-days: 30

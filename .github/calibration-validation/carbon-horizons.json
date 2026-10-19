@@ -1,0 +1,7 @@
+{
+  "region": "CISO",
+  "target": "carbon_intensity_g_per_kwh",
+  "validation_period": "March 2025",
+  "variants": ["existing three buckets", "one correction per horizon"],
+  "purpose": "Isolate calibration partition while preserving model parameters, fit dates, labels and point forecasts; no promotion"
+}
