@@ -18,7 +18,7 @@ jobs:
       image: ${{ steps.source.outputs.image }}
       version: ${{ steps.source.outputs.version }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           ref: ${{ github.sha }}
           fetch-depth: 0
@@ -52,7 +52,7 @@ jobs:
       IMAGE: ${{ needs.release-source.outputs.image }}
       VERSION: ${{ needs.release-source.outputs.version }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           ref: ${{ github.sha }}
           persist-credentials: false
