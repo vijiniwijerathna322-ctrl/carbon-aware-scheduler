@@ -1,6 +1,6 @@
 UV ?= uv
 
-.PHONY: lint test check docker-build docker-run
+.PHONY: lint test check docker-build docker-run ui
 lint:
 	$(UV) run ruff check .
 	$(UV) run ruff format --check .
@@ -16,3 +16,6 @@ docker-build:
 
 docker-run:
 	docker run --rm --read-only --tmpfs /tmp --cap-drop ALL -p 127.0.0.1:8000:8000 carbon-scheduler:demo
+
+ui:
+	$(UV) run --group ui streamlit run streamlit_app.py

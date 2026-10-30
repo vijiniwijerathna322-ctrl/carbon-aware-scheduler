@@ -1,5 +1,8 @@
 # Carbon-Aware Energy Scheduler
 
+Want a visual interface? Run the [local Streamlit dashboard](docs/dashboard.md)
+for forecast charts, job scheduling, CSV export and monitoring status.
+
 [![CI](https://github.com/vijiniwijerathna322-ctrl/carbon-aware-scheduler/actions/workflows/ci.yml/badge.svg)](https://github.com/vijiniwijerathna322-ctrl/carbon-aware-scheduler/actions/workflows/ci.yml)
 
 Forecast grid demand and carbon intensity, then schedule flexible jobs with honest uncertainty.

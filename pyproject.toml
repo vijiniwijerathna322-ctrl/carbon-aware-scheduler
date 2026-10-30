@@ -33,6 +33,7 @@ build-backend = "hatchling.build"
 packages = ["src/carbon_scheduler"]
 
 [dependency-groups]
+ui = ["streamlit>=1.40,<2"]
 eda = ["matplotlib", "nbformat", "nbclient", "ipykernel"]
 dev = ["pytest", "pytest-cov", "respx", "ruff", "mypy", "pandas-stubs", "types-PyYAML", "pre-commit", "matplotlib"]
 
