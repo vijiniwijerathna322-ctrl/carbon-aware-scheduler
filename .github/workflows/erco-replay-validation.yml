@@ -25,7 +25,7 @@ jobs:
       - name: Install locked environment
         run: uv sync --frozen
       - name: Restore exact retained observation history
-        uses: actions/cache/restore@v4
+        uses: actions/cache/restore@v6
         with:
           path: |
             data/raw/ERCO
