@@ -73,9 +73,13 @@ flowchart LR
 
 ## Quick start: offline API demo
 
-No live-hosted demo is linked here yet; [docs/deployment.md](docs/deployment.md)
-has the ready-to-run steps for standing one up on free-tier hosts
-(Railway or Render + Streamlit Community Cloud).
+**Live demo** (free tier — the first request may take a few seconds to wake
+the service):
+[dashboard](https://carbon-aware-scheduler-pn9ru6qcxynyrdugcyk57j.streamlit.app) ·
+[API](https://carbon-scheduler-api-production.up.railway.app/docs). Both serve
+the same frozen CISO snapshot described below — not a live forecast. See
+[docs/deployment.md](docs/deployment.md) to stand up your own copy on
+free-tier hosts (Railway or Render + Streamlit Community Cloud).
 
 See the [64-second native API walkthrough](docs/demo/native-walkthrough.gif),
 generated from real endpoint responses. It is explicitly labelled as a rendered
