@@ -9,32 +9,46 @@ The API and dashboard deploy **separately**: `streamlit_app.py` only ever
 talks to the API over HTTP via `CARBON_API_URL` (see `docs/architecture.md`),
 so there's no shared build step between them.
 
-## 1. API on Render (free Docker web service)
+## 1. API on Railway (free trial/tier, no card required)
 
-1. Go to [render.com](https://render.com) and sign in with GitHub.
-2. **New → Blueprint**, pick this repository. Render reads `render.yaml` at
-   the repo root and proposes a `carbon-scheduler-api` web service using the
-   existing `Dockerfile`.
-3. Before the first deploy, set these environment variables in Render's
-   dashboard (they're intentionally left out of `render.yaml` with
-   `sync: false` so no values are committed):
-   - `API_KEYS` — a key you make up (e.g. a random 32-char string) if you
-     want `/v1/*` to require `X-API-Key`. Leave unset to keep the demo
-     keyless.
+Railway's own pricing page states its trial and free tier need no credit
+card, and it auto-detects a `Dockerfile` in the repo. `railway.toml` at the
+repo root pins the builder explicitly so it doesn't try Nixpacks instead.
+
+1. Go to [railway.com](https://railway.com) and sign in with GitHub.
+2. **New Project → Deploy from GitHub repo**, pick this repository.
+3. Railway should detect `railway.toml`/`Dockerfile` and build from it. If it
+   instead proposes a Nixpacks build, open the service's **Settings → Build**
+   and switch the builder to **Dockerfile** manually.
+4. The `Dockerfile` already bakes in sane demo defaults (`DEMO_MODE=1`,
+   `CARBON_DATA_DIR`, `CARBON_MODELS_DIR`, `PORT=8000`), so the service should
+   come up with **zero required configuration**. Railway injects its own
+   `PORT`, which the image already respects.
+5. Optional environment variables (Settings → Variables), same as the
+   Dockerfile's definitions in `src/carbon_scheduler/config.py`:
+   - `API_KEYS` — a key you make up if you want `/v1/*` to require
+     `X-API-Key`. Leave unset to keep the demo keyless.
    - `CORS_ALLOWED_ORIGINS` — the dashboard's URL once you have it from step
-     2 below (comma-separated if you add more than one origin later).
-4. Deploy. Render builds the Docker image (same one `scripts/smoke_docker.sh`
-   and CI already verify) and serves it on a `*.onrender.com` URL with
-   `/healthz` as the health check path.
-5. Confirm it's live:
+     2 below.
+6. Under **Settings → Networking**, generate a public domain
+   (`*.up.railway.app`) if one isn't assigned automatically.
+7. Confirm it's live:
    ```bash
-   curl --fail https://<your-service>.onrender.com/healthz
-   curl --fail "https://<your-service>.onrender.com/v1/forecast?horizon=1"
+   curl --fail https://<your-service>.up.railway.app/healthz
+   curl --fail "https://<your-service>.up.railway.app/v1/forecast?horizon=1"
    ```
-6. **Free-tier caveat**: Render's free web services sleep after inactivity
-   and cold-start on the next request (tens of seconds). That's expected —
-   mention it next to the link rather than treating the first slow response
-   as a bug.
+8. **Free-tier caveats**: Railway's free tier is capped (around 1 vCPU /
+   0.5 GB RAM per service) and the trial's one-time credit is time- and
+   usage-limited before it falls back to a small monthly credit — fine for a
+   low-traffic demo, not for sustained load. The service may also sleep on
+   inactivity depending on current plan behavior; treat a slow first request
+   as expected, not a bug.
+
+**Alternative: Render** (`render.yaml` is also committed and ready) works the
+same way via **New → Blueprint**, but Render now asks for a card to verify
+identity before using Blueprints, even though the service itself stays free
+(a $1 temporary authorization, not a charge). Use it instead if you'd rather
+add a card than live with Railway's tighter free-tier limits.
 
 ## 2. Dashboard on Streamlit Community Cloud
 
@@ -48,36 +62,39 @@ so there's no shared build step between them.
    comment).
 4. Add a secret (Settings → Secrets):
    ```toml
-   CARBON_API_URL = "https://<your-service>.onrender.com"
+   CARBON_API_URL = "https://<your-service>.up.railway.app"
    ```
-5. Deploy. Once live, copy its URL back into Render's `CORS_ALLOWED_ORIGINS`
-   (step 1.3) so the dashboard's browser-side requests aren't blocked — the
-   dashboard's own server-side `httpx` calls don't need CORS, but Streamlit's
-   client-rendered components may still originate browser requests.
+5. Deploy. Once live, copy its URL back into the API host's
+   `CORS_ALLOWED_ORIGINS` (step 1.5) so the dashboard's browser-side requests
+   aren't blocked — the dashboard's own server-side `httpx` calls don't need
+   CORS, but Streamlit's client-rendered components may still originate
+   browser requests.
 
 ## 3. Auto-deploy on release (optional)
 
-`render.yaml`'s blueprint deploys on every push to the connected branch by
+Both Railway and Render redeploy on every push to the connected branch by
 default — no extra workflow needed for that. If you want releases (`v*`
-tags, mirroring `.github/workflows/release.yml`) to also trigger Render
-explicitly: in Render, open the service → Settings → **Deploy Hook**, copy
-the URL, then add it as a repository secret:
+tags, mirroring `.github/workflows/release.yml`) to also trigger a deploy
+explicitly: each host has an equivalent of a deploy-hook URL (Railway:
+service → Settings → look for a webhook/trigger URL; Render: service →
+Settings → **Deploy Hook**). Copy whichever you use, then add it as a
+repository secret:
 
 ```bash
-gh secret set RENDER_DEPLOY_HOOK_URL
+gh secret set DEPLOY_HOOK_URL
 ```
 
 and add a step to a workflow that runs on tag push:
 
 ```yaml
-- name: Trigger Render deploy
-  run: curl --fail -X POST "$RENDER_DEPLOY_HOOK_URL"
+- name: Trigger deploy
+  run: curl --fail -X POST "$DEPLOY_HOOK_URL"
   env:
-    RENDER_DEPLOY_HOOK_URL: ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
+    DEPLOY_HOOK_URL: ${{ secrets.DEPLOY_HOOK_URL }}
 ```
 
 This repo does not ship that workflow by default, since it's only useful once
-the Render service above already exists.
+the API service above already exists.
 
 ## 4. Update the README
 

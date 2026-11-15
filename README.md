@@ -75,7 +75,7 @@ flowchart LR
 
 No live-hosted demo is linked here yet; [docs/deployment.md](docs/deployment.md)
 has the ready-to-run steps for standing one up on free-tier hosts
-(Render + Streamlit Community Cloud).
+(Railway or Render + Streamlit Community Cloud).
 
 See the [64-second native API walkthrough](docs/demo/native-walkthrough.gif),
 generated from real endpoint responses. It is explicitly labelled as a rendered
