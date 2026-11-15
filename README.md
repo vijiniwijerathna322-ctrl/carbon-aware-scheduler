@@ -110,12 +110,27 @@ $env:DEMO_MODE="1"
 uv run uvicorn carbon_scheduler.api.main:app --host 127.0.0.1 --port 8000
 ```
 
-Endpoints include `/healthz`, `/v1/forecast`, `/v1/schedule` and `/v1/models/current`.
+Endpoints include `/healthz`, `/metrics`, `/v1/forecast`, `/v1/schedule` and
+`/v1/models/current`.
 Outside demo mode, target data older than `MAX_DATA_AGE_HOURS` (default 6) returns
 503 `data_stale`. Models and raw history are loaded once; restart after refreshing
 them. Forecast horizons are 1–48 hours. Schedule arrivals default to the first
 forecast hour; past arrivals are clamped with a note, while deadlines outside the
 forecast window return 422. Only CISO is served in this MVP.
+
+## API hardening and observability
+
+`/v1/*` routes require an `X-API-Key` header only when `API_KEYS` (comma-separated)
+is configured; unset, the API stays keyless, matching the credential-free demo.
+A fixed-window limiter returns 429 past `RATE_LIMIT_PER_MINUTE` (default 60),
+keyed by API key or client address. `/metrics` serves Prometheus counters and
+latency histograms; logs are JSON lines correlated by an `X-Request-ID` header.
+`CORS_ALLOWED_ORIGINS` (comma-separated) enables cross-origin calls, e.g. from a
+separately deployed dashboard. See [ADR 0019](docs/adr/0019-api-authentication-rate-limiting-and-observability.md).
+
+Monitoring's `alert` verdict optionally posts to `MONITOR_WEBHOOK_URL` (generic
+JSON or `MONITOR_WEBHOOK_STYLE=slack`'s `{"text": ...}` shape), best-effort and
+never affecting the CLI's exit code.
 
 ## Development
 

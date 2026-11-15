@@ -17,3 +17,4 @@ Additional decisions:
 - [0011-ingestion-completeness](0011-ingestion-completeness.md)
 - [0016-weather-provenance-and-fallback](0016-weather-provenance-and-fallback.md)
 - [0018-automation-bootstrap](0018-automation-bootstrap.md)
+- [0019-api-authentication-rate-limiting-and-observability](0019-api-authentication-rate-limiting-and-observability.md)

@@ -16,6 +16,7 @@ from carbon_scheduler.ingest.pipeline import G2_MAX_GAP_FRACTION, run_ingest
 from carbon_scheduler.logging import configure_logging
 from carbon_scheduler.models.reporting import run_backtest
 from carbon_scheduler.models.training import train_region
+from carbon_scheduler.monitoring.notify import post_alert_webhook
 from carbon_scheduler.monitoring.report import build_monitor_report, write_monitor_report
 from carbon_scheduler.regions import load_regions
 from carbon_scheduler.scheduler.reporting import run_schedule_backtest
@@ -46,6 +47,12 @@ def monitor(
         typer.echo(f"Monitor failed: {error}", err=True)
         raise typer.Exit(code=1) from None
     typer.echo(f"Monitoring {report.status}: {path}")
+    if report.status == "alert" and settings.monitor_webhook_url:
+        delivered = post_alert_webhook(
+            report, settings.monitor_webhook_url, style=settings.monitor_webhook_style
+        )
+        if not delivered:
+            typer.echo("Monitor alert webhook delivery failed; see logs.", err=True)
     if report.status == "alert":
         raise typer.Exit(code=2)
 

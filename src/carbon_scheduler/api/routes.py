@@ -13,12 +13,14 @@ from carbon_scheduler.api.schemas import (
     ScheduleRequest,
     ScheduleResponse,
 )
+from carbon_scheduler.api.security import require_api_key
 from carbon_scheduler.api.service import ForecastService
 from carbon_scheduler.monitoring.report import read_monitor_report
 from carbon_scheduler.scheduler.models import Job
 from carbon_scheduler.scheduler.optimizer import recommend
 
 router = APIRouter()
+v1_router = APIRouter(dependencies=[Depends(require_api_key)])
 Service = Annotated[ForecastService, Depends(get_service)]
 
 
@@ -36,7 +38,7 @@ def health(service: Service) -> JSONResponse:
     )
 
 
-@router.get("/v1/forecast", response_model=ForecastResponse)
+@v1_router.get("/v1/forecast", response_model=ForecastResponse)
 def forecast(
     service: Service,
     region: str | None = None,
@@ -61,7 +63,7 @@ def forecast(
     )
 
 
-@router.post("/v1/schedule", response_model=ScheduleResponse)
+@v1_router.post("/v1/schedule", response_model=ScheduleResponse)
 def schedule(body: ScheduleRequest, service: Service) -> ScheduleResponse:
     check_region(service.region if body.region is None else body.region, service)
     frame, meta = service.forecast("carbon_intensity_g_per_kwh")
@@ -110,12 +112,12 @@ def schedule(body: ScheduleRequest, service: Service) -> ScheduleResponse:
     )
 
 
-@router.get("/v1/models/current")
+@v1_router.get("/v1/models/current")
 def current_models(service: Service) -> dict[str, Any]:
     return {"region": service.region, "models": service.current_models()}
 
 
-@router.get("/v1/monitoring/status")
+@v1_router.get("/v1/monitoring/status")
 def monitoring_status(service: Service, region: str | None = None) -> JSONResponse:
     region = service.region if region is None else region
     check_region(region, service)
