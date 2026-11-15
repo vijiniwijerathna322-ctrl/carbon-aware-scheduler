@@ -4,9 +4,16 @@ Want a visual interface? Run the [local Streamlit dashboard](docs/dashboard.md)
 for forecast charts, job scheduling, CSV export and monitoring status.
 
 [![CI](https://github.com/vijiniwijerathna322-ctrl/carbon-aware-scheduler/actions/workflows/ci.yml/badge.svg)](https://github.com/vijiniwijerathna322-ctrl/carbon-aware-scheduler/actions/workflows/ci.yml)
+[![Python 3.11 | 3.12](https://img.shields.io/badge/python-3.11%20%7C%203.12-blue)](pyproject.toml)
+[![Coverage 93%](https://img.shields.io/badge/coverage-93%25-brightgreen)](docs/results/backtest-cqr.md)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
+
+**Stack:** Python · FastAPI · Typer CLI · LightGBM quantile regression · split
+conformal prediction (CQR) · Prometheus metrics · Streamlit dashboard · Docker
+(non-root, read-only) · GitHub Actions. See [architecture](docs/architecture.md).
 
 Forecast grid demand and carbon intensity, then schedule flexible jobs with honest uncertainty.
-Implementation follows the [master plan](plans/2026-10-11-00-master-plan.md).
+Implementation follows the [master plan](docs/planning/plans/2026-10-11-00-master-plan.md).
 
 ![Held-out carbon forecast week with its nominal interval and actual proxy](docs/figures/forecast-fan.png)
 
@@ -391,11 +398,17 @@ cohort, and test fleet-specific workloads with defensible marginal-emissions dat
 
 ## Project structure
 
-- `src/carbon_scheduler/`: ingestion, carbon proxy, issue-time features, models, scheduler, API and monitoring.
+- `src/carbon_scheduler/`: ingestion, carbon proxy, issue-time features, models (including
+  explainability), scheduler, API (auth, rate limiting, metrics, middleware) and monitoring.
 - `config/`: region definitions and attributed emission factors.
 - `demo/`: bounded byte-checked offline snapshot and selected artifacts.
 - `scripts/`: experiments, bundle preparation, figures and native demo capture.
-- `docs/`: result sources, model card, datasheet, ADRs and write-up.
+- `docs/`: result sources, model card, datasheet, ADRs, architecture and write-up.
+- `docs/planning/`: the original master plan, phase plans and design spec.
 - `.github/workflows/`: CI and review-oriented operational workflows.
 
-Read the [project write-up](docs/writeup.md) and [architecture decision index](docs/adr/README.md) for design rationale.
+Read the [project write-up](docs/writeup.md), [architecture](docs/architecture.md) and
+[architecture decision index](docs/adr/README.md) for design rationale.
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for development workflow and
+[SECURITY.md](SECURITY.md) for reporting a vulnerability.
