@@ -56,6 +56,46 @@
     ],
     "notes": []
   },
+  "explain": {
+    "region": "CISO",
+    "target": "carbon_intensity_g_per_kwh",
+    "issue_time": "2026-10-11T06:00:00Z",
+    "model_version": "20261012T115113Z-438177c1",
+    "points": [
+      {
+        "target_time": "2026-10-11T07:00:00Z",
+        "horizon": 1,
+        "base_value": 238.18283320374428,
+        "raw_median": 260.8126065770471,
+        "contributions": [
+          {
+            "feature": "anchor_168",
+            "value": 355.72349862503324,
+            "contribution": 23.67827479283809
+          },
+          {
+            "feature": "anchor_24",
+            "value": 279.59122015511736,
+            "contribution": 20.48108633085076
+          },
+          {
+            "feature": "horizon",
+            "value": 1.0,
+            "contribution": -12.182074677305248
+          },
+          {
+            "feature": "dow_local",
+            "value": 6.0,
+            "contribution": -8.259697635610957
+          }
+        ]
+      }
+    ],
+    "notes": [
+      "Explains the raw median quantile model prior to conformal calibration; the calibration offset is a separate, undifferentiated correction.",
+      "Explanation reflects the weather-free baseline model even when an approved weather variant is being served."
+    ]
+  },
   "job": {
     "duration_hours": 2,
     "power_kw": 7,

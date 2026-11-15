@@ -9,6 +9,8 @@ import numpy as np
 import pandas as pd
 
 from carbon_scheduler.config import Settings
+from carbon_scheduler.models.explain import HorizonExplanation, explain_forecast
+from carbon_scheduler.models.forecast_model import ForecastModel
 from carbon_scheduler.models.registry import (
     ModelIncompatibleError,
     ModelNotFoundError,
@@ -41,6 +43,7 @@ class ForecastService:
         self._reason = "ok"
         self._forecasts: dict[str, tuple[pd.DataFrame, ForecastMeta]] = {}
         self._models: dict[str, dict[str, Any]] = {}
+        self._explain_inputs: dict[str, tuple[ForecastModel, pd.Series]] = {}
         try:
             load_regions(settings.regions_path)[region]
             for target in TARGETS:
@@ -70,6 +73,7 @@ class ForecastService:
                 if not np.isfinite(frame[["lower", "median", "upper"]].to_numpy()).all():
                     raise ModelIncompatibleError("Model returned nonfinite predictions")
                 meta = ForecastMeta(issue, issue, metadata["version"], float(metadata["alpha"]))
+                self._explain_inputs[target] = (model, series)
                 frame, meta = self._with_weather(target, series, frame, meta, provenance)
                 metadata = read_metadata(
                     region,
@@ -101,6 +105,7 @@ class ForecastService:
         if self._reason != "ok":
             self._forecasts.clear()
             self._models.clear()
+            self._explain_inputs.clear()
 
     def _with_weather(
         self,
@@ -203,6 +208,21 @@ class ForecastService:
         if not self._fresh(meta):
             raise ServiceUnavailableError("data_stale")
         return frame.iloc[:horizon].copy(deep=True), meta
+
+    def explain(
+        self, target: str, horizon: int | None = None, top_n: int = 8
+    ) -> tuple[list[HorizonExplanation], ForecastMeta]:
+        if target not in TARGETS:
+            raise ValueError("Unknown forecast target")
+        if horizon is not None and not 1 <= horizon <= 48:  # noqa: PLR2004
+            raise ValueError("Horizon must be between 1 and 48 hours")
+        if self._reason != "ok":
+            raise ServiceUnavailableError(self._reason)
+        _, meta = self._forecasts[target]
+        if not self._fresh(meta):
+            raise ServiceUnavailableError("data_stale")
+        model, series = self._explain_inputs[target]
+        return explain_forecast(model, series, meta.issue_time, horizon=horizon, top_n=top_n), meta
 
     def current_models(self) -> dict[str, dict[str, Any]]:
         healthy, reason = self.is_healthy()

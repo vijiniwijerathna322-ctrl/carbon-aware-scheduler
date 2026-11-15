@@ -32,6 +32,14 @@ def test_baked_demo_offline_forecast_and_schedule(monkeypatch):
             response = client.get("/v1/forecast", params={"target": target, "horizon": 6})
             assert response.is_success, response.text
             assert len(response.json()["points"]) == 6  # noqa: PLR2004
+            # Real saved artifacts predate feature_columns_ on some objects;
+            # this is the regression path that caught it (unlike synthetic fixtures).
+            response = client.get(
+                "/v1/forecast/explain", params={"target": target, "horizon": 1, "top_n": 3}
+            )
+            assert response.is_success, response.text
+            point = response.json()["points"][0]
+            assert len(point["contributions"]) == 3  # noqa: PLR2004
         response = client.post(
             "/v1/schedule",
             json={"duration_hours": 2, "power_kw": 7, "deadline": "2026-10-12T06:00:00Z"},

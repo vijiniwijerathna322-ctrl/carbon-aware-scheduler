@@ -25,6 +25,9 @@ def test_dashboard_forecast_schedule_and_missing_report(monkeypatch):
         respx.get(f"{URL}/v1/forecast").mock(
             return_value=httpx.Response(200, json=CAPTURE["forecast"])
         )
+        respx.get(f"{URL}/v1/forecast/explain").mock(
+            return_value=httpx.Response(200, json=CAPTURE["explain"])
+        )
         respx.get(f"{URL}/v1/monitoring/status").mock(
             return_value=httpx.Response(404, json={"error": "no_report"})
         )

@@ -110,8 +110,8 @@ $env:DEMO_MODE="1"
 uv run uvicorn carbon_scheduler.api.main:app --host 127.0.0.1 --port 8000
 ```
 
-Endpoints include `/healthz`, `/metrics`, `/v1/forecast`, `/v1/schedule` and
-`/v1/models/current`.
+Endpoints include `/healthz`, `/metrics`, `/v1/forecast`, `/v1/forecast/explain`,
+`/v1/schedule` and `/v1/models/current`.
 Outside demo mode, target data older than `MAX_DATA_AGE_HOURS` (default 6) returns
 503 `data_stale`. Models and raw history are loaded once; restart after refreshing
 them. Forecast horizons are 1–48 hours. Schedule arrivals default to the first
@@ -131,6 +131,19 @@ separately deployed dashboard. See [ADR 0019](docs/adr/0019-api-authentication-r
 Monitoring's `alert` verdict optionally posts to `MONITOR_WEBHOOK_URL` (generic
 JSON or `MONITOR_WEBHOOK_STYLE=slack`'s `{"text": ...}` shape), best-effort and
 never affecting the CLI's exit code.
+
+## Model explainability
+
+```bash
+curl --fail 'http://localhost:8000/v1/forecast/explain?region=CISO&horizon=1&top_n=5'
+```
+
+Returns per-feature TreeSHAP contributions for the median quantile model, using
+LightGBM's native `pred_contrib` (no extra explainer dependency). This explains
+the raw pre-calibration median only — not the final calibrated value, the
+interval, or an active weather variant. See
+[ADR 0020](docs/adr/0020-model-explainability.md) and the
+[model card](docs/model_card.md#explainability).
 
 ## Development
 

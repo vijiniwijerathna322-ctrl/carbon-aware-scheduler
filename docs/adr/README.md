@@ -18,3 +18,4 @@ Additional decisions:
 - [0016-weather-provenance-and-fallback](0016-weather-provenance-and-fallback.md)
 - [0018-automation-bootstrap](0018-automation-bootstrap.md)
 - [0019-api-authentication-rate-limiting-and-observability](0019-api-authentication-rate-limiting-and-observability.md)
+- [0020-model-explainability](0020-model-explainability.md)

@@ -8,6 +8,9 @@ from fastapi.responses import JSONResponse
 
 from carbon_scheduler.api.deps import get_service
 from carbon_scheduler.api.schemas import (
+    ExplainPoint,
+    ExplainResponse,
+    FeatureContribution,
     ForecastPoint,
     ForecastResponse,
     ScheduleRequest,
@@ -60,6 +63,51 @@ def forecast(
         alpha=meta.alpha,
         notes=list(meta.notes),
         points=[ForecastPoint.model_validate(row) for row in frame.to_dict("records")],
+    )
+
+
+@v1_router.get("/v1/forecast/explain", response_model=ExplainResponse)
+def forecast_explain(
+    service: Service,
+    region: str | None = None,
+    target: str = "carbon_intensity_g_per_kwh",
+    horizon: Annotated[int | None, Query(ge=1, le=48)] = None,
+    top_n: Annotated[int, Query(ge=1, le=20)] = 8,
+) -> ExplainResponse:
+    region = service.region if region is None else region
+    check_region(region, service)
+    try:
+        results, meta = service.explain(target, horizon=horizon, top_n=top_n)
+    except ValueError:
+        raise HTTPException(status_code=422, detail="Unknown forecast target") from None
+    notes = [
+        "Explains the raw median quantile model prior to conformal calibration; "
+        "the calibration offset is a separate, undifferentiated correction.",
+        "Explanation reflects the weather-free baseline model even when an "
+        "approved weather variant is being served.",
+    ]
+    notes.extend(meta.notes)
+    return ExplainResponse(
+        region=region,
+        target=target,
+        issue_time=meta.issue_time.to_pydatetime(),
+        model_version=meta.model_version,
+        points=[
+            ExplainPoint(
+                target_time=result.target_time.to_pydatetime(),
+                horizon=result.horizon,
+                base_value=result.base_value,
+                raw_median=result.raw_median,
+                contributions=[
+                    FeatureContribution(
+                        feature=c.feature, value=c.value, contribution=c.contribution
+                    )
+                    for c in result.contributions
+                ],
+            )
+            for result in results
+        ],
+        notes=notes,
     )
 
 

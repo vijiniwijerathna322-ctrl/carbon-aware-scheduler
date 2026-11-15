@@ -113,7 +113,7 @@ class ForecastModel:
             },
         }
 
-    def predict(
+    def _feature_frame(
         self, series: pd.Series, issue_time: pd.Timestamp, exog: pd.DataFrame | None = None
     ) -> pd.DataFrame:
         if self.fit_end_ is None:
@@ -121,14 +121,48 @@ class ForecastModel:
         issue = utc_hour(issue_time)
         if issue < self.fit_end_:
             raise ValueError("issue_time cannot precede fit_end")
-        frame = build_supervised(
+        return build_supervised(
             series.loc[:issue],
             pd.DatetimeIndex([issue]),
             tz=self.tz,
             with_target=False,
             exog=exog if exog is not None else getattr(self, "exog", None),
         )
+
+    def predict(
+        self, series: pd.Series, issue_time: pd.Timestamp, exog: pd.DataFrame | None = None
+    ) -> pd.DataFrame:
+        frame = self._feature_frame(series, issue_time, exog)
         return self._adjusted(frame)[["target_time", "horizon", "lower", "median", "upper"]]
+
+    def explain(
+        self, series: pd.Series, issue_time: pd.Timestamp, exog: pd.DataFrame | None = None
+    ) -> pd.DataFrame:
+        """Tidy per-(target_time, horizon, feature) TreeSHAP contributions.
+
+        Explains the raw median quantile model prior to conformal calibration;
+        `calibrator.adjust`'s offset is a separate, undifferentiated correction
+        not attributed to individual features. Columns: target_time, horizon,
+        feature, value, contribution, base_value.
+        """
+        frame = self._feature_frame(series, issue_time, exog)
+        contributions = self.model.median_contributions(frame)
+        columns = [c for c in contributions.columns if c != "bias"]
+        base_value = contributions["bias"].to_numpy()
+        parts = [
+            pd.DataFrame(
+                {
+                    "target_time": frame["target_time"].to_numpy(),
+                    "horizon": frame["horizon"].to_numpy(),
+                    "feature": column,
+                    "value": frame[column].to_numpy(),
+                    "contribution": contributions[column].to_numpy(),
+                    "base_value": base_value,
+                }
+            )
+            for column in columns
+        ]
+        return pd.concat(parts, ignore_index=True)
 
     def metadata(self) -> dict[str, Any]:
         if self.fit_end_ is None:

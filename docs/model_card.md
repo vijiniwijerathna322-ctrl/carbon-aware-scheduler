@@ -29,6 +29,16 @@ The shipped demand artifact uses raw history beginning 2021-01-01, fitting targe
 
 [Scheduling replay](results/schedule-backtest.md) scores 2,726 equally weighted scenarios per strategy: mean median-strategy savings 29.37%, upper-strategy 27.35%, hindsight oracle 33.17%. These are proxy reductions relative to immediate execution, not measured fleet-wide avoided emissions. Nineteen incomplete windows per strategy were excluded. Summed upper endpoints are an uncertainty heuristic, not a calibrated job-level confidence interval.
 
+## Explainability
+
+`/v1/forecast/explain` returns per-feature TreeSHAP contributions (LightGBM's
+native `pred_contrib`, no extra explainer dependency) for the median quantile
+booster only. This explains the raw pre-calibration median, not the final
+conformal-adjusted value, not the lower/upper interval, and not the
+weather-variant model when one is being served. It is a local, per-forecast
+explanation, not a global feature-importance summary. See
+[ADR 0020](adr/0020-model-explainability.md).
+
 ## Failure modes and monitoring
 
 Heat waves, holidays, outages, changing generation mix and wildfire disruptions are plausible distribution shifts; their individual effects have not been isolated here. Missing fuel categories, upstream revisions and stale observations can change the proxy. Carbon intervals already under-cover on this test cohort. The 30% intensity-shift experiment reaches 67.09% realized coverage at sampled day 7; pre-existing input alarms are disclosed. A seven-day detection guarantee is not claimed.

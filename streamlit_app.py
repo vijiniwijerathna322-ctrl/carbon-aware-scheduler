@@ -82,6 +82,25 @@ with forecast_tab:
         "Download forecast CSV", frame.to_csv(index=False), "forecast.csv", "text/csv"
     )
 
+    st.subheader("Why this forecast?")
+    explain_target = "demand_mwh" if target == "Demand" else "carbon_intensity_g_per_kwh"
+    explain_horizon = min(horizon, 48)
+    code, explanation = request(
+        f"/v1/forecast/explain?target={explain_target}&horizon={explain_horizon}&top_n=8"
+    )
+    if code != httpx.codes.OK or not explanation.get("points"):
+        st.info("No feature attribution is available for this selection.")
+    else:
+        point = explanation["points"][0]
+        contrib = pd.DataFrame(point["contributions"]).set_index("feature")
+        st.bar_chart(contrib[["contribution"]], x_label="Feature", y_label=units, horizontal=True)
+        st.caption(
+            f"Base value {point['base_value']:.1f} plus these contributions reproduce the raw "
+            f"median ({point['raw_median']:.1f}) before conformal calibration's offset."
+        )
+        for note in explanation.get("notes", []):
+            st.caption(note)
+
 with schedule_tab:
     st.subheader("Choose when your job should run")
     st.caption(f"Times are relative to the forecast, starting {first.isoformat()} (UTC).")

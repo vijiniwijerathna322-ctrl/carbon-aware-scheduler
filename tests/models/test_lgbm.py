@@ -82,6 +82,23 @@ def test_crossing_quantiles_are_repaired(monkeypatch):
     assert model.predict(data).iloc[0].tolist() == [1, 2, 3]
 
 
+def test_median_contributions_reconstruct_the_median_prediction(sinusoid):
+    train = build_supervised(sinusoid, sinusoid.index[168:2000:12], tz="UTC")
+    test = build_supervised(sinusoid, sinusoid.index[2100:2400:24], tz="UTC")
+    model = QuantileLgbm(params={"n_estimators": 50, "min_child_samples": 20}).fit(train, train.y)
+    contributions = model.median_contributions(test)
+    assert list(contributions.columns) == [*model.feature_columns_, "bias"]
+    reconstructed = contributions.sum(axis=1).to_numpy()
+    median_model = model.models_[model.alphas.index(0.5)]
+    raw_median = median_model.predict(model._features(test))
+    assert np.allclose(reconstructed, raw_median, atol=1e-6)
+
+
+def test_median_contributions_requires_fit():
+    with pytest.raises(RuntimeError, match="fit"):
+        QuantileLgbm().median_contributions(pd.DataFrame({"horizon": [1]}))
+
+
 def test_invalid_or_unfitted_model_raises(sinusoid):
     with pytest.raises(ValueError, match="quantiles"):
         QuantileLgbm(alphas=(0.2, 0.5, 0.8))

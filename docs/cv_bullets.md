@@ -3,6 +3,7 @@
 - Built leakage-aware 48-hour grid forecasts using chronological raw-data evaluation and conformal calibration; disclosed held-out demand coverage of 77.35% and carbon coverage of 71.57% against nominal 80%.
 - Replayed 2,726 flexible-load scenarios per strategy; median scheduling achieved 29.37% mean proxy savings versus immediate execution, compared with a 33.17% hindsight oracle.
 - Implemented a credential-free Docker/FastAPI demo, tested model registry, drift/coverage monitoring and review-based automation; a sampled 30% intensity shift produced a coverage alarm at day 7.
+- Hardened the API with optional key auth, a fixed-window rate limiter, JSON access logs correlated by request ID, and Prometheus metrics; shipped local feature explanations via LightGBM's native TreeSHAP contributions with zero added dependencies.
 
 Numbers trace to [CQR](results/backtest-cqr.md), [scheduling](results/schedule-backtest.md) and [shift simulation](results/drift-simulation.md). Do not claim production deployment, ERCO performance, validated carbon 80% intervals or measured real-world avoided emissions.
 

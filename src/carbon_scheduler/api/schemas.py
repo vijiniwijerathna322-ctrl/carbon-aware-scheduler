@@ -24,6 +24,29 @@ class ForecastResponse(BaseModel):
     notes: list[str] = Field(default_factory=list)
 
 
+class FeatureContribution(BaseModel):
+    feature: str
+    value: float = Field(allow_inf_nan=False)
+    contribution: float = Field(allow_inf_nan=False)
+
+
+class ExplainPoint(BaseModel):
+    target_time: AwareDatetime
+    horizon: int = Field(ge=1, le=48)
+    base_value: float = Field(allow_inf_nan=False)
+    raw_median: float = Field(allow_inf_nan=False)
+    contributions: list[FeatureContribution]
+
+
+class ExplainResponse(BaseModel):
+    region: str
+    target: str
+    issue_time: AwareDatetime
+    model_version: str
+    points: list[ExplainPoint]
+    notes: list[str] = Field(default_factory=list)
+
+
 class ScheduleRequest(BaseModel):
     model_config = ConfigDict(
         extra="forbid",

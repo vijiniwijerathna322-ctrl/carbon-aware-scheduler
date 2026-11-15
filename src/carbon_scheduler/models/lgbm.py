@@ -80,6 +80,23 @@ class QuantileLgbm:
         values = np.column_stack([model.predict(features) for model in self.models_])
         return pd.DataFrame(np.sort(values, axis=1), columns=["q10", "q50", "q90"], index=X.index)
 
+    def median_contributions(self, X: pd.DataFrame) -> pd.DataFrame:
+        """Per-row TreeSHAP contributions from the median (q50) booster.
+
+        Uses LightGBM's native `pred_contrib` support, so no extra explainer
+        dependency is needed. These explain the median booster's own raw
+        output, taken *before* `predict`'s quantile-crossing repair (`np.sort`
+        across the three boosters) -- a difference that only matters on rows
+        where crossing was actually repaired.
+        """
+        if len(self.models_) != len(QUANTILES):
+            raise RuntimeError("Call fit before predict")
+        features = self._features(X)
+        median_model = self.models_[self.alphas.index(0.5)]
+        raw = median_model.booster_.predict(features, pred_contrib=True)
+        columns = [*getattr(self, "feature_columns_", FEATURE_COLUMNS), "bias"]
+        return pd.DataFrame(raw, columns=columns, index=X.index)
+
 
 class LgbmForecaster:
     def __init__(
