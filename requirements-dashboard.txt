@@ -1,0 +1,7 @@
+# Minimal dependencies for deploying streamlit_app.py on Streamlit Community
+# Cloud (which installs from requirements.txt, not uv/pyproject.toml). The
+# dashboard only ever talks HTTP to the API (see CARBON_API_URL) and never
+# imports carbon_scheduler directly, so it needs none of the ML/data stack.
+streamlit>=1.40,<2
+httpx
+pandas
