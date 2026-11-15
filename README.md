@@ -1,7 +1,7 @@
 # Carbon-Aware Energy Scheduler
 
-Want a visual interface? Run the [local Streamlit dashboard](docs/dashboard.md)
-for forecast charts, job scheduling, CSV export and monitoring status.
+Forecast grid demand and carbon intensity, then schedule flexible jobs against
+honest, disclosed uncertainty — not a black box.
 
 [![CI](https://github.com/vijiniwijerathna322-ctrl/carbon-aware-scheduler/actions/workflows/ci.yml/badge.svg)](https://github.com/vijiniwijerathna322-ctrl/carbon-aware-scheduler/actions/workflows/ci.yml)
 [![Python 3.11 | 3.12](https://img.shields.io/badge/python-3.11%20%7C%203.12-blue)](pyproject.toml)
@@ -10,16 +10,18 @@ for forecast charts, job scheduling, CSV export and monitoring status.
 
 **Stack:** Python · FastAPI · Typer CLI · LightGBM quantile regression · split
 conformal prediction (CQR) · Prometheus metrics · Streamlit dashboard · Docker
-(non-root, read-only) · GitHub Actions. See [architecture](docs/architecture.md).
+(non-root, read-only) · GitHub Actions
 
-Forecast grid demand and carbon intensity, then schedule flexible jobs with honest uncertainty.
-Implementation follows the [master plan](docs/planning/plans/2026-10-11-00-master-plan.md).
+Want a visual interface? Run the [local Streamlit dashboard](docs/dashboard.md)
+for forecast charts, job scheduling, CSV export, model explanations and
+monitoring status.
 
-![Held-out carbon forecast week with its nominal interval and actual proxy](docs/figures/forecast-fan.png)
+Flexible loads — EV charging, batch jobs, deferrable industrial load — can
+choose *when* to run. This project connects hourly forecasts to that decision,
+compares the result against immediate execution and a hindsight oracle, and
+keeps every failed uncertainty check visible instead of hiding it.
 
-Flexible loads can choose when to run. This project connects hourly forecasts to
-that decision, compares against immediate execution and a hindsight oracle, and
-keeps failed uncertainty checks visible.
+### At a glance
 
 | Measured CISO result | Value | Evidence |
 |---|---:|---|
@@ -28,11 +30,34 @@ keeps failed uncertainty checks visible.
 | Median / upper mean scenario savings | 29.37% / 27.35% | [Scheduling replay](docs/results/schedule-backtest.md) |
 | Hindsight oracle mean scenario savings | 33.17% | [Scheduling replay](docs/results/schedule-backtest.md) |
 
-Figures and [summary metrics](docs/results/portfolio-summary.json) are regenerated
-from [committed evaluation inputs](docs/results/figure-inputs/README.md) using
-`uv run python scripts/make_figures.py`; no API key is needed.
-See the [model card](docs/model_card.md), [datasheet](docs/datasheet.md) and
+Figures and [summary metrics](docs/results/portfolio-summary.json) regenerate
+from [committed evaluation inputs](docs/results/figure-inputs/README.md) via
+`uv run python scripts/make_figures.py` — no API key needed. See the
+[model card](docs/model_card.md), [datasheet](docs/datasheet.md) and
 [CV/interview wording](docs/cv_bullets.md) for intended use and limitations.
+
+![Held-out carbon forecast week with its nominal interval and actual proxy](docs/figures/forecast-fan.png)
+
+---
+
+## Contents
+
+- [Architecture](#architecture)
+- [Quick start: offline API demo](#quick-start-offline-api-demo)
+- [API hardening and observability](#api-hardening-and-observability)
+- [Model explainability](#model-explainability)
+- [Development](#development)
+- [Reproducing the full pipeline](#reproducing-the-full-pipeline)
+- [Automation and releases](#automation-and-releases)
+- [Scope, attribution and licence](#scope-attribution-and-licence)
+- [Project structure](#project-structure)
+
+## Architecture
+
+Implementation follows the
+[master plan](docs/planning/plans/2026-10-11-00-master-plan.md); see
+[docs/architecture.md](docs/architecture.md) for the full request-path diagram,
+including auth, rate limiting, metrics and explainability.
 
 ```mermaid
 flowchart LR
@@ -46,7 +71,7 @@ flowchart LR
   B --> V[Reviewable metrics and figures]
 ```
 
-## Offline API demo
+## Quick start: offline API demo
 
 No live-hosted demo is linked here yet; [docs/deployment.md](docs/deployment.md)
 has the ready-to-run steps for standing one up on free-tier hosts
@@ -167,7 +192,14 @@ Defaults and relative directory overrides resolve against the project root; abso
 `CARBON_DATA_DIR` and `CARBON_MODELS_DIR` overrides are also supported.
 Live tests are excluded by default; explicitly select them with `uv run pytest -m live`.
 
-## Ingest hourly data
+## Reproducing the full pipeline
+
+Every stage below is independently runnable offline (except ingestion, which
+needs a free EIA key) and regenerates the committed reports under
+`docs/results/`. Expand a stage for its exact commands and measured numbers.
+
+<details>
+<summary><strong>1. Ingest hourly data</strong></summary>
 
 Set `EIA_API_KEY` in the ignored project `.env`, then run:
 
@@ -201,7 +233,10 @@ The full-history live check is explicitly opt-in and downloads into a temporary 
 uv run pytest tests/ingest/test_live.py -m live --no-cov
 ```
 
-## Build the carbon dataset
+</details>
+
+<details>
+<summary><strong>2. Build the carbon dataset</strong></summary>
 
 After ingestion, run `uv run carbon-scheduler build-dataset --region CISO`.
 This offline command writes `data/processed/CISO/hourly.parquet` and
@@ -230,7 +265,10 @@ intensity hours. Its 29.37–449.03 range reflects changing observed fuel mixes.
 43,472 hours have partial included-fuel observations, largely because GEO appears
 late; these values must not be described as complete whole-grid carbon intensity.
 
-## Forecast backtests
+</details>
+
+<details>
+<summary><strong>3. Forecast backtests</strong></summary>
 
 Run offline rolling-origin comparisons on the latest six calendar months:
 
@@ -260,7 +298,10 @@ for demand (2,690.36 → 1,255.11 MWh) and 38.49% for carbon intensity
 (43.98 → 27.05 gCO2e/kWh). Raw interval coverage is 73.17% and 58.83%,
 respectively; these intervals still need Plan 05 calibration.
 
-## Calibrated models and registry
+</details>
+
+<details>
+<summary><strong>4. Calibrated models and registry</strong></summary>
 
 ```powershell
 uv run carbon-scheduler backtest --region CISO --target demand_mwh --model cqr
@@ -283,7 +324,10 @@ baseline in every bucket. The original results are retained without test-period
 tuning; [ADR 0013](docs/adr/0013-carbon-coverage-gate-miss.md) documents the miss.
 Carbon intervals must not be advertised as validated nominal 80% bounds.
 
-## Scheduling replay
+</details>
+
+<details>
+<summary><strong>5. Scheduling replay</strong></summary>
 
 After producing the raw CQR carbon backtest, run:
 
@@ -309,7 +353,10 @@ available under zero observation latency. Upper endpoints are an uncertainty
 heuristic, not a validated job-level confidence bound. See
 [ADR 0014](docs/adr/0014-scheduling-and-replay.md).
 
-## Weather extension
+</details>
+
+<details>
+<summary><strong>6. Weather extension (exploratory)</strong></summary>
 
 Weather data: [Open-Meteo](https://open-meteo.com/), CC BY 4.0; its public API is
 for non-commercial use. Plan 08 uses cached UTC temperature, cloud cover,
@@ -337,7 +384,10 @@ is written to `docs/results/ablation-weather.md`.
 Once both prediction files exist, add `--reuse-weather` to regenerate the report
 without repeating the weather fits; weather and baseline provenance are checked.
 
-## Monitoring
+</details>
+
+<details>
+<summary><strong>7. Monitoring</strong></summary>
 
 ```powershell
 uv run carbon-scheduler monitor --region CISO
@@ -357,6 +407,10 @@ variants require forecast-vintage logs before replay monitoring is supported.
 See the [CISO snapshot](docs/results/monitoring-ciso.md),
 [30% shift simulation](docs/results/drift-simulation.md) and
 [diagnostic limitations](docs/adr/0017-monitoring-cutoffs-and-diagnostics.md).
+
+</details>
+
+## Automation and releases
 
 Region metadata is configurable through `CARBON_REGIONS_PATH` (default
 `config/regions.yaml`). Commands without `--region` use its first entry; API
@@ -382,6 +436,8 @@ CI gate on stable `v*` tags already merged into main. It smoke-tests the exact
 image before publishing and verifies the GHCR digest before updating `latest`.
 Weekly Dependabot updates cover uv and GitHub Actions. See
 [release operations](docs/automation-release.md). The approved [v0.2.0 research release](https://github.com/vijiniwijerathna322-ctrl/carbon-aware-scheduler/releases/tag/v0.2.0) is published with the existing CISO demo; coverage and production acceptance limitations remain explicit.
+
+---
 
 ## Scope, attribution and licence
 
